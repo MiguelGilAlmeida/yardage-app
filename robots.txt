@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://clothchalk.netlify.app/sitemap.xml

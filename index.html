@@ -1,0 +1,2628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Cloth & Chalk — Fabric Yardage Calculator for Bespoke Menswear</title>
+  <meta name="description" content="Calculate exactly how much fabric you need for a bespoke suit, sport coat, trousers, vest or shirt. Enter your measurements and get an accurate yardage estimate with a to-scale cutting layout." />
+  <meta name="keywords" content="fabric yardage calculator, bespoke suit fabric, menswear yardage, suit fabric calculator, trouser yardage, jacket fabric, tailoring yardage, how much fabric for a suit, bespoke tailoring" />
+  <meta name="robots" content="index, follow" />
+  <meta name="google-site-verification" content="CPhM_wmOQcOAO2K10Jicipug4ppxJ6zJRoeoTQbOdjU" />
+  <link rel="canonical" href="https://clothchalk.netlify.app/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://clothchalk.netlify.app/" />
+  <meta property="og:title"       content="Cloth & Chalk — Fabric Yardage Calculator for Bespoke Menswear" />
+  <meta property="og:description" content="Calculate exactly how much fabric you need for a bespoke suit, sport coat, trousers, vest or shirt. Accurate yardage with a to-scale cutting layout." />
+  <meta property="og:site_name"   content="Cloth & Chalk" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary" />
+  <meta name="twitter:title"       content="Cloth & Chalk — Fabric Yardage Calculator for Bespoke Menswear" />
+  <meta name="twitter:description" content="Calculate exactly how much fabric you need for a bespoke suit, sport coat, trousers, vest or shirt." />
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Cloth & Chalk",
+    "url": "https://clothchalk.netlify.app/",
+    "description": "Fabric yardage calculator for bespoke menswear. Calculate how much fabric you need for suits, sport coats, trousers, vests and shirts based on your measurements.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "keywords": "fabric yardage calculator, bespoke suit, menswear, tailoring"
+  }
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5191383046823498"
+     crossorigin="anonymous"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:      #0C0C0C;
+      --off-black:  #1C1C1C;
+      --charcoal:   #3A3A3A;
+      --warm-gray:  #8A8680;
+      --light-gray: #C8C4BC;
+      --rule:       #E0DCD4;
+      --cream:      #F5F0E8;
+      --cream-dark: #EDE8DF;
+      --warm-white: #FDFAF5;
+      --text:       #1C1C1C;
+      --serif: 'Playfair Display', Georgia, serif;
+      --sans:  'Inter', -apple-system, sans-serif;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: var(--cream);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--black);
+      color: var(--warm-white);
+      padding: 14px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-center { text-align: center; flex: 1; }
+    header .wordmark {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--warm-white);
+    }
+    header .tagline {
+      font-size: 9px;
+      font-weight: 400;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--light-gray);
+      margin-top: 3px;
+    }
+    /* header spacer keeps wordmark visually centred */
+    .header-spacer { width: 72px; }
+    /* unit pill in header */
+    .header-unit {
+      display: flex;
+      border: 1px solid #3A3A3A;
+      border-radius: 2px;
+      overflow: hidden;
+      width: 72px;
+      flex-shrink: 0;
+    }
+    .header-unit button {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--light-gray);
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      padding: 5px 0;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .header-unit button.active {
+      background: var(--warm-white);
+      color: var(--black);
+      font-weight: 700;
+    }
+
+    /* ── Layout ── */
+    .container { max-width: 520px; margin: 0 auto; padding: 28px 18px 52px; }
+
+    /* ── Progress bar ── */
+    .progress-track {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      margin-bottom: 28px;
+    }
+    .progress-step {
+      flex: 1;
+      height: 2px;
+      background: var(--rule);
+      transition: background 0.35s;
+    }
+    .progress-step.done   { background: var(--black); }
+    .progress-step.active { background: var(--black); }
+    .progress-node {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--rule);
+      flex-shrink: 0;
+      transition: background 0.35s, transform 0.35s;
+    }
+    .progress-node.done   { background: var(--black); }
+    .progress-node.active { background: var(--black); transform: scale(1.5); }
+
+    /* ── Section label ── */
+    .section-eyebrow {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      margin-bottom: 6px;
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--black);
+      margin-bottom: 24px;
+      line-height: 1.2;
+    }
+
+    /* ── Mode selection ── */
+    .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .mode-btn {
+      border: 1px solid var(--rule);
+      background: var(--warm-white);
+      border-radius: 4px;
+      padding: 24px 14px 20px;
+      cursor: pointer;
+      text-align: center;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+    }
+    .mode-btn::after {
+      content: '→';
+      position: absolute;
+      bottom: 14px;
+      right: 14px;
+      font-size: 14px;
+      color: var(--light-gray);
+      transition: color 0.2s, transform 0.2s;
+    }
+    .mode-btn:hover { border-color: var(--black); box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+    .mode-btn:hover::after { color: var(--black); transform: translateX(3px); }
+    .mode-btn .m-icon { margin-bottom: 14px; display: flex; justify-content: center; width: 100%; }
+    .mode-btn .m-icon svg { width: 64px; height: 64px; display: block; }
+    .mode-btn .m-label {
+      font-family: var(--serif);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--black);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .mode-btn .m-sub {
+      font-size: 11px;
+      color: var(--warm-gray);
+      line-height: 1.5;
+    }
+
+    /* ── Garment selector ── */
+    .garment-list {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+    }
+    .garment-btn {
+      border: 1px solid var(--rule);
+      background: var(--warm-white);
+      border-radius: 4px;
+      padding: 0;
+      cursor: pointer;
+      text-align: center;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Suits: 2-up */
+    .garment-btn.suit    { grid-column: span 3; }
+    /* Separates: 3-up */
+    .garment-btn.sep     { grid-column: span 2; }
+    /* Shirt: full width */
+    .garment-btn.full-width { grid-column: 1 / -1; }
+    .g-img {
+      background: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px 12px 12px;
+      height: 130px;
+    }
+    .garment-btn.full-width .g-img { height: 110px; }
+    .g-img svg {
+      width: 100%;
+      max-width: 80px;
+      height: auto;
+    }
+    .g-info {
+      padding: 10px 10px 12px;
+      border-top: 1px solid var(--rule);
+    }
+    .garment-btn .g-name {
+      font-family: var(--serif);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--black);
+      display: block;
+    }
+    .garment-btn .g-sub {
+      font-size: 10px;
+      color: var(--warm-gray);
+      margin-top: 2px;
+      display: block;
+    }
+    .g-check-badge {
+      position: absolute;
+      top: 8px; right: 8px;
+      width: 22px; height: 22px;
+      background: var(--black);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+      color: var(--warm-white);
+      opacity: 0;
+      transform: scale(0.6);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .garment-btn.selected { border-color: var(--black); box-shadow: 0 0 0 1px var(--black); }
+    .garment-btn.selected .g-check-badge { opacity: 1; transform: scale(1); }
+    .garment-btn.selected .g-img { background: var(--cream-dark); }
+    .garment-btn:not(.selected):hover { border-color: var(--charcoal); }
+
+    /* ── Measurement fields ── */
+    .measure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 16px; }
+    .measure-group { display: flex; flex-direction: column; }
+    .measure-group label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      margin-bottom: 3px;
+    }
+    .measure-group .hint {
+      font-size: 10px;
+      color: var(--light-gray);
+      margin-bottom: 6px;
+    }
+    .field-error {
+      font-size: 10px;
+      color: #e74c3c;
+      min-height: 14px;
+      margin-top: 3px;
+    }
+    .options-section-title {
+      font-family: var(--serif);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--black);
+      margin: 22px 0 8px;
+    }
+    .options-section-title:first-child { margin-top: 0; }
+    .options-group-title {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--light-gray);
+      margin-bottom: 7px;
+    }
+    .option-grid {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .option-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .option-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .option-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+    .option-card {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid var(--rule);
+      background: var(--warm-white);
+      border-radius: 4px;
+      padding: 0;
+      cursor: pointer;
+      text-align: center;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      overflow: hidden;
+    }
+    .option-card.selected { border-color: var(--black); box-shadow: 0 0 0 1px var(--black); }
+    .option-card:not(.selected):hover { border-color: var(--charcoal); }
+    .oc-img {
+      background: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 6px 6px;
+      height: 58px;
+    }
+    .oc-img svg { width: 100%; max-width: 38px; height: auto; }
+    .oc-label {
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--black);
+      padding: 5px 4px 6px;
+      border-top: 1px solid var(--rule);
+      display: block;
+      letter-spacing: 0.02em;
+    }
+    .measure-input {
+      display: flex;
+      align-items: stretch;
+      border-bottom: 1.5px solid var(--rule);
+      transition: border-color 0.2s;
+    }
+    .measure-input:focus-within { border-color: var(--black); }
+    .measure-input input {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: 8px 0;
+      font-size: 18px;
+      font-weight: 300;
+      font-family: var(--serif);
+      color: var(--black);
+      background: transparent;
+      width: 0;
+    }
+    .measure-input input::placeholder { color: var(--rule); }
+    .measure-input .unit {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--light-gray);
+      padding: 8px 0 8px 6px;
+      align-self: flex-end;
+    }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      width: 100%;
+      background: var(--black);
+      color: var(--warm-white);
+      border: none;
+      border-radius: 2px;
+      padding: 17px;
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-primary:hover  { background: var(--off-black); }
+    .btn-primary:active { background: var(--charcoal); }
+
+    .btn-secondary {
+      width: 100%;
+      background: transparent;
+      color: var(--warm-gray);
+      border: none;
+      padding: 14px;
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: color 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      text-align: center;
+    }
+    .btn-secondary:hover { color: var(--black); }
+
+    /* ── Results ── */
+    .result-eyebrow {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      margin-bottom: 4px;
+    }
+    .result-headline {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--black);
+      margin-bottom: 6px;
+    }
+    .result-subtitle {
+      font-size: 12px;
+      color: var(--warm-gray);
+      margin-bottom: 28px;
+    }
+    .result-divider {
+      width: 32px;
+      height: 1px;
+      background: var(--black);
+      margin-bottom: 24px;
+    }
+
+    .result-item {
+      padding: 18px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .result-item:first-child { border-top: 1px solid var(--rule); }
+    .result-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+    .result-item-name {
+      font-family: var(--serif);
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--black);
+    }
+    .result-item-yards {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 400;
+      color: var(--black);
+      line-height: 1;
+    }
+    .result-item-yards span {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      color: var(--warm-gray);
+      margin-left: 3px;
+    }
+    .result-breakdown {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .result-breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--warm-gray);
+    }
+    .result-breakdown-row strong {
+      color: var(--charcoal);
+      font-weight: 500;
+    }
+
+    .totals-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      margin-top: 24px;
+      border: 1px solid var(--black);
+    }
+    .total-cell {
+      padding: 16px 12px 14px;
+      text-align: center;
+      border-right: 1px solid var(--rule);
+    }
+    .total-cell:last-child { border-right: none; }
+    .total-cell.primary {
+      background: var(--black);
+      border-right-color: #3A3A3A;
+    }
+    .tc-label {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      margin-bottom: 6px;
+    }
+    .total-cell.primary .tc-label { color: var(--light-gray); }
+    .tc-amount {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 400;
+      color: var(--black);
+      line-height: 1;
+    }
+    .total-cell.primary .tc-amount { color: var(--warm-white); }
+    .tc-unit {
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--light-gray);
+      margin-top: 3px;
+    }
+    .tc-amount-m {
+      font-family: var(--sans);
+      font-size: 15px;
+      color: var(--charcoal);
+      margin-top: 6px;
+      line-height: 1;
+    }
+    .total-cell.primary .tc-amount-m { color: rgba(245,240,232,0.75); }
+    .tc-unit-m {
+      font-size: 9px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--light-gray);
+      margin-top: 2px;
+    }
+    .total-cell.primary .tc-unit-m { color: rgba(245,240,232,0.5); }
+    .result-item-meters {
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--charcoal);
+      margin-top: 3px;
+    }
+    .result-item-meters span {
+      font-size: 10px;
+      color: var(--light-gray);
+      margin-left: 2px;
+    }
+
+    .tip-box {
+      background: var(--cream-dark);
+      border-left: 2px solid var(--charcoal);
+      padding: 12px 14px;
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--charcoal);
+      line-height: 1.6;
+    }
+    .tip-box strong { font-weight: 600; color: var(--black); }
+
+    /* ── Page transitions ── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ── Pattern layout ── */
+    .layout-section { margin-top: 32px; }
+    .layout-section-title {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--black);
+      margin-bottom: 4px;
+    }
+    .layout-section-sub {
+      font-size: 11px;
+      color: var(--warm-gray);
+      margin-bottom: 20px;
+      letter-spacing: 0.3px;
+    }
+    .layout-garment { margin-bottom: 28px; }
+    .layout-garment-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--charcoal);
+      margin-bottom: 8px;
+    }
+    .layout-fabric-wrap {
+      border: 1px solid var(--rule);
+      background: var(--warm-white);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .layout-fabric-wrap svg { display: block; width: 100%; height: auto; }
+
+    /* ── Validation ── */
+    .error-text {
+      font-size: 11px;
+      color: #9B2335;
+      margin-top: 8px;
+      letter-spacing: 0.3px;
+      display: none;
+    }
+    .error-text.show { display: block; }
+  </style>
+</head>
+<body>
+
+<!-- SEO: static content indexed by crawlers before JS executes -->
+<section aria-hidden="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;">
+  <h1>Cloth &amp; Chalk — Fabric Yardage Calculator for Bespoke Menswear</h1>
+  <p>Cloth &amp; Chalk is a free fabric yardage calculator for bespoke tailors and their clients. Enter your body or finished measurements for a suit, sport coat, trousers, vest or shirt and get an accurate fabric estimate along with a to-scale cutting layout showing how the pattern pieces fit on the cloth.</p>
+  <p>Whether you are calculating yardage for a two-piece suit, a three-piece suit, a single sport coat, bespoke trousers or slacks, a waistcoat, or a dress shirt, Cloth &amp; Chalk gives you the correct amount of fabric to order — no more, no less. Supports 54-inch and 60-inch fabric widths.</p>
+  <ul>
+    <li>Bespoke suit fabric calculator</li>
+    <li>Trouser and slacks yardage calculator</li>
+    <li>Jacket and sport coat fabric estimate</li>
+    <li>Vest and waistcoat yardage</li>
+    <li>Dress shirt fabric calculator</li>
+    <li>Pattern layout for 58-inch fabric</li>
+  </ul>
+</section>
+
+<header>
+  <div class="header-spacer"></div>
+  <div class="header-center">
+    <div class="wordmark">Cloth & Chalk</div>
+    <div class="tagline">Fabric Estimator · 58″ Wide</div>
+  </div>
+  <div class="header-unit">
+    <button id="unitYards"  class="active" onclick="setUnit('yards')">yds</button>
+    <button id="unitMeters"            onclick="setUnit('meters')">m</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- Progress indicator -->
+  <div class="progress-track" id="progressTrack">
+    <div class="progress-node active" id="pn0"></div>
+    <div class="progress-step"  id="ps0"></div>
+    <div class="progress-node"  id="pn1"></div>
+    <div class="progress-step"  id="ps1"></div>
+    <div class="progress-node"  id="pn2"></div>
+    <div class="progress-step"  id="ps2"></div>
+    <div class="progress-node"  id="pn3"></div>
+    <div class="progress-step"  id="ps3"></div>
+    <div class="progress-node"  id="pn4"></div>
+  </div>
+
+  <!-- ══ PAGE 0: Measure Mode ══ -->
+  <div class="page active" id="page0">
+    <div class="section-eyebrow">Step 1 of 4</div>
+    <div class="section-title">How are you<br>measuring?</div>
+    <div class="mode-grid">
+      <button class="mode-btn" onclick="selectMode('body')">
+        <span class="m-icon">
+          <svg viewBox="0 0 44 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Head -->
+            <circle cx="22" cy="6" r="5" stroke="#2A2A2A" stroke-width="1.2"/>
+            <!-- Body outline -->
+            <path d="M8,18 C10,15 16,13 22,13 C28,13 34,15 36,18 L36,46 L8,46 Z" stroke="#2A2A2A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Waist suggestion -->
+            <path d="M8,31 C12,29 32,29 36,31" stroke="#2A2A2A" stroke-width="0.6" stroke-dasharray="1.5,2"/>
+            <!-- Chest tape measure -->
+            <line x1="2" y1="23" x2="42" y2="23" stroke="#2A2A2A" stroke-width="1"/>
+            <!-- Left arrow -->
+            <path d="M2,23 L6,21 M2,23 L6,25" stroke="#2A2A2A" stroke-width="0.9" stroke-linecap="round"/>
+            <!-- Right arrow -->
+            <path d="M42,23 L38,21 M42,23 L38,25" stroke="#2A2A2A" stroke-width="0.9" stroke-linecap="round"/>
+            <!-- Tape tick marks -->
+            <line x1="14" y1="21" x2="14" y2="25" stroke="#2A2A2A" stroke-width="0.7"/>
+            <line x1="22" y1="21" x2="22" y2="25" stroke="#2A2A2A" stroke-width="0.7"/>
+            <line x1="30" y1="21" x2="30" y2="25" stroke="#2A2A2A" stroke-width="0.7"/>
+          </svg>
+        </span>
+        <span class="m-label">Body<br>Measures</span>
+        <span class="m-sub">Customer's actual body measurements</span>
+      </button>
+      <button class="mode-btn" onclick="selectMode('garment')">
+        <span class="m-icon">
+          <svg viewBox="0 0 44 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Left sleeve -->
+            <path d="M10,10 C5,13 2,22 2,36 L10,37 C10,26 11,16 10,10" stroke="#2A2A2A" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Right sleeve -->
+            <path d="M34,10 C39,13 42,22 42,36 L34,37 C34,26 33,16 34,10" stroke="#2A2A2A" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Jacket body -->
+            <path d="M10,10 C9,22 9,36 9,50 L35,50 C35,36 35,22 34,10" stroke="#2A2A2A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Left lapel -->
+            <path d="M22,5 L10,10 L13,32 L22,38" stroke="#2A2A2A" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Right lapel -->
+            <path d="M22,5 L34,10 L31,32 L22,38" stroke="#2A2A2A" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Collar -->
+            <path d="M13,32 C17,28 19,26 22,25 C25,26 27,28 31,32" stroke="#2A2A2A" stroke-width="0.75" stroke-linecap="round"/>
+            <!-- Gorge notch left -->
+            <path d="M13,32 L16,28" stroke="#2A2A2A" stroke-width="0.75" stroke-linecap="round"/>
+            <!-- Gorge notch right -->
+            <path d="M31,32 L28,28" stroke="#2A2A2A" stroke-width="0.75" stroke-linecap="round"/>
+            <!-- Buttons -->
+            <circle cx="22" cy="42" r="1.5" fill="#2A2A2A"/>
+            <circle cx="22" cy="48" r="1.5" fill="#2A2A2A"/>
+            <!-- Chest welt -->
+            <line x1="27" y1="19" x2="33" y2="21" stroke="#2A2A2A" stroke-width="0.7"/>
+            <!-- Hip pockets -->
+            <line x1="9" y1="43" x2="20" y2="43" stroke="#2A2A2A" stroke-width="0.7"/>
+            <line x1="24" y1="43" x2="35" y2="43" stroke="#2A2A2A" stroke-width="0.7"/>
+          </svg>
+        </span>
+        <span class="m-label">Finished<br>Garment</span>
+        <span class="m-sub">Dimensions of the finished piece</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ PAGE 1: Garment selection ══ -->
+  <div class="page" id="page1">
+    <div class="section-eyebrow">Step 2 of 4</div>
+    <div class="section-title">What are you<br>making?</div>
+    <div class="garment-list" id="garmentGrid">
+
+      <!-- 2-Piece Suit -->
+      <button class="garment-btn suit" data-garment="suit2" onclick="toggleGarment(this)">
+        <div class="g-check-badge">✓</div>
+        <div class="g-img">
+          <svg viewBox="0 0 64 90" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#2A2A2A" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke-width="0.85" d="M13,15 C7,18 3,28 3,46 L11,48 C11,32 12,20 13,15"/>
+            <path stroke-width="0.85" d="M51,15 C57,18 61,28 61,46 L53,48 C53,32 52,20 51,15"/>
+            <path stroke-width="0.95" d="M13,15 C11,30 10,56 11,82 L53,82 C54,56 53,30 51,15"/>
+            <path stroke-width="0.85" d="M32,9 L13,15 L19,50 L32,56"/>
+            <path stroke-width="0.85" d="M32,9 L51,15 L45,50 L32,56"/>
+            <path stroke-width="0.7" d="M19,50 C24,46 28,43 32,42 C36,43 40,46 45,50"/>
+            <path stroke-width="0.7" d="M19,50 L23,46"/>
+            <path stroke-width="0.7" d="M45,50 L41,46"/>
+            <circle cx="32" cy="62" r="1.3" fill="#2A2A2A" stroke="none"/>
+            <circle cx="32" cy="72" r="1.3" fill="#2A2A2A" stroke="none"/>
+            <line x1="40" y1="34" x2="50" y2="37" stroke-width="0.6"/>
+            <line x1="11" y1="71" x2="24" y2="71" stroke-width="0.65"/>
+            <line x1="40" y1="71" x2="53" y2="71" stroke-width="0.65"/>
+            <line x1="4" y1="42" x2="4" y2="46" stroke-width="0.6"/>
+            <line x1="6" y1="42" x2="6" y2="46" stroke-width="0.6"/>
+            <line x1="58" y1="42" x2="58" y2="46" stroke-width="0.6"/>
+            <line x1="60" y1="42" x2="60" y2="46" stroke-width="0.6"/>
+          </svg>
+        </div>
+        <div class="g-info">
+          <span class="g-name">2-Piece Suit</span>
+          <span class="g-sub">Coat + Pants</span>
+        </div>
+      </button>
+
+      <!-- 3-Piece Suit -->
+      <button class="garment-btn suit" data-garment="suit3" onclick="toggleGarment(this)">
+        <div class="g-check-badge">✓</div>
+        <div class="g-img">
+          <svg viewBox="0 0 64 90" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#2A2A2A" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke-width="0.85" d="M13,15 C7,18 3,28 3,46 L11,48 C11,32 12,20 13,15"/>
+            <path stroke-width="0.85" d="M51,15 C57,18 61,28 61,46 L53,48 C53,32 52,20 51,15"/>
+            <path stroke-width="0.95" d="M13,15 C11,30 10,56 11,82 L53,82 C54,56 53,30 51,15"/>
+            <path stroke-width="0.85" d="M32,9 L13,15 L19,50 L32,56"/>
+            <path stroke-width="0.85" d="M32,9 L51,15 L45,50 L32,56"/>
+            <path stroke-width="0.7" d="M19,50 C24,46 28,43 32,42 C36,43 40,46 45,50"/>
+            <path stroke-width="0.7" d="M19,50 L23,46"/>
+            <path stroke-width="0.7" d="M45,50 L41,46"/>
+            <path stroke-width="0.7" fill="var(--cream)" d="M19,50 L32,56 L45,50 L46,78 L32,80 L18,78 Z"/>
+            <path stroke-width="0.65" d="M19,50 L32,60 L45,50"/>
+            <circle cx="32" cy="57" r="1.0" fill="#2A2A2A" stroke="none"/>
+            <circle cx="32" cy="63" r="1.0" fill="#2A2A2A" stroke="none"/>
+            <circle cx="32" cy="69" r="1.0" fill="#2A2A2A" stroke="none"/>
+            <circle cx="32" cy="75" r="1.0" fill="#2A2A2A" stroke="none"/>
+            <line x1="40" y1="34" x2="50" y2="37" stroke-width="0.6"/>
+            <line x1="11" y1="71" x2="24" y2="71" stroke-width="0.65"/>
+            <line x1="40" y1="71" x2="53" y2="71" stroke-width="0.65"/>
+            <line x1="4" y1="42" x2="4" y2="46" stroke-width="0.6"/>
+            <line x1="6" y1="42" x2="6" y2="46" stroke-width="0.6"/>
+            <line x1="58" y1="42" x2="58" y2="46" stroke-width="0.6"/>
+            <line x1="60" y1="42" x2="60" y2="46" stroke-width="0.6"/>
+          </svg>
+        </div>
+        <div class="g-info">
+          <span class="g-name">3-Piece Suit</span>
+          <span class="g-sub">Coat + Vest + Pants</span>
+        </div>
+      </button>
+
+      <!-- Sport Coat -->
+      <button class="garment-btn sep" data-garment="sportcoat" onclick="toggleGarment(this)">
+        <div class="g-check-badge">✓</div>
+        <div class="g-img">
+          <svg viewBox="0 0 64 90" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#2A2A2A" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Left sleeve — slightly fuller than suit jacket -->
+            <path stroke-width="0.85" d="M13,15 C6,18 2,28 2,48 L11,50 C11,32 12,20 13,15"/>
+            <!-- Right sleeve -->
+            <path stroke-width="0.85" d="M51,15 C58,18 62,28 62,48 L53,50 C53,32 52,20 51,15"/>
+            <!-- Body — slightly boxier, longer -->
+            <path stroke-width="0.95" d="M13,15 C11,28 9,54 10,84 L54,84 C55,54 53,28 51,15"/>
+            <!-- Left lapel — wider, more casual peak shape -->
+            <path stroke-width="0.85" d="M32,9 L13,15 L18,52 L32,58"/>
+            <!-- Right lapel -->
+            <path stroke-width="0.85" d="M32,9 L51,15 L46,52 L32,58"/>
+            <!-- Collar -->
+            <path stroke-width="0.7" d="M18,52 C23,47 28,44 32,43 C36,44 41,47 46,52"/>
+            <path stroke-width="0.7" d="M18,52 L22,47"/>
+            <path stroke-width="0.7" d="M46,52 L42,47"/>
+            <!-- 2 buttons -->
+            <circle cx="32" cy="64" r="1.3" fill="#2A2A2A" stroke="none"/>
+            <circle cx="32" cy="74" r="1.3" fill="#2A2A2A" stroke="none"/>
+            <!-- Chest patch pocket (sport coat characteristic) -->
+            <path stroke-width="0.65" d="M40,33 L51,33 L51,44 L40,44 L40,33"/>
+            <line x1="40" y1="36" x2="51" y2="36" stroke-width="0.5"/>
+            <!-- Left patch pocket at hip -->
+            <path stroke-width="0.65" d="M11,65 L26,65 L26,78 L11,78 L11,65"/>
+            <!-- Right patch pocket at hip -->
+            <path stroke-width="0.65" d="M38,65 L53,65 L53,78 L38,78 L38,65"/>
+            <!-- Sleeve cuff buttons -->
+            <line x1="3" y1="44" x2="3" y2="48" stroke-width="0.6"/>
+            <line x1="5" y1="44" x2="5" y2="48" stroke-width="0.6"/>
+            <line x1="59" y1="44" x2="59" y2="48" stroke-width="0.6"/>
+            <line x1="61" y1="44" x2="61" y2="48" stroke-width="0.6"/>
+          </svg>
+        </div>
+        <div class="g-info">
+          <span class="g-name">Sport Coat</span>
+          <span class="g-sub">Coat</span>
+        </div>
+      </button>
+
+      <!-- Slacks -->
+      <button class="garment-btn sep" data-garment="slacks" onclick="toggleGarment(this)">
+        <div class="g-check-badge">✓</div>
+        <div class="g-img">
+          <svg viewBox="0 0 64 92" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#2A2A2A" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Waistband (slight curve, more realistic) -->
+            <path stroke-width="0.95" d="M12,10 C12,8 14,7 16,7 L48,7 C50,7 52,8 52,10 L52,17 C52,19 50,20 48,20 L16,20 C14,20 12,19 12,17 Z"/>
+            <!-- Belt loops -->
+            <rect x="19" y="5" width="2.5" height="5" stroke-width="0.55" fill="none"/>
+            <rect x="30" y="5" width="2.5" height="5" stroke-width="0.55" fill="none"/>
+            <rect x="42" y="5" width="2.5" height="5" stroke-width="0.55" fill="none"/>
+            <!-- Fly -->
+            <path stroke-width="0.6" d="M32,20 C31,24 31,28 32,32"/>
+            <!-- Left leg — gently tapers to ankle -->
+            <path stroke-width="0.9" d="M12,20 C11,44 10,66 10,88 L32,88 L32,20"/>
+            <!-- Right leg -->
+            <path stroke-width="0.9" d="M52,20 C53,44 54,66 54,88 L32,88 L32,20"/>
+            <!-- Left crease (very fine dashed) -->
+            <line x1="22" y1="22" x2="19" y2="86" stroke-width="0.5" stroke-dasharray="2,4"/>
+            <!-- Right crease -->
+            <line x1="42" y1="22" x2="45" y2="86" stroke-width="0.5" stroke-dasharray="2,4"/>
+            <!-- Side seam pocket opening — left -->
+            <path stroke-width="0.65" d="M12,22 C10,30 10,36 12,40"/>
+            <!-- Side seam pocket opening — right -->
+            <path stroke-width="0.65" d="M52,22 C54,30 54,36 52,40"/>
+            <!-- Turn-up / cuff left -->
+            <line x1="10" y1="83" x2="32" y2="83" stroke-width="0.65"/>
+            <!-- Turn-up / cuff right -->
+            <line x1="32" y1="83" x2="54" y2="83" stroke-width="0.65"/>
+          </svg>
+        </div>
+        <div class="g-info">
+          <span class="g-name">Slacks</span>
+          <span class="g-sub">Pants</span>
+        </div>
+      </button>
+
+      <!-- Waistcoat / Vest -->
+      <button class="garment-btn sep" data-garment="vest" onclick="toggleGarment(this)">
+        <div class="g-check-badge">✓</div>
+        <div class="g-img">
+          <svg viewBox="0 0 64 92" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#2A2A2A" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Back -->
+            <path stroke-width="0.95" d="M10,10 C10,8 13,6 16,6 L48,6 C51,6 54,8 54,10 L54,78 C54,80 52,82 50,82 L14,82 C12,82 10,80 10,78 Z"/>
+            <!-- Armscye left -->
+            <path stroke-width="0.85" d="M10,10 C6,14 5,22 8,30 L10,32"/>
+            <!-- Armscye right -->
+            <path stroke-width="0.85" d="M54,10 C58,14 59,22 56,30 L54,32"/>
+            <!-- V-neck left -->
+            <path stroke-width="0.85" d="M16,6 C18,10 26,22 32,38"/>
+            <!-- V-neck right -->
+            <path stroke-width="0.85" d="M48,6 C46,10 38,22 32,38"/>
+            <!-- Centre front -->
+            <line x1="32" y1="38" x2="32" y2="82" stroke-width="0.6"/>
+            <!-- Buttons -->
+            <circle cx="32" cy="44" r="1.2" fill="#2A2A2A" stroke="none"/>
+            <circle cx="32" cy="53" r="1.2" fill="#2A2A2A" stroke="none"/>
+            <circle cx="32" cy="62" r="1.2" fill="#2A2A2A" stroke="none"/>
+            <circle cx="32" cy="71" r="1.2" fill="#2A2A2A" stroke="none"/>
+            <!-- Welt pocket left -->
+            <path stroke-width="0.6" d="M13,46 L24,46 L24,50 L13,50 Z"/>
+            <!-- Welt pocket right -->
+            <path stroke-width="0.6" d="M40,46 L51,46 L51,50 L40,50 Z"/>
+            <!-- Hem curve -->
+            <path stroke-width="0.7" d="M10,78 C16,84 24,86 32,85 C40,86 48,84 54,78"/>
+          </svg>
+        </div>
+        <div class="g-info">
+          <span class="g-name">Waistcoat</span>
+          <span class="g-sub">Vest</span>
+        </div>
+      </button>
+
+      <!-- Dress Shirt — full width -->
+      <button class="garment-btn full-width" data-garment="shirt" onclick="toggleGarment(this)">
+        <div class="g-check-badge">✓</div>
+        <div class="g-img">
+          <svg viewBox="0 0 96 76" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#2A2A2A" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Shirt body -->
+            <path stroke-width="0.95" d="M18,18 L18,68 L78,68 L78,18"/>
+            <!-- Yoke seam across shoulder -->
+            <path stroke-width="0.65" d="M18,24 L78,24"/>
+            <!-- Left sleeve — set in, tapers to cuff -->
+            <path stroke-width="0.9" d="M18,18 C14,16 8,14 4,14 L4,46 C4,48 6,50 8,50 L18,48"/>
+            <!-- Left cuff -->
+            <path stroke-width="0.75" d="M4,44 L18,44 L18,50 L4,50 Z"/>
+            <!-- Right sleeve -->
+            <path stroke-width="0.9" d="M78,18 C82,16 88,14 92,14 L92,46 C92,48 90,50 88,50 L78,48"/>
+            <!-- Right cuff -->
+            <path stroke-width="0.75" d="M92,44 L78,44 L78,50 L92,50 Z"/>
+            <!-- Collar band -->
+            <path stroke-width="0.8" d="M34,6 L62,6 L62,12 L34,12 Z"/>
+            <!-- Left collar point -->
+            <path stroke-width="0.8" d="M34,12 L28,22 L48,18 L48,12"/>
+            <!-- Right collar point -->
+            <path stroke-width="0.8" d="M62,12 L68,22 L48,18 L48,12"/>
+            <!-- Collar stand button -->
+            <circle cx="48" cy="9" r="1.1" fill="#2A2A2A" stroke="none"/>
+            <!-- Placket -->
+            <line x1="48" y1="18" x2="48" y2="67" stroke-width="0.65"/>
+            <!-- Buttons -->
+            <circle cx="48" cy="27" r="1.1" fill="#2A2A2A" stroke="none"/>
+            <circle cx="48" cy="36" r="1.1" fill="#2A2A2A" stroke="none"/>
+            <circle cx="48" cy="45" r="1.1" fill="#2A2A2A" stroke="none"/>
+            <circle cx="48" cy="54" r="1.1" fill="#2A2A2A" stroke="none"/>
+            <circle cx="48" cy="63" r="1.1" fill="#2A2A2A" stroke="none"/>
+            <!-- Chest pocket -->
+            <path stroke-width="0.65" d="M58,28 L70,28 L70,38 L58,38 L58,28"/>
+            <!-- Shirt tail — curved hem -->
+            <path stroke-width="0.75" d="M18,68 C24,72 36,74 48,73 C60,74 72,72 78,68"/>
+            <!-- Cuff buttons -->
+            <circle cx="7" cy="47" r="1.0" fill="#2A2A2A" stroke="none"/>
+            <circle cx="89" cy="47" r="1.0" fill="#2A2A2A" stroke="none"/>
+          </svg>
+        </div>
+        <div class="g-info">
+          <span class="g-name">Dress Shirt</span>
+          <span class="g-sub">Shirt</span>
+        </div>
+      </button>
+
+    </div>
+    <button class="btn-secondary" onclick="goToPage(0)" style="margin-top:20px">← Back</button>
+  </div>
+
+  <!-- ══ PAGE 2: Style options ══ -->
+  <div class="page" id="page2">
+    <div class="section-eyebrow">Step 3 of 4</div>
+    <div class="section-title">Style Options</div>
+    <div id="optionsFields"></div>
+    <button class="btn-primary" onclick="goToMeasurements()">Next →</button>
+    <button class="btn-secondary" onclick="goToPage(1)" style="margin-top:10px">← Back</button>
+  </div>
+
+  <!-- ══ PAGE 3: Measurements ══ -->
+  <div class="page" id="page3">
+    <div class="section-eyebrow">Step 4 of 4</div>
+    <div class="section-title" id="measureCardTitle">Measurements</div>
+    <div class="measure-grid" id="measureFields">
+      <!-- Populated dynamically -->
+    </div>
+    <button class="btn-primary" onclick="calculate()">Calculate Fabric</button>
+    <button class="btn-secondary" onclick="goToPage(2)">← Back</button>
+  </div>
+
+  <!-- ══ PAGE 4: Results ══ -->
+  <div class="page" id="page4">
+    <div class="result-eyebrow">Estimate Ready</div>
+    <div class="result-headline">Fabric Required</div>
+    <div class="result-subtitle" id="resultSubtitle">58″ wide · body measures</div>
+    <div class="result-divider"></div>
+    <div id="resultItems"></div>
+    <div class="totals-grid">
+      <div class="total-cell primary">
+        <div class="tc-label">Cloth</div>
+        <div class="tc-amount" id="totalShell">—</div>
+        <div class="tc-unit">yds</div>
+        <div class="tc-amount-m" id="totalShellM">—</div>
+        <div class="tc-unit-m">m</div>
+      </div>
+      <div class="total-cell">
+        <div class="tc-label">Lining</div>
+        <div class="tc-amount" id="totalLining">—</div>
+        <div class="tc-unit">yds</div>
+        <div class="tc-amount-m" id="totalLiningM">—</div>
+        <div class="tc-unit-m">m</div>
+      </div>
+      <div class="total-cell">
+        <div class="tc-label">Interfacing</div>
+        <div class="tc-amount" id="totalInterf">—</div>
+        <div class="tc-unit">yds</div>
+        <div class="tc-amount-m" id="totalInterfM">—</div>
+        <div class="tc-unit-m">m</div>
+      </div>
+    </div>
+    <div class="tip-box" id="tipBox"></div>
+
+    <div class="layout-section">
+      <div class="layout-section-title">Pattern Layout</div>
+      <div class="layout-section-sub">How pieces fit on 58″ wide cloth</div>
+      <div id="patternLayouts"></div>
+    </div>
+
+    <button class="btn-primary" onclick="startOver()">Start Over</button>
+  </div>
+
+</div>
+
+<script>
+  // ── State ──
+  const state = {
+    garments: new Set(),
+    fabricWidth: 58,
+    measureMode: 'body', // 'body' | 'garment'
+    unit: 'yards',       // 'yards' | 'meters'
+    measurements: {},
+    options: {
+      lapel:         'notch',    // 'notch' | 'peak' | 'shawl' | 'standup'
+      lapelWidth:    3.25,       // inches — user-specified width
+      pockets:       'flap',     // 'flap' | 'jetted' | 'patch'
+      ticketPocket:  false,
+      waistbandWidth: 1.5,       // inches
+      cuffs:         'none',  // 'none' | '1' | '1.25' | '1.5' | '1.75' | '2'
+      vestBack:      'lining',   // 'lining' | 'fabric'
+      vestPockets:   'jetted',   // 'jetted' | 'flap'
+      fit:           'regular',  // 'slim' | 'tapered' | 'regular' | 'full'
+    }
+  };
+
+  // ── Measurement field definitions ──
+  // Two variants per field: body measure hints vs finished garment hints
+  const fields = {
+    body: {
+      chest:       { label: 'Chest',         hint: 'Fullest part of chest',       unit: 'in', min: 28,  max: 65  },
+      shoulder:    { label: 'Shoulder',      hint: 'Point to point across back',  unit: 'in', min: 12,  max: 22  },
+      backLength:  { label: 'Jacket Length', hint: 'Nape of neck to hem',         unit: 'in', min: 24,  max: 40  },
+      sleeveLength:{ label: 'Sleeve Length', hint: 'Shoulder point to wrist',     unit: 'in', min: 20,  max: 30  },
+      waist:       { label: 'Waist',         hint: 'Natural waist circumference', unit: 'in', min: 22,  max: 60  },
+      hip:         { label: 'Seat',          hint: 'Fullest part of seat',        unit: 'in', min: 28,  max: 65  },
+      outseam:     { label: 'Outseam',       hint: 'Waist to floor',              unit: 'in', min: 36,  max: 50  },
+      urise:       { label: 'U-Rise',        hint: 'Front waist → crotch → back waist', unit: 'in', min: 22,  max: 40  },
+      shirtLength: { label: 'Shirt Length',  hint: 'Nape to shirt hem',           unit: 'in', min: 26,  max: 38  },
+      neck:        { label: 'Neck',          hint: 'Neck circumference',          unit: 'in', min: 12,  max: 22  },
+      bicep:       { label: 'Bicep',         hint: 'Arm circumference at fullest point', unit: 'in', min: 10,  max: 22  },
+      thigh:       { label: 'Thigh',         hint: 'Leg circumference at fullest point', unit: 'in', min: 17,  max: 36  },
+      cuff:        { label: 'Cuff',          hint: 'Wrist / cuff circumference',  unit: 'in', min: 7,   max: 14  },
+      legOpen:     { label: 'Pant Cuff',  hint: 'Leg opening circumference',   unit: 'in', min: 12,  max: 22  },
+    },
+    garment: {
+      chest:       { label: 'Chest (finished)',         hint: 'Half chest × 2',              unit: 'in', min: 30,  max: 68  },
+      shoulder:    { label: 'Shoulder (finished)',      hint: 'Seam to seam across back',    unit: 'in', min: 13,  max: 24  },
+      backLength:  { label: 'Back Length (finished)',   hint: 'Collar seam to hem',          unit: 'in', min: 25,  max: 42  },
+      sleeveLength:{ label: 'Sleeve Length (finished)', hint: 'Shoulder seam to cuff edge',  unit: 'in', min: 21,  max: 32  },
+      waist:       { label: 'Waist (finished)',         hint: 'Waistband circumference',     unit: 'in', min: 24,  max: 64  },
+      hip:         { label: 'Seat (finished)',           hint: 'Seat circumference',          unit: 'in', min: 30,  max: 68  },
+      outseam:     { label: 'Outseam (finished)',       hint: 'Top of waistband to hem',     unit: 'in', min: 37,  max: 52  },
+      urise:       { label: 'U-Rise (finished)',        hint: 'Front waist → crotch → back waist', unit: 'in', min: 23,  max: 42  },
+      shirtLength: { label: 'Shirt Length (finished)',  hint: 'Collar seam to shirt hem',    unit: 'in', min: 27,  max: 40  },
+      neck:        { label: 'Collar (finished)',        hint: 'Collar band length',          unit: 'in', min: 13,  max: 24  },
+      bicep:       { label: 'Bicep (finished)',         hint: 'Sleeve circumference at fullest point', unit: 'in', min: 11,  max: 23  },
+      thigh:       { label: 'Thigh (finished)',         hint: 'Pant circumference at fullest point', unit: 'in', min: 18,  max: 38  },
+      cuff:        { label: 'Cuff (finished)',          hint: 'Cuff opening circumference',  unit: 'in', min: 8,   max: 15  },
+      legOpen:     { label: 'Pant Cuff (finished)',  hint: 'Leg opening circumference',   unit: 'in', min: 13,  max: 24  },
+    }
+  };
+
+  // Which fields each garment type needs
+  const garmentFields = {
+    suit2:     ['chest','shoulder','backLength','sleeveLength','bicep','waist','hip','outseam','thigh','legOpen','urise'],
+    suit3:     ['chest','shoulder','backLength','sleeveLength','bicep','waist','hip','outseam','thigh','legOpen','urise'],
+    sportcoat: ['chest','shoulder','backLength','sleeveLength','bicep'],
+    slacks:    ['waist','hip','outseam','thigh','legOpen','urise'],
+    vest:      ['chest','backLength','waist'],
+    shirt:     ['chest','shoulder','shirtLength','sleeveLength','bicep','neck','cuff'],
+  };
+
+  // ── Yardage formulas ──
+  // All base formulas calibrated for 60" wide fabric at ~40" body chest / 42" hip.
+  // widthFactor scales up for narrower fabric.
+  // Body mode: specific ease added per measurement type (circumferences only, not lengths).
+  // Chest/hip also drive a layout-efficiency correction — larger bodies need more
+  // yardage because wider pattern pieces nest less tightly across the fabric width.
+  function widthFactor(w) { return 60 / w; }
+
+  // Ease by fit style (body-measurement mode only, in inches).
+  // Keyed by the three circumference measurements that fit affects.
+  // Vest uses chest/2 (vests always fit closer than the jacket above them).
+  const _FIT_EASE = {
+    //              chest   waist   seat   bicep  thigh
+    slim:    { chest: 1.5,  waist: 0.5,  seat: 1,   bicep: 0.5,  thigh: 1   },
+    tapered: { chest: 2.5,  waist: 0.75, seat: 1.5, bicep: 0.75, thigh: 1.5 },
+    regular: { chest: 3,    waist: 1,    seat: 2,   bicep: 1,    thigh: 2   },
+    full:    { chest: 4.5,  waist: 2,    seat: 3,   bicep: 1.5,  thigh: 3   },
+  };
+
+  function calcJacket(m, wf) {
+    const body = state.measureMode === 'body';
+    const fit  = state.options.fit || 'regular';
+    const finishedChest = (m.chest || 40) + (body ? _FIT_EASE[fit].chest : 0);
+
+    // Base formula: back + fronts (~1.5× backLength) + sleeves + collar/facing/pocket bags (~12")
+    let yards60 = (m.backLength * 1.5 + m.sleeveLength + 12) / 36;
+
+    // Layout efficiency: calibrated at 43" finished chest. Wider panels leave more
+    // unusable selvedge — roughly 0.022 yd extra per inch above baseline.
+    yards60 += Math.max(0, (finishedChest - 43) * 0.022);
+
+    if (state.options.lapel === 'peak')    yards60 += 0.15;  // wider facing
+    if (state.options.lapel === 'shawl')   yards60 += 0.25;  // large self-faced shawl piece
+    if (state.options.lapel === 'standup') yards60 -= 0.10;  // no lapel facing, tiny collar
+    const _baseLW = { notch:3.25, peak:3.5, shawl:3.5, standup:1.5 };
+    yards60 += (parseFloat(state.options.lapelWidth) - (_baseLW[state.options.lapel] || 3.25)) * 0.04;
+    if (state.options.pockets === 'patch') yards60 += 0.25; // patch pockets are large external pieces
+
+    return parseFloat((yards60 * wf).toFixed(2));
+  }
+
+  function calcTrousers(m, wf) {
+    const body = state.measureMode === 'body';
+    const fit  = state.options.fit || 'regular';
+    const finishedWaist = (m.waist || 34) + (body ? _FIT_EASE[fit].waist : 0);
+    const finishedHip   = (m.hip   || 42) + (body ? _FIT_EASE[fit].seat  : 0);
+
+    // Head-to-toe nesting fits all 4 pieces in roughly 1 outseam length on 58"+ fabric.
+    // Add ~10" for pocket bags, waistband, and any overflow for large builds.
+    let yards60 = (m.outseam + 10) / 36;
+
+    // Layout efficiency: calibrated at 42" finished hip. Wider legs = less efficient nesting.
+    yards60 += Math.max(0, (finishedHip - 42) * 0.015);
+
+    const cuffDepth = parseFloat(state.options.cuffs) || 0;
+    if (cuffDepth > 0) yards60 += (cuffDepth * 4) / 36;
+    yards60 += (parseFloat(state.options.waistbandWidth) - 1.5) * 0.06;
+
+    return parseFloat((yards60 * wf).toFixed(2));
+  }
+
+  function calcVest(m, wf) {
+    const body = state.measureMode === 'body';
+    const fit  = state.options.fit || 'regular';
+    const finishedChest = (m.chest || 40) + (body ? _FIT_EASE[fit].chest / 2 : 0);
+    const finishedWaist = (m.waist || 34) + (body ? _FIT_EASE[fit].waist / 2 : 0);
+
+    let yards60 = (m.backLength * 0.7 + 4) / 36;
+
+    // Layout efficiency correction (smaller effect than jacket — fewer large pieces)
+    yards60 += Math.max(0, (finishedChest - 43) * 0.01);
+
+    if (state.options.vestBack === 'fabric') yards60 += 0.35;
+
+    return parseFloat((yards60 * wf).toFixed(2));
+  }
+
+  function calcShirt(m, wf) {
+    const body = state.measureMode === 'body';
+    const fit  = state.options.fit || 'regular';
+    const finishedChest = (m.chest || 40) + (body ? _FIT_EASE[fit].chest : 0);
+
+    let yards60 = (m.shirtLength + m.sleeveLength + 16) / 36;
+
+    yards60 += Math.max(0, (finishedChest - 43) * 0.015);
+
+    return parseFloat((yards60 * wf).toFixed(2));
+  }
+
+  // ── Lining estimates ──
+  function calcLining(type, m) {
+    if (type === 'suit2' || type === 'suit3' || type === 'sportcoat') {
+      const body = state.measureMode === 'body';
+      const fit  = state.options.fit || 'regular';
+      const finishedChest = (m.chest || 40) + (body ? _FIT_EASE[fit].chest : 0);
+      const base = (m.backLength * 1.5 + m.sleeveLength + 10) / 36;
+      const chestAdj = Math.max(0, (finishedChest - 43) * 0.018);
+      return parseFloat(((base + chestAdj) * 0.85).toFixed(2));
+    }
+    if (type === 'slacks') return parseFloat(((m.outseam / 36) * 0.75).toFixed(2));
+    return 0;
+  }
+
+  // ── UI helpers ──
+  function setUnit(u) {
+    state.unit = u;
+    document.getElementById('unitYards').classList.toggle('active', u === 'yards');
+    document.getElementById('unitMeters').classList.toggle('active', u === 'meters');
+    // Rebuild whichever fields are currently visible
+    if (document.getElementById('optionsFields')?.children.length) {
+      buildOptionsFields();
+    }
+    if (document.getElementById('measureFields')?.children.length) {
+      buildMeasurementFields();
+    }
+  }
+
+  function selectMode(mode) {
+    state.measureMode = mode;
+    state.measurements = {}; // clear saved values when switching mode
+    goToPage(1);
+  }
+
+  function toggleGarment(btn) {
+    const g = btn.dataset.garment;
+    // Clear any previous selection
+    state.garments.clear();
+    document.querySelectorAll('.garment-btn').forEach(b => b.classList.remove('selected'));
+    // Select this one and advance
+    state.garments.add(g);
+    btn.classList.add('selected');
+    // Small delay so the selection is visible before navigating
+    setTimeout(() => goToOptions(), 160);
+  }
+
+  function goToPage(n) {
+    document.querySelectorAll('.page').forEach((p, i) => {
+      p.classList.toggle('active', i === n);
+    });
+    // Update progress nodes and segments
+    for (let i = 0; i <= 4; i++) {
+      const node = document.getElementById('pn' + i);
+      if (node) {
+        node.classList.toggle('active', i === n);
+        node.classList.toggle('done',   i < n);
+      }
+      const seg = document.getElementById('ps' + i);
+      if (seg) {
+        seg.classList.toggle('done', i < n);
+      }
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function goToOptions() {
+    if (state.garments.size === 0) {
+      document.getElementById('garmentError').classList.add('show');
+      return;
+    }
+    buildOptionsFields();
+    goToPage(2);
+  }
+
+  function goToMeasurements() {
+    buildMeasurementFields();
+    goToPage(3);
+  }
+
+  function buildOptionsFields() {
+    const hasJacket  = ['suit2','suit3','sportcoat'].some(g => state.garments.has(g));
+    const hasTrouser = ['suit2','suit3','slacks'].some(g => state.garments.has(g));
+    const hasVest    = state.garments.has('suit3') || state.garments.has('vest');
+    const o = state.options;
+    const container = document.getElementById('optionsFields');
+
+    const S = `fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#2A2A2A" stroke-linecap="round" stroke-linejoin="round"`;
+
+    // ── Lapel SVGs ────────────────────────────────────────────────────
+    const svgNotch = `<svg viewBox="0 0 60 76" ${S}>
+      <path stroke-width="0.9" d="M10,6 L10,74 L50,74 L50,6"/>
+      <path stroke-width="0.9" d="M10,6 C14,9 22,14 24,23"/>
+      <path stroke-width="0.9" d="M50,6 C46,9 38,14 36,23"/>
+      <path stroke-width="0.9" d="M10,16 C13,20 19,25 24,23 L30,40"/>
+      <path stroke-width="0.9" d="M50,16 C47,20 41,25 36,23 L30,40"/>
+      <line stroke-width="0.55" x1="30" y1="40" x2="30" y2="74"/>
+    </svg>`;
+
+    const svgPeak = `<svg viewBox="0 0 60 76" ${S}>
+      <path stroke-width="0.9" d="M10,6 L10,74 L50,74 L50,6"/>
+      <path stroke-width="0.9" d="M10,6 C15,9 24,14 26,22"/>
+      <path stroke-width="0.9" d="M50,6 C45,9 36,14 34,22"/>
+      <path stroke-width="0.9" d="M10,18 C12,13 16,9 20,7 L26,22 L30,40"/>
+      <path stroke-width="0.9" d="M50,18 C48,13 44,9 40,7 L34,22 L30,40"/>
+      <line stroke-width="0.55" x1="30" y1="40" x2="30" y2="74"/>
+    </svg>`;
+
+    const svgShawl = `<svg viewBox="0 0 60 76" ${S}>
+      <path stroke-width="0.9" d="M10,6 L10,74 L50,74 L50,6"/>
+      <path stroke-width="0.9" d="M10,6 C11,12 14,20 20,28 C24,34 28,38 30,40"/>
+      <path stroke-width="0.9" d="M50,6 C49,12 46,20 40,28 C36,34 32,38 30,40"/>
+      <line stroke-width="0.55" x1="30" y1="40" x2="30" y2="74"/>
+    </svg>`;
+
+    const svgStandup = `<svg viewBox="0 0 60 76" ${S}>
+      <path stroke-width="0.9" d="M10,6 L10,74 L50,74 L50,6"/>
+      <path stroke-width="0.9" d="M22,6 L22,18 C22,23 26,25 30,25 C34,25 38,23 38,18 L38,6"/>
+      <path stroke-width="0.9" d="M22,18 C22,28 24,35 30,40"/>
+      <path stroke-width="0.9" d="M38,18 C38,28 36,35 30,40"/>
+      <line stroke-width="0.55" x1="30" y1="40" x2="30" y2="74"/>
+      <line stroke-width="0.55" x1="22" y1="13" x2="38" y2="13"/>
+    </svg>`;
+
+    // ── Pocket SVGs ───────────────────────────────────────────────────
+    const svgFlap = `<svg viewBox="0 0 64 52" ${S}>
+      <rect x="8" y="4" width="48" height="44" stroke-width="0.65"/>
+      <rect x="16" y="26" width="32" height="18" stroke-width="0.9"/>
+      <path stroke-width="0.9" d="M14,26 L50,26 L50,34 C50,38 48,40 46,40 L18,40 C16,40 14,38 14,34 Z"/>
+    </svg>`;
+
+    const svgJetted = `<svg viewBox="0 0 64 52" ${S}>
+      <rect x="8" y="4" width="48" height="44" stroke-width="0.65"/>
+      <rect x="16" y="21" width="32" height="4" stroke-width="0.9"/>
+      <rect x="16" y="27" width="32" height="4" stroke-width="0.9"/>
+    </svg>`;
+
+    const svgPatch = `<svg viewBox="0 0 64 52" ${S}>
+      <rect x="8" y="4" width="48" height="44" stroke-width="0.65"/>
+      <rect x="16" y="12" width="32" height="30" stroke-width="0.9"/>
+      <line stroke-width="1.3" x1="16" y1="12" x2="48" y2="12"/>
+      <line stroke-width="0.45" stroke-dasharray="2,2" x1="19" y1="15" x2="19" y2="39"/>
+      <line stroke-width="0.45" stroke-dasharray="2,2" x1="45" y1="15" x2="45" y2="39"/>
+      <line stroke-width="0.45" stroke-dasharray="2,2" x1="19" y1="39" x2="45" y2="39"/>
+    </svg>`;
+
+    // ── Ticket pocket SVGs ────────────────────────────────────────────
+    const svgNoTicket = `<svg viewBox="0 0 64 58" ${S}>
+      <rect x="8" y="4" width="48" height="50" stroke-width="0.65"/>
+      <path stroke-width="0.9" d="M14,34 L50,34 L50,42 C50,46 48,48 46,48 L18,48 C16,48 14,46 14,42 Z"/>
+    </svg>`;
+
+    const svgYesTicket = `<svg viewBox="0 0 64 58" ${S}>
+      <rect x="8" y="4" width="48" height="50" stroke-width="0.65"/>
+      <path stroke-width="0.9" d="M14,36 L50,36 L50,44 C50,48 48,50 46,50 L18,50 C16,50 14,48 14,44 Z"/>
+      <path stroke-width="0.9" d="M20,16 L44,16 L44,23 C44,25 43,26 42,26 L22,26 C21,26 20,25 20,23 Z"/>
+    </svg>`;
+
+    // ── Waistband SVGs ────────────────────────────────────────────────
+    const svgWBnarrow = `<svg viewBox="0 0 70 56" ${S}>
+      <path stroke-width="0.9" d="M8,18 L62,18 L64,54 L6,54 Z"/>
+      <rect x="8" y="9" width="54" height="9" rx="1" stroke-width="0.9"/>
+      <line stroke-width="0.5" x1="13" y1="9" x2="13" y2="18"/>
+      <line stroke-width="0.5" x1="35" y1="9" x2="35" y2="18"/>
+      <line stroke-width="0.5" x1="57" y1="9" x2="57" y2="18"/>
+    </svg>`;
+
+    const svgWBstandard = `<svg viewBox="0 0 70 56" ${S}>
+      <path stroke-width="0.9" d="M8,22 L62,22 L64,54 L6,54 Z"/>
+      <rect x="8" y="6" width="54" height="16" rx="1" stroke-width="0.9"/>
+      <line stroke-width="0.5" x1="13" y1="6" x2="13" y2="22"/>
+      <line stroke-width="0.5" x1="35" y1="6" x2="35" y2="22"/>
+      <line stroke-width="0.5" x1="57" y1="6" x2="57" y2="22"/>
+    </svg>`;
+
+    const svgWBwide = `<svg viewBox="0 0 70 56" ${S}>
+      <path stroke-width="0.9" d="M8,28 L62,28 L64,54 L6,54 Z"/>
+      <rect x="8" y="3" width="54" height="25" rx="1" stroke-width="0.9"/>
+      <line stroke-width="0.5" x1="13" y1="3" x2="13" y2="28"/>
+      <line stroke-width="0.5" x1="35" y1="3" x2="35" y2="28"/>
+      <line stroke-width="0.5" x1="57" y1="3" x2="57" y2="28"/>
+    </svg>`;
+
+    // ── Cuffs SVGs ────────────────────────────────────────────────────
+    const svgNoCuffs = `<svg viewBox="0 0 50 60" ${S}>
+      <path stroke-width="0.9" d="M8,6 C8,38 10,50 10,56 L40,56 C40,50 42,38 42,6"/>
+      <line stroke-width="0.9" x1="8" y1="6" x2="42" y2="6"/>
+      <line stroke-width="0.9" x1="10" y1="56" x2="40" y2="56"/>
+    </svg>`;
+    const svgCuffIcon = `<svg viewBox="0 0 50 62" ${S}>
+      <path stroke-width="0.9" d="M8,6 C8,34 10,47 10,49 L40,49 C40,47 42,34 42,6"/>
+      <line stroke-width="0.9" x1="8" y1="6" x2="42" y2="6"/>
+      <line stroke-width="0.9" x1="10" y1="49" x2="40" y2="49"/>
+      <path stroke-width="0.9" d="M10,49 L7,58 L43,58 L40,49"/>
+      <line stroke-width="0.9" x1="7" y1="58" x2="43" y2="58"/>
+    </svg>`;
+
+    // ── Vest back SVGs ────────────────────────────────────────────────
+    const svgVestLining = `<svg viewBox="0 0 60 74" ${S}>
+      <path stroke-width="0.9" d="M30,6 C26,6 20,8 16,12 L10,20 L10,72 L50,72 L50,20 L44,12 C40,8 34,6 30,6 Z"/>
+      <path stroke-width="0.9" d="M10,20 C14,18 18,22 20,26"/>
+      <path stroke-width="0.9" d="M50,20 C46,18 42,22 40,26"/>
+      <line stroke-width="0.45" stroke-dasharray="3,3" x1="14" y1="36" x2="46" y2="36"/>
+      <line stroke-width="0.45" stroke-dasharray="3,3" x1="14" y1="43" x2="46" y2="43"/>
+      <line stroke-width="0.45" stroke-dasharray="3,3" x1="14" y1="50" x2="46" y2="50"/>
+      <line stroke-width="0.45" stroke-dasharray="3,3" x1="14" y1="57" x2="46" y2="57"/>
+      <line stroke-width="0.45" stroke-dasharray="3,3" x1="14" y1="64" x2="46" y2="64"/>
+    </svg>`;
+
+    const svgVestFabric = `<svg viewBox="0 0 60 74" ${S}>
+      <path stroke-width="0.9" d="M30,6 C26,6 20,8 16,12 L10,20 L10,72 L50,72 L50,20 L44,12 C40,8 34,6 30,6 Z"/>
+      <path stroke-width="0.9" d="M10,20 C14,18 18,22 20,26"/>
+      <path stroke-width="0.9" d="M50,20 C46,18 42,22 40,26"/>
+      <line stroke-width="0.55" x1="30" y1="6" x2="30" y2="72"/>
+    </svg>`;
+
+    // ── Fit SVGs ──────────────────────────────────────────────────────
+    const svgFitSlim = `<svg viewBox="0 0 44 58" ${S}>
+      <path fill="var(--cream)" stroke-width="1.1" d="M22,4 L15,8 C10,20 16,38 15,52 L29,52 C28,38 34,20 29,8 Z"/>
+      <path stroke-width="0.8" d="M22,4 L15,8 L17,26 L22,30"/>
+      <path stroke-width="0.8" d="M22,4 L29,8 L27,26 L22,30"/>
+      <path stroke-width="0.6" d="M17,26 C19,22 21,21 22,20 C23,21 25,22 27,26"/>
+      <path stroke-width="0.6" d="M17,26 L19,23 M27,26 L25,23"/>
+      <line stroke-width="0.4" x1="22" y1="30" x2="22" y2="52"/>
+      <circle cx="22" cy="36" r="1.2" fill="#2A2A2A" stroke="none"/>
+      <circle cx="22" cy="44" r="1.2" fill="#2A2A2A" stroke="none"/>
+    </svg>`;
+    const svgFitTapered = `<svg viewBox="0 0 44 58" ${S}>
+      <path fill="var(--cream)" stroke-width="1.1" d="M22,4 L13,8 C10,20 14,38 13,52 L31,52 C30,38 34,20 31,8 Z"/>
+      <path stroke-width="0.8" d="M22,4 L13,8 L16,26 L22,30"/>
+      <path stroke-width="0.8" d="M22,4 L31,8 L28,26 L22,30"/>
+      <path stroke-width="0.6" d="M16,26 C18,22 20,21 22,20 C24,21 26,22 28,26"/>
+      <path stroke-width="0.6" d="M16,26 L18,23 M28,26 L26,23"/>
+      <line stroke-width="0.4" x1="22" y1="30" x2="22" y2="52"/>
+      <circle cx="22" cy="36" r="1.2" fill="#2A2A2A" stroke="none"/>
+      <circle cx="22" cy="44" r="1.2" fill="#2A2A2A" stroke="none"/>
+    </svg>`;
+    const svgFitRegular = `<svg viewBox="0 0 44 58" ${S}>
+      <path fill="var(--cream)" stroke-width="1.1" d="M22,4 L11,8 C9,20 11,38 10,52 L34,52 C33,38 35,20 33,8 Z"/>
+      <path stroke-width="0.8" d="M22,4 L11,8 L15,26 L22,30"/>
+      <path stroke-width="0.8" d="M22,4 L33,8 L29,26 L22,30"/>
+      <path stroke-width="0.6" d="M15,26 C18,22 20,21 22,20 C24,21 26,22 29,26"/>
+      <path stroke-width="0.6" d="M15,26 L17,23 M29,26 L27,23"/>
+      <line stroke-width="0.4" x1="22" y1="30" x2="22" y2="52"/>
+      <circle cx="22" cy="36" r="1.2" fill="#2A2A2A" stroke="none"/>
+      <circle cx="22" cy="44" r="1.2" fill="#2A2A2A" stroke="none"/>
+    </svg>`;
+    const svgFitFull = `<svg viewBox="0 0 44 58" ${S}>
+      <path fill="var(--cream)" stroke-width="1.1" d="M22,4 L9,8 C8,20 8,38 8,52 L36,52 C36,38 36,20 35,8 Z"/>
+      <path stroke-width="0.8" d="M22,4 L9,8 L13,26 L22,30"/>
+      <path stroke-width="0.8" d="M22,4 L35,8 L31,26 L22,30"/>
+      <path stroke-width="0.6" d="M13,26 C16,22 19,21 22,20 C25,21 28,22 31,26"/>
+      <path stroke-width="0.6" d="M13,26 L15,23 M31,26 L29,23"/>
+      <line stroke-width="0.4" x1="22" y1="30" x2="22" y2="52"/>
+      <circle cx="22" cy="36" r="1.2" fill="#2A2A2A" stroke="none"/>
+      <circle cx="22" cy="44" r="1.2" fill="#2A2A2A" stroke="none"/>
+    </svg>`;
+
+    // ── Helpers ───────────────────────────────────────────────────────
+    function card(key, val, label, svg) {
+      const active = o[key] === val ? ' selected' : '';
+      const v = typeof val === 'boolean' ? String(val) : val;
+      return `<button class="option-card${active}" onclick="selectOption('${key}','${v}',this)">
+        <div class="oc-img">${svg}</div>
+        <span class="oc-label">${label}</span>
+      </button>`;
+    }
+    function group(title, cols, cards) {
+      return `<div class="options-group-title">${title}</div>
+        <div class="option-grid" style="grid-template-columns:repeat(${cols},1fr)">${cards.join('')}</div>`;
+    }
+
+    let html = '';
+    const useCm    = state.unit === 'meters';
+    const inToU    = v => +(useCm ? v * 2.54 : v).toFixed(1);
+    const lapelUnit = useCm ? 'cm' : '"';
+
+    // ── Fit (body mode only — ease is irrelevant for finished measurements) ──
+    if (state.measureMode === 'body') {
+      html += `<div class="options-section-title">Fit</div>
+        <div class="option-grid" style="grid-template-columns:repeat(4,1fr); margin-bottom:20px;">
+          ${card('fit','slim',    'Slim',    svgFitSlim)}
+          ${card('fit','tapered', 'Tapered', svgFitTapered)}
+          ${card('fit','regular', 'Regular', svgFitRegular)}
+          ${card('fit','full',    'Full',    svgFitFull)}
+        </div>`;
+    }
+
+    if (hasJacket) {
+      const LAPEL_LIMITS = { notch:[2.5,4.0], peak:[3.0,4.5], shawl:[3.0,5.0], standup:[1.0,2.0] };
+      const LAPEL_LABELS = { notch:'Lapel width', peak:'Lapel width', shawl:'Lapel width', standup:'Collar height' };
+      const lapelLim = LAPEL_LIMITS[o.lapel] || [2.5, 4.5];
+      const lapelLbl = LAPEL_LABELS[o.lapel] || 'Lapel width';
+      const lapelW   = inToU(o.lapelWidth || 3.25);
+      const lapelMin = inToU(lapelLim[0]), lapelMax = inToU(lapelLim[1]);
+      html += `<div class="options-section-title">Jacket</div>`;
+      html += `<div class="options-group-title">Lapel style</div>
+        <div class="option-grid" style="grid-template-columns:repeat(4,1fr); margin-bottom:6px;">
+          <button class="option-card${o.lapel==='notch'  ?' selected':''}" onclick="setLapelType('notch',this)"><div class="oc-img">${svgNotch}</div><span class="oc-label">Notch</span></button>
+          <button class="option-card${o.lapel==='peak'   ?' selected':''}" onclick="setLapelType('peak',this)"><div class="oc-img">${svgPeak}</div><span class="oc-label">Peak</span></button>
+          <button class="option-card${o.lapel==='shawl'  ?' selected':''}" onclick="setLapelType('shawl',this)"><div class="oc-img">${svgShawl}</div><span class="oc-label">Shawl</span></button>
+          <button class="option-card${o.lapel==='standup'?' selected':''}" onclick="setLapelType('standup',this)"><div class="oc-img">${svgStandup}</div><span class="oc-label">Stand-up</span></button>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:18px; padding:8px 10px; background:var(--cream); border-radius:4px;">
+          <span id="lapelWidthLabel" style="font-size:11px; color:var(--charcoal); white-space:nowrap;">${lapelLbl}</span>
+          <input type="number" id="lapelWidthInput"
+            value="${lapelW}" min="${lapelMin}" max="${lapelMax}" step="0.1"
+            onchange="setLapelWidth(this)"
+            style="flex:1; padding:6px 8px; border:1px solid var(--rule); border-radius:4px; background:var(--warm-white); font-family:var(--sans); font-size:13px; color:var(--black);" />
+          <span style="font-size:11px; color:var(--charcoal);">${lapelUnit}</span>
+          <span id="lapelWidthHint" style="font-size:10px; color:var(--light-gray); white-space:nowrap;">${lapelMin}–${lapelMax} ${lapelUnit}</span>
+        </div>`;
+      html += group('Pockets', 3, [
+        card('pockets', 'flap',   'Flap',   svgFlap),
+        card('pockets', 'jetted', 'Jetted', svgJetted),
+        card('pockets', 'patch',  'Patch',  svgPatch),
+      ]);
+      html += group('Ticket pocket', 2, [
+        card('ticketPocket', false, 'None', svgNoTicket),
+        card('ticketPocket', true,  'Yes',  svgYesTicket),
+      ]);
+    }
+
+    if (hasTrouser) {
+      html += `<div class="options-section-title">Pants</div>`;
+      const wbW = inToU(parseFloat(o.waistbandWidth) || 1.5);
+      html += `<div class="options-group-title">Waistband width</div>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:18px; padding:8px 10px; background:var(--cream); border-radius:4px;">
+          <input type="number" id="waistbandWidthInput"
+            value="${wbW}" min="${inToU(0.75)}" max="${inToU(2.5)}" step="0.1"
+            onchange="setWaistbandWidth(this)"
+            style="flex:1; padding:6px 8px; border:1px solid var(--rule); border-radius:4px; background:var(--warm-white); font-family:var(--sans); font-size:13px; color:var(--black);" />
+          <span style="font-size:11px; color:var(--charcoal);">${lapelUnit}</span>
+          <span style="font-size:10px; color:var(--light-gray); white-space:nowrap;">${inToU(0.75)}–${inToU(2.5)} ${lapelUnit}</span>
+        </div>`;
+      const cuffWithActive = o.cuffs !== 'none' ? ' selected' : '';
+      const cuffNoneActive = o.cuffs === 'none' ? ' selected' : '';
+      const cuffSel = o.cuffs !== 'none' ? o.cuffs : '1.5';
+      html += `<div class="options-group-title">Cuffs / turn-ups</div>
+        <div class="option-grid" style="grid-template-columns:repeat(2,1fr); margin-bottom:6px;">
+          <button class="option-card${cuffNoneActive}" onclick="setCuffs('none',this)">
+            <div class="oc-img">${svgNoCuffs}</div>
+            <span class="oc-label">No cuff</span>
+          </button>
+          <button class="option-card${cuffWithActive}" onclick="setCuffs('with',this)">
+            <div class="oc-img">${svgCuffIcon}</div>
+            <span class="oc-label">With cuffs</span>
+          </button>
+        </div>
+        <div id="cuffSizeRow" style="display:${o.cuffs !== 'none' ? 'flex' : 'none'}; align-items:center; gap:10px; margin-bottom:18px; padding:8px 10px; background:var(--cream); border-radius:4px;">
+          <span style="font-size:11px; color:var(--charcoal); white-space:nowrap;">Cuff depth</span>
+          <input type="number" id="cuffSizeInput"
+            value="${+(useCm ? parseFloat(cuffSel)*2.54 : parseFloat(cuffSel)).toFixed(1)}"
+            min="${useCm ? 1.9 : 0.8}" max="${useCm ? 6.4 : 2.5}" step="0.1"
+            onchange="setCuffWidth(this)"
+            style="flex:1; padding:6px 8px; border:1px solid var(--rule); border-radius:4px; background:var(--warm-white); font-family:var(--sans); font-size:13px; color:var(--black);" />
+          <span style="font-size:11px; color:var(--charcoal);">${lapelUnit}</span>
+          <span style="font-size:10px; color:var(--light-gray); white-space:nowrap;">${useCm ? '1.9–6.4 cm' : '¾" – 2½"'}</span>
+        </div>`;
+    }
+
+    if (hasVest) {
+      html += `<div class="options-section-title">Waistcoat</div>`;
+      html += group('Pockets', 2, [
+        card('vestPockets', 'jetted', 'Jetted', svgJetted),
+        card('vestPockets', 'flap',   'Flap',   svgFlap),
+      ]);
+      html += group('Back', 2, [
+        card('vestBack', 'lining', 'Lining back',      svgVestLining),
+        card('vestBack', 'fabric', 'Full fabric back', svgVestFabric),
+      ]);
+    }
+
+    container.innerHTML = html;
+  }
+
+  function selectOption(key, val, btn) {
+    if (val === 'true')  val = true;
+    if (val === 'false') val = false;
+    state.options[key] = val;
+    btn.closest('.option-grid').querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+    btn.classList.add('selected');
+  }
+
+  const _LAPEL_LIMITS  = { notch:[2.5,4.0], peak:[3.0,4.5], shawl:[3.0,5.0], standup:[1.0,2.0] };
+  const _LAPEL_DEFAULTS = { notch:3.25, peak:3.5, shawl:3.5, standup:1.5 };
+  const _LAPEL_LABELS  = { notch:'Lapel width', peak:'Lapel width', shawl:'Lapel width', standup:'Collar height' };
+
+  function setLapelType(val, btn) {
+    btn.closest('.option-grid').querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+    btn.classList.add('selected');
+    state.options.lapel = val;
+    const [min, max] = _LAPEL_LIMITS[val];
+    const def = _LAPEL_DEFAULTS[val];
+    state.options.lapelWidth = def;
+    const useCm = state.unit === 'meters';
+    const toU = v => useCm ? +(v * 2.54).toFixed(1) : v;
+    const unit = useCm ? 'cm' : '"';
+    const inp  = document.getElementById('lapelWidthInput');
+    const hint = document.getElementById('lapelWidthHint');
+    const lbl  = document.getElementById('lapelWidthLabel');
+    if (inp)  { inp.min = toU(min); inp.max = toU(max); inp.value = toU(def); inp.step = 0.1; }
+    if (hint) hint.textContent = `${toU(min)}–${toU(max)} ${unit}`;
+    if (lbl)  lbl.textContent  = _LAPEL_LABELS[val] || 'Lapel width';
+  }
+
+  function setLapelWidth(inp) {
+    const useCm = state.unit === 'meters';
+    const [minIn, maxIn] = _LAPEL_LIMITS[state.options.lapel] || [2.5, 4.5];
+    const [min, max] = useCm ? [+(minIn*2.54).toFixed(1), +(maxIn*2.54).toFixed(1)] : [minIn, maxIn];
+    const raw = +Math.max(min, Math.min(max, parseFloat(inp.value) || min)).toFixed(1);
+    state.options.lapelWidth = +(useCm ? raw / 2.54 : raw).toFixed(2);
+    inp.value = raw;
+  }
+
+  function setCuffs(val, btn) {
+    btn.closest('.option-grid').querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+    btn.classList.add('selected');
+    const sizeRow = document.getElementById('cuffSizeRow');
+    if (val === 'none') {
+      state.options.cuffs = 'none';
+      sizeRow.style.display = 'none';
+    } else {
+      const inp = document.getElementById('cuffSizeInput');
+      if (inp) {
+        const useCm = state.unit === 'meters';
+        const raw = parseFloat(inp.value) || (useCm ? 3.8 : 1.5);
+        state.options.cuffs = String(+(useCm ? raw / 2.54 : raw).toFixed(3));
+      } else {
+        state.options.cuffs = '1.5';
+      }
+      sizeRow.style.display = 'flex';
+    }
+  }
+
+  function setCuffWidth(inp) {
+    const useCm = state.unit === 'meters';
+    const [minV, maxV] = useCm ? [1.9, 6.4] : [0.8, 2.5];
+    const raw = +Math.max(minV, Math.min(maxV, parseFloat(inp.value) || (useCm ? 3.8 : 1.5))).toFixed(1);
+    state.options.cuffs = String(+(useCm ? raw / 2.54 : raw).toFixed(2));
+    inp.value = raw;
+  }
+
+  function setWaistbandWidth(inp) {
+    const useCm = state.unit === 'meters';
+    const [minV, maxV] = useCm ? [+(0.75*2.54).toFixed(1), +(2.5*2.54).toFixed(1)] : [0.75, 2.5];
+    const raw = +Math.max(minV, Math.min(maxV, parseFloat(inp.value) || (useCm ? 3.8 : 1.5))).toFixed(1);
+    state.options.waistbandWidth = +(useCm ? raw / 2.54 : raw).toFixed(2);
+    inp.value = raw;
+  }
+
+  function buildMeasurementFields() {
+    const needed = new Set();
+    state.garments.forEach(g => garmentFields[g].forEach(f => needed.add(f)));
+
+    const fieldDefs = fields[state.measureMode];
+    const title = state.measureMode === 'body' ? 'Body Measurements' : 'Finished Garment Measurements';
+    document.getElementById('measureCardTitle').textContent = title;
+
+    const container = document.getElementById('measureFields');
+    container.innerHTML = '';
+
+    const useCm  = state.unit === 'meters';   // input in cm when output is meters
+    const toDisp = v => useCm ? +(v * 2.54).toFixed(1) : v;  // stored inches → display unit
+    const unitLbl = useCm ? 'cm' : 'in';
+
+    const order = ['chest','shoulder','backLength','sleeveLength','bicep','neck','cuff','waist','hip','outseam','thigh','legOpen','urise','shirtLength'];
+    order.forEach(key => {
+      if (!needed.has(key)) return;
+      const f    = fieldDefs[key];
+      const dMin = toDisp(f.min);
+      const dMax = toDisp(f.max);
+      const step = useCm ? 0.5 : 0.25;
+      const savedIn = state.measurements[key];
+      const dispVal = savedIn ? toDisp(savedIn) : '';
+      const div = document.createElement('div');
+      div.className = 'measure-group';
+      div.innerHTML = `
+        <label>${f.label}</label>
+        ${f.hint ? `<div class="hint">${f.hint} (${dMin}–${dMax} ${unitLbl})</div>` : ''}
+        <div class="measure-input">
+          <input type="number" inputmode="decimal" id="m_${key}" placeholder="0.0"
+                 min="${dMin}" max="${dMax}" step="${step}"
+                 value="${dispVal}" />
+          <span class="unit">${unitLbl}</span>
+        </div>
+        <div class="field-error" id="err_${key}"></div>`;
+      container.appendChild(div);
+    });
+  }
+
+  function calculate() {
+    // Read measurements
+    const needed = new Set();
+    state.garments.forEach(g => garmentFields[g].forEach(f => needed.add(f)));
+
+    let valid = true;
+    const m = {};
+    const fieldDefs = fields[state.measureMode];
+    const inCm      = state.unit === 'meters';
+    const toInches  = v => inCm ? v / 2.54 : v;
+    const toDisp    = v => inCm ? +(v * 2.54).toFixed(1) : v;
+    const unitLbl   = inCm ? 'cm' : '"';
+    needed.forEach(key => {
+      const input  = document.getElementById(`m_${key}`);
+      const errEl  = document.getElementById(`err_${key}`);
+      const rawVal = parseFloat(input?.value);         // value in display unit
+      const f      = fieldDefs[key];
+      const dMin   = toDisp(f.min);
+      const dMax   = toDisp(f.max);
+      let msg = '';
+      if (!rawVal || isNaN(rawVal)) {
+        msg = 'Required';
+      } else if (rawVal < dMin) {
+        msg = `Min ${dMin} ${unitLbl}`;
+      } else if (rawVal > dMax) {
+        msg = `Max ${dMax} ${unitLbl}`;
+      }
+      if (msg) {
+        if (input)  input.style.borderColor = '#e74c3c';
+        if (errEl)  errEl.textContent = msg;
+        valid = false;
+      } else {
+        if (input)  input.style.borderColor = '';
+        if (errEl)  errEl.textContent = '';
+        const inchVal = toInches(rawVal);   // always store & compute in inches
+        m[key] = inchVal;
+        state.measurements[key] = inchVal;
+      }
+    });
+    if (!valid) return;
+
+    const wf = widthFactor(state.fabricWidth);
+    const container = document.getElementById('resultItems');
+    container.innerHTML = '';
+    let grandShell = 0, grandLining = 0, grandInterf = 0;
+
+    const names = {
+      suit2: '2-Piece Suit', suit3: '3-Piece Suit',
+      sportcoat: 'Sport Coat', slacks: 'Slacks', vest: 'Waistcoat', shirt: 'Dress Shirt'
+    };
+
+    state.garments.forEach(g => {
+      let shell = 0, lining = 0, interf = 0;
+      const clothRows = [], liningRows = [], interfRows = [];
+
+      if (g === 'suit2') {
+        const jkt = calcJacket(m, wf), trs = calcTrousers(m, wf);
+        shell = parseFloat((jkt + trs).toFixed(2));
+        lining = calcLining(g, m);
+        interf = 0.75;
+        clothRows.push({ label: 'Jacket', val: jkt }, { label: 'Pants', val: trs });
+        liningRows.push({ label: 'Jacket + pant lining', val: lining });
+        interfRows.push({ label: 'Canvas / fusible', val: interf });
+      } else if (g === 'suit3') {
+        const jkt = calcJacket(m, wf), trs = calcTrousers(m, wf), vst = calcVest(m, wf);
+        shell = parseFloat((jkt + trs + vst).toFixed(2));
+        lining = parseFloat((calcLining('suit2', m) + 0.4).toFixed(2));
+        interf = 0.75;
+        clothRows.push({ label: 'Jacket', val: jkt }, { label: 'Pants', val: trs }, { label: 'Waistcoat', val: vst });
+        liningRows.push({ label: 'Jacket + pant lining', val: lining });
+        interfRows.push({ label: 'Canvas / fusible', val: interf });
+      } else if (g === 'sportcoat') {
+        shell = calcJacket(m, wf);
+        lining = calcLining(g, m);
+        interf = 0.5;
+        clothRows.push({ label: 'Jacket shell', val: shell });
+        liningRows.push({ label: 'Jacket lining', val: lining });
+        interfRows.push({ label: 'Canvas / fusible', val: interf });
+      } else if (g === 'slacks') {
+        shell = calcTrousers(m, wf);
+        lining = calcLining(g, m);
+        clothRows.push({ label: 'Pant shell', val: shell });
+        liningRows.push({ label: 'Pocketing / lining', val: lining });
+      } else if (g === 'shirt') {
+        shell = calcShirt(m, wf);
+        interf = 0.3;
+        clothRows.push({ label: 'Shirt shell', val: shell });
+        interfRows.push({ label: 'Collar / cuff fusing', val: interf });
+      } else if (g === 'vest') {
+        shell  = calcVest(m, wf);
+        lining = parseFloat((shell * 0.85).toFixed(2));
+        interf = 0.25;
+        clothRows.push({ label: 'Waistcoat shell', val: shell });
+        liningRows.push({ label: 'Back + facing lining', val: lining });
+        interfRows.push({ label: 'Fusible', val: interf });
+      }
+
+      grandShell  += shell;
+      grandLining += lining;
+      grandInterf += interf;
+
+      const toM  = v => (v * 0.9144).toFixed(2);
+      const fmt  = v => v > 0 ? `${v.toFixed(2)} yds / ${toM(v)} m` : '—';
+
+      const item = document.createElement('div');
+      item.className = 'result-item';
+      item.innerHTML = `
+        <div class="result-item-top">
+          <div class="result-item-name">${names[g]}</div>
+          <div>
+            <div class="result-item-yards">${shell.toFixed(2)} <span>yds cloth</span></div>
+            <div class="result-item-meters">${toM(shell)} <span>m</span></div>
+          </div>
+        </div>
+        <div class="result-breakdown">
+          ${clothRows.map(r => `
+            <div class="result-breakdown-row">
+              <span>${r.label}</span><strong>${fmt(r.val)}</strong>
+            </div>`).join('')}
+          ${liningRows.length ? `<div class="result-breakdown-row" style="margin-top:6px;padding-top:6px;border-top:1px solid var(--rule)">
+              <span style="color:var(--charcoal);font-weight:500">Lining</span><strong>${fmt(lining)}</strong>
+            </div>
+            ${liningRows.length > 1 ? liningRows.map(r => `<div class="result-breakdown-row"><span>${r.label}</span><strong>${fmt(r.val)}</strong></div>`).join('') : ''}` : ''}
+          ${interfRows.length ? `<div class="result-breakdown-row" style="margin-top:6px;padding-top:6px;border-top:1px solid var(--rule)">
+              <span style="color:var(--charcoal);font-weight:500">Interfacing</span><strong>${fmt(interf)}</strong>
+            </div>` : ''}
+        </div>`;
+      container.appendChild(item);
+    });
+
+    const buf  = v => (v * 1.1).toFixed(2);
+    const bufM = v => (v * 0.9144 * 1.1).toFixed(2);
+
+    document.getElementById('totalShell').textContent   = buf(grandShell);
+    document.getElementById('totalShellM').textContent  = bufM(grandShell);
+    document.getElementById('totalLining').textContent  = grandLining > 0 ? buf(grandLining)  : '—';
+    document.getElementById('totalLiningM').textContent = grandLining > 0 ? bufM(grandLining) : '—';
+    document.getElementById('totalInterf').textContent  = grandInterf > 0 ? buf(grandInterf)  : '—';
+    document.getElementById('totalInterfM').textContent = grandInterf > 0 ? bufM(grandInterf) : '—';
+
+    const modeLabel = state.measureMode === 'body' ? 'body measures' : 'finished garment';
+    document.getElementById('resultSubtitle').textContent = `58″ wide · ${modeLabel}`;
+
+    const extra = grandShell * 0.15 * 1.1;
+    document.getElementById('tipBox').innerHTML =
+      `<strong>Note:</strong> All totals include a 10% buffer. ` +
+      `For plaids or large repeats, add an extra ${extra.toFixed(2)} yds / ${(extra * 0.9144).toFixed(2)} m to cloth.`;
+
+    buildPatternLayouts();
+    goToPage(4);
+  }
+
+  // ── Pattern Layout ──────────────────────────────────────────────────
+  // Greedy first-fit decreasing packer: sorts pieces by height desc,
+  // then fills each row horizontally before starting a new one.
+  // Pieces within a section (jacket / trousers) are kept together.
+  function getLayoutRows(garment, m) {
+    const SA = 1.25;
+    const _body = state.measureMode === 'body';
+    const _fit  = state.options.fit || 'regular';
+    // Layout ease = wearing ease + extra cutting/SA margin; keys mirror _FIT_EASE
+    const _LAY  = {
+      slim:    { chest: 3,   waist: 0.5,  seat: 1   },
+      tapered: { chest: 4.5, waist: 0.75, seat: 1.5 },
+      regular: { chest: 5,   waist: 1,    seat: 2   },
+      full:    { chest: 7.5, waist: 2,    seat: 4   },
+    };
+    const _le   = _body ? (_LAY[_fit] || _LAY.regular) : { chest:0, waist:0, seat:0 };
+    const chest    = (m.chest      || 40) + _le.chest;
+    const back     = (m.backLength || 30) + SA;
+    const sleeve   = (m.sleeveLength || 24) + SA;
+    const shirtL   = (m.shirtLength || 29) + SA;
+    const outseam  = (m.outseam    || 42) + SA;
+    const hip      = (m.hip        || 42) + _le.seat;
+    const waist    = (m.waist      || 34) + _le.waist;
+    const neck     = (m.neck       || 15);
+    const shoulder = (m.shoulder   || 18);
+    // bicep: use entered value + ease, or fall back to shoulder-derived default
+    const bicep = m.bicep
+      ? (m.bicep + (_body ? (_FIT_EASE[_fit]?.bicep || 1) : 0))
+      : (shoulder * 2 / 3 + 2);
+    // thigh: use entered value + ease, or fall back to hip-derived default
+    const thigh = m.thigh
+      ? (m.thigh + (_body ? (_FIT_EASE[_fit]?.thigh || 2) : 0))
+      : (hip / 2.1);
+    // cuff: finished measurement (no ease added — user controls button overlap)
+    const cuff = m.cuff || 9;
+
+    const bkW   = chest / 4 + 2.5;
+    const frW   = chest / 4 + 3;
+    // sleeve widths from bicep: top sleeve ≈ half bicep + ease/SA, under sleeve narrower
+    const tsW   = bicep / 2 + 2;
+    const usW   = bicep / 2 + 0.5;
+    const slvH  = sleeve + 7;
+    // trouser leg widths: driven by the wider of seat or thigh
+    // Front panel ≈ seat/4 + SA; back panel ≈ seat/4 + back-curve + SA
+    // Thigh: each piece covers ~40-55% of thigh circumference (not half)
+    const legFW = Math.max(hip / 4 + 0.75, thigh * 0.42 + 0.75);
+    const legBW = Math.max(hip / 4 + 2.5,  thigh * 0.55 + 0.75);
+
+    // Usable width between selvedges, minus piece gap buffer
+    const AVAIL = 54.8;
+    const PG    = 0.45;
+
+    // Pack a flat piece list into rows using FFD (first-fit decreasing by height)
+    function pack(pieces) {
+      const sorted  = [...pieces].sort((a, b) => b.h - a.h || b.w - a.w);
+      const placed  = new Array(sorted.length).fill(false);
+      const rows    = [];
+      for (let i = 0; i < sorted.length; i++) {
+        if (placed[i]) continue;
+        const row = [sorted[i]];
+        placed[i] = true;
+        let used = sorted[i].w;
+        for (let j = i + 1; j < sorted.length; j++) {
+          if (placed[j]) continue;
+          if (used + PG + sorted[j].w <= AVAIL) {
+            row.push(sorted[j]);
+            used += PG + sorted[j].w;
+            placed[j] = true;
+          }
+        }
+        rows.push(row);
+      }
+      return rows;
+    }
+
+    // Options shortcuts
+    const opt = state.options;
+    const wbH = parseFloat(opt.waistbandWidth) * 2 || 3;
+    const cuffDepth = parseFloat(opt.cuffs) || 0;
+    const trsH = outseam + cuffDepth * 2;  // fold doubles the fabric needed
+
+    // Facing size: base width per lapel type, then scaled by user's lapel width
+    const _facBase = { notch:7, peak:9, shawl:5, standup:2.5 };
+    const _lwBase  = { notch:3.25, peak:3.5, shawl:3.5, standup:1.5 };
+    const _lapelW  = parseFloat(opt.lapelWidth) || _lwBase[opt.lapel] || 3.25;
+    const facW = (_facBase[opt.lapel] || 7) + (_lapelW - (_lwBase[opt.lapel] || 3.25));
+    const facH = opt.lapel === 'standup' ? back * 0.45 : back * 0.65;
+
+    // Collar pieces by lapel type
+    const collarPieces = opt.lapel === 'standup'
+      ? [ { n:'Stand Collar', w:neck*0.75, h:4 } ]
+      : opt.lapel === 'shawl'
+        // Shawl wraps shoulder-to-shoulder + down the front, so significantly wider
+        ? [ { n:'Shawl Col.', w:neck*1.4, h:7, shape:'collar' } ]
+        // Notch and peak share the same collar structure; peak difference is in the facing
+        : [ { n:'Collar',    w:neck*0.8,  h:5, shape:'collar' },
+            { n:'Col. Band', w:neck*0.75, h:3, shape:'collar-band' } ];
+
+    // Vest pocket layout pieces driven by vestPockets option
+    const vestPocketPieces = opt.vestPockets === 'flap'
+      ? [ { n:'V.Flap', w:4, h:2 }, { n:'V.Flap', w:4, h:2 }, { n:'V.Welt ×4', w:8, h:2 } ]
+      : [ { n:'V.Welt ×4', w:8, h:2 } ];
+
+    // Pocket pieces by pocket style
+    const pocketPieces = opt.pockets === 'jetted'
+      ? [ { n:'Welt ×4', w:10, h:3 } ]
+      : opt.pockets === 'patch'
+        ? [ { n:'Patch', w:6.5, h:7 }, { n:'Patch', w:6.5, h:7 },
+            { n:'Welt ×2', w:10, h:3 } ]
+        : [ { n:'Flap', w:5.5, h:2.5 }, { n:'Flap', w:5.5, h:2.5 },
+            { n:'Welt ×4', w:10, h:3 } ];
+
+    const ticketPieces = opt.ticketPocket
+      ? [ { n:'Ticket Flap', w:4, h:2 } ] : [];
+
+    // Shared piece lists
+    const jacketPieces = [
+      { n:'Back',      w:bkW,       h:back,       shape:'jacket-back' },
+      { n:'Back',      w:bkW,       h:back,       shape:'jacket-back',        mirror:true },
+      { n:'Front L',   w:frW,       h:back,       shape:'jacket-front' },
+      { n:'Front R',   w:frW,       h:back,       shape:'jacket-front',       mirror:true },
+      { n:'Top Slv',   w:tsW,       h:slvH,       shape:'jacket-sleeve-top' },
+      { n:'Top Slv',   w:tsW,       h:slvH,       shape:'jacket-sleeve-top' },
+      { n:'Und Slv',   w:usW,       h:slvH,       shape:'jacket-sleeve-under' },
+      { n:'Und Slv',   w:usW,       h:slvH,       shape:'jacket-sleeve-under' },
+      { n:'Facing',    w:facW,      h:facH,  shape:'facing' },
+      { n:'Facing',    w:facW,      h:facH,  shape:'facing',             mirror:true },
+      ...collarPieces,
+      ...pocketPieces,
+      ...ticketPieces,
+    ];
+
+    // Measurement-driven shape props — replace hardcoded fractions in piecePath
+    const legOpCirc = m.legOpen || 16;
+    const mRise     = m.urise   || 11;
+    const riseFrac  = Math.min(0.34, mRise / trsH);
+    // Front: waist/4 as fraction of front bounding-box width
+    const fWaistFrac = Math.min(0.80, (waist / 4) / legFW);
+    // Back: waist/4 as fraction of back bounding-box width (CB rises further)
+    const bWaistFrac = Math.min(0.74, (waist / 4) / legBW);
+    // Inseam landing at hem (leg-opening drives the taper)
+    const fHemFrac   = Math.min(0.94, (legOpCirc * 0.42 + 0.5) / legFW);
+    const bHemFrac   = Math.min(0.96, (legOpCirc * 0.55 + 0.75) / legBW);
+
+    const fProps = { wf: fWaistFrac, hif: fHemFrac, rf: riseFrac,
+      waistVal: +(waist/4).toFixed(1), seatVal: +(hip/4).toFixed(1),
+      riseVal: +mRise.toFixed(1), hemVal: +(legOpCirc*0.42+0.5).toFixed(1),
+      cuffDepth, pocketStyle: opt.pockets || 'flap' };
+    const bProps = { wf: bWaistFrac, hif: bHemFrac, rf: riseFrac,
+      waistVal: +(waist/4).toFixed(1), seatVal: +(hip/4).toFixed(1),
+      riseVal: +mRise.toFixed(1), hemVal: +(legOpCirc*0.55+0.75).toFixed(1),
+      cuffDepth };
+
+    // Head-to-toe layout: R pieces are rotated 180° so the hem of one sits beside
+    // the waist of the other — the crotch curves interlock, minimising waste.
+    const trouserPieces = [
+      { n:'Front L', w:legFW, h:trsH, shape:'trouser-front', props:fProps },
+      { n:'Front R', w:legFW, h:trsH, shape:'trouser-front', flip180:true, props:fProps },
+      { n:'Back L',  w:legBW, h:trsH, shape:'trouser-back',  props:bProps },
+      { n:'Back R',  w:legBW, h:trsH, shape:'trouser-back',  flip180:true, props:bProps },
+      { n:'Waistband', w:waist/2+2, h:wbH, shape:'waistband',
+        props:{ wbWidth: +parseFloat(opt.waistbandWidth).toFixed(2) } },
+    ];
+
+    if (garment === 'suit2') {
+      return [...pack(jacketPieces), ...pack(trouserPieces)];
+    }
+
+    if (garment === 'sportcoat') {
+      return pack(jacketPieces);
+    }
+
+    if (garment === 'suit3') {
+      const vstW = chest / 4 + 2;
+      const vstH = back * 0.72;
+      const vestPieces = [
+        { n:'Vest Front', w:vstW,        h:vstH, shape:'vest-front' },
+        { n:'Vest Front', w:vstW,        h:vstH, shape:'vest-front', mirror:true },
+        ...(opt.vestBack === 'fabric' ? [{ n:'Back L', w:vstW * 1.05, h:vstH, shape:'jacket-back' }, { n:'Back R', w:vstW * 1.05, h:vstH, shape:'jacket-back', mirror:true }] : []),
+        ...vestPocketPieces,
+      ];
+      return [...pack([...jacketPieces, ...vestPieces]), ...pack(trouserPieces)];
+    }
+
+    if (garment === 'slacks') {
+      return pack(trouserPieces);
+    }
+
+    if (garment === 'vest') {
+      const vstW = chest / 4 + 2;
+      const vstH = back * 0.72;
+      const vestPieces = [
+        { n:'Front L',  w:vstW,        h:vstH, shape:'vest-front' },
+        { n:'Front R',  w:vstW,        h:vstH, shape:'vest-front', mirror:true },
+        ...(opt.vestBack === 'fabric' ? [{ n:'Back L', w:vstW * 1.05, h:vstH, shape:'jacket-back' }, { n:'Back R', w:vstW * 1.05, h:vstH, shape:'jacket-back', mirror:true }] : []),
+        ...vestPocketPieces,
+      ];
+      return pack(vestPieces);
+    }
+
+    if (garment === 'shirt') {
+      const bodyW  = chest / 4 + 2;
+      const slvW   = bicep / 2 + 2;   // shirt sleeve width from bicep
+      const shSlvH = sleeve + 5;
+      const shirtPieces = [
+        { n:'Back',    w:bodyW,         h:shirtL,      shape:'shirt-back',  fold:true },
+        { n:'Front L', w:bodyW,         h:shirtL,      shape:'shirt-front' },
+        { n:'Front R', w:bodyW,         h:shirtL,      shape:'shirt-front', mirror:true },
+        { n:'Sleeve',  w:slvW,          h:shSlvH,      shape:'shirt-sleeve' },
+        { n:'Sleeve',  w:slvW,          h:shSlvH,      shape:'shirt-sleeve', mirror:true },
+        { n:'Yoke',    w:bodyW * 2 + 2, h:7,           shape:'collar' },
+        { n:'Collar',  w:neck * 0.75,   h:5,           shape:'collar' },
+        { n:'Band ×2', w:neck * 0.75,   h:3,           shape:'collar-band' },
+        { n:'Cuff ×2', w:cuff / 2 + 1,  h:4.5 },   // cuff piece = half circumference + SA/overlap
+        { n:'Placket', w:3,             h:shirtL * 0.55 },
+      ];
+      return pack(shirtPieces);
+    }
+
+    return [];
+  }
+
+  // Returns SVG path `d` for each piece silhouette type.
+  // (x,y) = bounding box top-left, (w,h) = size in inches.
+  // mirror=true flips horizontally for right-hand pieces.
+  function piecePath(type, x, y, w, h, mirror, props) {
+    props = props || {};
+    const f  = v => +v.toFixed(3);
+    const mx = px => mirror ? f(x + w - (px - x)) : f(px);
+    const my = py => f(py);
+    const L  = (px, py) => `L ${mx(px)},${my(py)}`;
+    const M  = (px, py) => `M ${mx(px)},${my(py)}`;
+    const C  = (x1,y1,x2,y2,ex,ey) => `C ${mx(x1)},${my(y1)} ${mx(x2)},${my(y2)} ${mx(ex)},${my(ey)}`;
+    const Q  = (cx,cy,ex,ey)        => `Q ${mx(cx)},${my(cy)} ${mx(ex)},${my(ey)}`;
+
+    switch (type) {
+      case 'jacket-back':
+        // CB on left (slight inward curve for fit).
+        // Shoulder seam slopes gently down to armscye.
+        // Concave neck notch at CB top.
+        // Back armscye: two-segment S-curve — scoops in then eases to side seam.
+        return [
+          M(x+w*0.05, y+h*0.025),              // CB neck start
+          Q(x+w*0.04, y,  x+w*0.17, y),        // concave CB neck curve
+          L(x+w*0.84, y+h*0.018),              // shoulder seam slopes to armscye
+          C(x+w*0.96, y+h*0.018, x+w, y+h*0.07, x+w, y+h*0.155),   // armscye cap
+          C(x+w*0.99, y+h*0.22,  x+w*0.93, y+h*0.205, x+w*0.93, y+h*0.25), // armscye pit
+          C(x+w*0.93, y+h*0.30,  x+w*0.96, y+h*0.45, x+w*0.96, y+h),       // side seam
+          L(x+w*0.05, y+h),                    // hem
+          C(x+w*0.07, y+h*0.65, x+w*0.04, y+h*0.35, x+w*0.05, y+h*0.025),  // CB seam
+          'Z'
+        ].join(' ');
+
+      case 'jacket-front':
+        // CF on right (straight with slight neckline step).
+        // Armscye on left: a pronounced inward scoop — the deepest point is
+        // clearly visible, then it eases back out to the side seam below.
+        return [
+          M(x+w*0.20, y),                       // armscye/shoulder junction
+          L(x+w*0.94, y+h*0.01),               // shoulder seam to CF neck
+          L(x+w,      y+h*0.10),               // CF neckline step down
+          C(x+w*0.98, y+h*0.40, x+w*0.97, y+h*0.62, x+w*0.97, y+h), // CF/side seam
+          L(x+w*0.03, y+h),                    // hem
+          C(x+w*0.05, y+h*0.55, x+w*0.09, y+h*0.26, x+w*0.09, y+h*0.21), // side seam → underarm
+          C(x+w*0.09, y+h*0.16, x,        y+h*0.12, x,        y+h*0.08),  // armscye scoop
+          C(x,        y+h*0.04, x+w*0.07, y,   x+w*0.20, y),              // armscye to shoulder
+          'Z'
+        ].join(' ');
+
+      case 'vest-front':
+        // Like jacket-front but shorter and without a sleeve — shallower armscye.
+        return [
+          M(x+w*0.16, y),
+          L(x+w*0.94, y+h*0.01),
+          L(x+w,      y+h*0.09),
+          C(x+w*0.98, y+h*0.40, x+w*0.97, y+h*0.62, x+w*0.97, y+h),
+          L(x+w*0.03, y+h),
+          C(x+w*0.05, y+h*0.55, x+w*0.07, y+h*0.24, x+w*0.07, y+h*0.19),
+          C(x+w*0.07, y+h*0.14, x,        y+h*0.10, x,        y+h*0.07),
+          C(x,        y+h*0.03, x+w*0.07, y,        x+w*0.16, y),
+          'Z'
+        ].join(' ');
+
+      case 'jacket-sleeve-top':
+        // Two-piece top sleeve.
+        // Cap is ASYMMETRIC: back (left in layout) is fuller/higher than front.
+        // Seams taper inward toward the cuff.
+        return [
+          M(x,         y+h*0.21),               // back seam underarm
+          C(x,         y+h*0.07, x+w*0.22, y,   x+w*0.50, y),           // back cap (fuller)
+          C(x+w*0.68,  y,        x+w,      y+h*0.11, x+w, y+h*0.19),   // front cap (shallower)
+          C(x+w*0.99,  y+h*0.52, x+w*0.90, y+h*0.82, x+w*0.87, y+h),  // front seam taper
+          L(x+w*0.13,  y+h),                    // cuff
+          C(x+w*0.10,  y+h*0.82, x+w*0.01, y+h*0.52, x, y+h*0.21),    // back seam taper
+          'Z'
+        ].join(' ');
+
+      case 'jacket-sleeve-under':
+        // Narrower, very flat cap — barely rises above the seam line.
+        return [
+          M(x,         y+h*0.055),
+          C(x+w*0.12,  y+h*0.015, x+w*0.38, y,          x+w*0.50, y+h*0.02),
+          C(x+w*0.62,  y,         x+w*0.88, y+h*0.015,  x+w,      y+h*0.055),
+          L(x+w*0.91,  y+h),
+          L(x+w*0.09,  y+h),
+          L(x,         y+h*0.055),
+          'Z'
+        ].join(' ');
+
+      case 'facing':
+        // Lapel facing: wide at shoulder, tapers to a point near the hem.
+        return [
+          M(x, y),
+          C(x+w*0.4,  y,        x+w*0.85, y+h*0.04, x+w,      y+h*0.08),
+          C(x+w*0.92, y+h*0.30, x+w*0.72, y+h*0.60, x+w*0.60, y+h),
+          L(x,        y+h),
+          L(x,        y),
+          'Z'
+        ].join(' ');
+
+      case 'trouser-front': {
+        // wf  = where the J-hook starts (waist/4 ÷ piece width)
+        // hif = inseam position at hem (legOpen fraction of piece width)
+        // rf  = rise fraction — how far down the seat line is
+        const wf  = props.wf  || 0.55;
+        const hif = props.hif || 0.91;
+        const rf  = props.rf  || 0.26;
+        const jd  = rf * 0.70;              // J-hook depth: 70% of rise height
+        // CP1 goes above y (the real crotch extension rises above the waistline),
+        // CP2 sits just past the right edge — this creates the visible J arch.
+        return [
+          M(x,               y),
+          L(x+w*wf,          y),                                               // waist
+          C(x+w*(wf+0.10),   y-h*0.05,  x+w*1.02, y+h*jd*0.5,  x+w, y+h*jd),// J-hook arches above
+          L(x+w*hif,         y+h),                                             // inseam
+          L(x+w*0.09,        y+h),                                             // hem
+          C(x+w*0.03,        y+h*0.62, x, y+h*0.28, x, y),                    // side seam
+          'Z'
+        ].join(' ');
+      }
+
+      case 'trouser-back': {
+        // wf  = how far across the waist sweeps before the seat arc (waist/4 ÷ piece width)
+        // hif = inseam position at hem
+        // rf  = rise fraction — seat arc reaches full width here
+        const wf  = props.wf  || 0.62;
+        const hif = props.hif || 0.93;
+        const rf  = props.rf  || 0.26;
+        return [
+          M(x+w*0.06,        y+h*0.09),
+          C(x+w*0.20,        y+h*0.01,  x+w*wf,        y,         x+w*wf,  y),        // waist rises L→R
+          C(x+w*(wf+0.16),   y,          x+w,           y+h*0.06,  x+w,     y+h*rf),   // seat arc → seat line
+          L(x+w*hif,         y+h),                                                      // inseam
+          L(x+w*0.06,        y+h),                                                      // hem
+          C(x,               y+h*0.62,   x,             y+h*0.28,  x+w*0.06, y+h*0.09),// outseam
+          'Z'
+        ].join(' ');
+      }
+
+      case 'waistband':
+        // Slight outward belly curve on bottom edge (reflects curved waist seam).
+        return [
+          M(x,    y),
+          L(x+w,  y),
+          L(x+w,  y+h),
+          C(x+w*0.75, y+h*1.20, x+w*0.25, y+h*1.20, x, y+h),
+          L(x,    y),
+          'Z'
+        ].join(' ');
+
+      case 'shirt-back':
+        // Shallow armscye (shirts have less armscye depth than jackets).
+        // CB neck concave notch; shoulder seam very slightly sloped.
+        return [
+          M(x+w*0.03, y+h*0.02),
+          Q(x+w*0.03, y,        x+w*0.14, y),
+          L(x+w*0.87, y+h*0.01),
+          C(x+w*0.96, y+h*0.01, x+w,      y+h*0.05, x+w, y+h*0.12),
+          L(x+w*0.97, y+h),
+          L(x+w*0.03, y+h),
+          L(x,        y+h*0.12),
+          C(x,        y+h*0.05, x+w*0.03, y+h*0.01, x+w*0.03, y+h*0.02),
+          'Z'
+        ].join(' ');
+
+      case 'shirt-front':
+        // Armscye concave on left, placket/CF edge straight on right.
+        return [
+          M(x+w*0.15, y),
+          L(x+w,      y),
+          L(x+w,      y+h),
+          L(x,        y+h),
+          L(x,        y+h*0.12),
+          C(x,        y+h*0.06, x+w*0.05, y+h*0.01, x+w*0.15, y),
+          'Z'
+        ].join(' ');
+
+      case 'shirt-sleeve':
+        // Shirt sleeve: high symmetrical cap, seams taper to a narrower cuff.
+        return [
+          M(x,         y+h*0.23),
+          C(x,         y+h*0.06, x+w*0.28, y,        x+w*0.50, y),
+          C(x+w*0.72,  y,        x+w,      y+h*0.06, x+w,      y+h*0.23),
+          C(x+w*0.99,  y+h*0.52, x+w*0.91, y+h*0.83, x+w*0.87, y+h),
+          L(x+w*0.13,  y+h),
+          C(x+w*0.09,  y+h*0.83, x+w*0.01, y+h*0.52, x, y+h*0.23),
+          'Z'
+        ].join(' ');
+
+      case 'collar':
+        // Spread collar: curved neckline edge with two collar points at bottom corners.
+        return [
+          M(x,         y+h*0.45),               // left collar-stand attachment
+          C(x+w*0.10,  y+h*0.15, x+w*0.35, y,  x+w*0.50, y),          // left curve to centre
+          C(x+w*0.65,  y,        x+w*0.90, y+h*0.15, x+w, y+h*0.45),  // right curve
+          L(x+w,       y+h),                    // right collar point
+          Q(x+w*0.75,  y+h*0.80, x+w*0.50, y+h*0.75),                 // collar fall
+          Q(x+w*0.25,  y+h*0.80, x,        y+h),                      // left collar point
+          L(x,         y+h*0.45),
+          'Z'
+        ].join(' ');
+
+      case 'collar-band':
+        // Slightly curved strip that follows the neckline.
+        return [
+          M(x,         y+h*0.35),
+          C(x+w*0.20,  y+h*0.10, x+w*0.50, y,  x+w*0.80, y+h*0.10),
+          Q(x+w*0.90,  y+h*0.22, x+w,      y+h*0.35),
+          L(x+w,       y+h),
+          L(x,         y+h),
+          L(x,         y+h*0.35),
+          'Z'
+        ].join(' ');
+
+      case 'pocket-bag':
+        // Bag with a notched top-right corner (welt opening side) and rounded base.
+        return [
+          M(x,         y),
+          L(x+w*0.72,  y),                      // to notch point
+          L(x+w,       y+h*0.12),              // notch angle (welt side)
+          L(x+w,       y+h*0.80),
+          C(x+w,       y+h*0.93, x+w*0.75, y+h, x+w*0.60, y+h),
+          L(x+w*0.40,  y+h),
+          C(x+w*0.25,  y+h,      x,         y+h*0.93, x, y+h*0.80),
+          L(x,         y),
+          'Z'
+        ].join(' ');
+
+      default:
+        return `M ${f(x)},${f(y)} L ${f(x+w)},${f(y)} L ${f(x+w)},${f(y+h)} L ${f(x)},${f(y+h)} Z`;
+    }
+  }
+
+  function buildLayoutSVG(rows) {
+    const FW  = 58;
+    const GAP = 1.5;
+    const PAD = 1.5;
+    const PG  = 0.45; // piece gap
+
+    let totalH = PAD;
+    rows.forEach(row => {
+      totalH += Math.max(...row.map(p => p.h)) + GAP;
+    });
+    totalH += PAD - GAP;
+
+    const s = [];
+    const F  = 'Inter,system-ui,sans-serif';
+
+    // Fabric background — black
+    s.push(`<rect width="${FW}" height="${totalH}" fill="#0C0C0C"/>`);
+    // Subtle 10" grid
+    for (let gx = 10; gx < FW; gx += 10) {
+      s.push(`<line x1="${gx}" y1="0" x2="${gx}" y2="${totalH}" stroke="#1E1E1E" stroke-width="0.15"/>`);
+    }
+    // Selvedge edges — double line
+    s.push(`<line x1="0.5" y1="0" x2="0.5" y2="${totalH}" stroke="#555" stroke-width="0.25"/>`);
+    s.push(`<line x1="1.1" y1="0" x2="1.1" y2="${totalH}" stroke="#333" stroke-width="0.12"/>`);
+    s.push(`<line x1="${FW-0.5}" y1="0" x2="${FW-0.5}" y2="${totalH}" stroke="#555" stroke-width="0.25"/>`);
+    s.push(`<line x1="${FW-1.1}" y1="0" x2="${FW-1.1}" y2="${totalH}" stroke="#333" stroke-width="0.12"/>`);
+    // Width label
+    s.push(`<text x="${FW/2}" y="${PAD*0.62}" text-anchor="middle" font-size="1.6" fill="#444" font-family="${F}">← 58″ fabric width →</text>`);
+
+    let y = PAD;
+    rows.forEach((row, ri) => {
+      const rowH = Math.max(...row.map(p => p.h));
+      let x = PG + 1.2; // offset for selvedge
+
+      row.forEach(piece => {
+        const pw    = Math.min(piece.w, FW - x - PG - 1.2);
+        const ph    = piece.h;
+        const shape = piece.shape || 'rect';
+        const mir   = !!piece.mirror;
+        const cx    = x + pw / 2;
+        const cy    = y + ph / 2;
+
+        const displayN = piece.n;
+
+        // ── Piece: white cutting line + SA dashed line ───────────────
+        // flip180 pieces (R panels) are rotated 180° to show head-to-toe nesting.
+        // SA dashed line is an inset re-draw of the same shape path (not a rect),
+        // so it follows curves correctly on all piece types.
+        const SA_VIS = 0.5;
+        const iw = pw - SA_VIS * 2;
+        const ih = ph - SA_VIS * 2;
+        const d   = piecePath(shape, x,          y,          pw, ph, mir, piece.props);
+        const dSA = (iw > 1.5 && ih > 1.5)
+          ? piecePath(shape, x + SA_VIS, y + SA_VIS, iw, ih, mir, piece.props)
+          : null;
+        if (piece.flip180) {
+          s.push(`<g transform="rotate(180,${cx.toFixed(3)},${cy.toFixed(3)})">`);
+          s.push(`<path d="${d}"   fill="none" stroke="#FFFFFF" stroke-width="0.18" stroke-linejoin="round"/>`);
+          if (dSA) s.push(`<path d="${dSA}" fill="none" stroke="#555" stroke-width="0.1" stroke-dasharray="0.5,0.35" stroke-linejoin="round"/>`);
+          s.push(`</g>`);
+        } else {
+          s.push(`<path d="${d}"   fill="none" stroke="#FFFFFF" stroke-width="0.18" stroke-linejoin="round"/>`);
+          if (dSA) s.push(`<path d="${dSA}" fill="none" stroke="#555" stroke-width="0.1" stroke-dasharray="0.5,0.35" stroke-linejoin="round"/>`);
+        }
+
+        // Fold line (CB on fold)
+        if (piece.fold) {
+          s.push(`<line x1="${x}" y1="${y}" x2="${x}" y2="${y+ph}" stroke="#FFF" stroke-width="0.2" stroke-dasharray="1,0.6"/>`);
+        }
+
+        // ── Waistband annotation ─────────────────────────────────────
+        if (shape === 'waistband' && piece.props?.wbWidth && pw > 4 && ph > 1.2) {
+          const wbFs = Math.min(0.8, ph * 0.38);
+          if (wbFs >= 0.35) {
+            s.push(`<text x="${cx.toFixed(2)}" y="${(y + ph*0.42).toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-size="${wbFs.toFixed(2)}" fill="#888" font-family="${F}">WB: ${piece.props.wbWidth}"</text>`);
+          }
+        }
+
+        // ── Trouser pattern annotations ──────────────────────────────
+        if ((shape === 'trouser-front' || shape === 'trouser-back') && piece.props && pw > 5 && ph > 10) {
+          const p        = piece.props;
+          const isFront  = shape === 'trouser-front';
+          const aC       = '#666';
+          const aFs      = Math.min(0.82, pw * 0.055);
+          const tick     = 0.35;
+
+          // Per-shape anchor points — must match piecePath exactly
+          const ssX  = x + pw * (isFront ? 0.00 : 0.06);  // side-seam x at waist
+          const ssY  = y + ph * (isFront ? 0.00 : 0.09);  // side-seam y at waist
+          const hemL = x + pw * (isFront ? 0.09 : 0.06);  // outer hem corner x
+          const hemR = x + pw * p.hif;                     // inner hem (inseam side)
+
+          // Grain line — vertical double-arrow, centred between side seam and inseam midpoint
+          const glx  = x + pw * 0.30;
+          const gly1 = y + ph * 0.20;
+          const gly2 = y + ph * 0.80;
+          const as   = Math.min(0.75, pw * 0.055);
+          s.push(`<line x1="${glx.toFixed(2)}" y1="${gly1.toFixed(2)}" x2="${glx.toFixed(2)}" y2="${gly2.toFixed(2)}" stroke="#555" stroke-width="0.12"/>`);
+          s.push(`<polygon points="${glx.toFixed(2)},${gly1.toFixed(2)} ${(glx-as*0.35).toFixed(2)},${(gly1+as).toFixed(2)} ${(glx+as*0.35).toFixed(2)},${(gly1+as).toFixed(2)}" fill="#555"/>`);
+          s.push(`<polygon points="${glx.toFixed(2)},${gly2.toFixed(2)} ${(glx-as*0.35).toFixed(2)},${(gly2-as).toFixed(2)} ${(glx+as*0.35).toFixed(2)},${(gly2-as).toFixed(2)}" fill="#555"/>`);
+
+          // Seat-line guide — horizontal dashed, anchored to side-seam x
+          if (p.rf) {
+            const sy = y + ph * p.rf;
+            s.push(`<line x1="${ssX.toFixed(2)}" y1="${sy.toFixed(2)}" x2="${(x+pw).toFixed(2)}" y2="${sy.toFixed(2)}" stroke="#444" stroke-width="0.09" stroke-dasharray="0.5,0.4"/>`);
+          }
+
+          // Dimension annotations — non-flipped (L) panels only
+          if (!piece.flip180 && aFs >= 0.38) {
+
+            // Waist: dimension line 2" below the side-seam waist point
+            if (p.waistVal) {
+              const wy  = ssY + 2.2;
+              const wx  = x + pw * p.wf;
+              s.push(`<line x1="${ssX.toFixed(2)}" y1="${wy.toFixed(2)}" x2="${wx.toFixed(2)}" y2="${wy.toFixed(2)}" stroke="${aC}" stroke-width="0.09"/>`);
+              s.push(`<line x1="${ssX.toFixed(2)}" y1="${(wy-tick).toFixed(2)}" x2="${ssX.toFixed(2)}" y2="${(wy+tick).toFixed(2)}" stroke="${aC}" stroke-width="0.09"/>`);
+              s.push(`<line x1="${wx.toFixed(2)}"  y1="${(wy-tick).toFixed(2)}" x2="${wx.toFixed(2)}"  y2="${(wy+tick).toFixed(2)}" stroke="${aC}" stroke-width="0.09"/>`);
+              s.push(`<text x="${((ssX+wx)/2).toFixed(2)}" y="${(wy-0.5).toFixed(2)}" text-anchor="middle" font-size="${aFs.toFixed(2)}" fill="${aC}" font-family="${F}">Waist ${p.waistVal}"</text>`);
+            }
+
+            // Seat: label just above the seat guide line, right side
+            if (p.seatVal && p.rf) {
+              const sy = y + ph * p.rf;
+              const lx = x + pw * 0.55;
+              s.push(`<text x="${lx.toFixed(2)}" y="${(sy-0.4).toFixed(2)}" font-size="${(aFs*0.85).toFixed(2)}" fill="${aC}" font-family="${F}">Seat ${p.seatVal}"</text>`);
+            }
+
+            // Rise: vertical dimension on left between side-seam waist and seat line
+            if (p.riseVal && p.rf) {
+              const sy   = y + ph * p.rf;
+              const rvx  = ssX - 1.0;          // just left of the piece
+              s.push(`<line x1="${rvx.toFixed(2)}" y1="${ssY.toFixed(2)}" x2="${rvx.toFixed(2)}" y2="${sy.toFixed(2)}" stroke="${aC}" stroke-width="0.09"/>`);
+              s.push(`<line x1="${(rvx-tick).toFixed(2)}" y1="${ssY.toFixed(2)}" x2="${(rvx+tick).toFixed(2)}" y2="${ssY.toFixed(2)}" stroke="${aC}" stroke-width="0.09"/>`);
+              s.push(`<line x1="${(rvx-tick).toFixed(2)}" y1="${sy.toFixed(2)}"  x2="${(rvx+tick).toFixed(2)}" y2="${sy.toFixed(2)}"  stroke="${aC}" stroke-width="0.09"/>`);
+              const rLabelY = (ssY + sy) / 2;
+              s.push(`<text x="${(rvx-0.15).toFixed(2)}" y="${rLabelY.toFixed(2)}" text-anchor="middle" dominant-baseline="middle" font-size="${(aFs*0.82).toFixed(2)}" fill="${aC}" font-family="${F}" transform="rotate(-90,${(rvx-0.15).toFixed(2)},${rLabelY.toFixed(2)})">Rise ${p.riseVal}"</text>`);
+            }
+
+            // Leg opening: dimension line 2" above the hem, anchored to actual hem corners
+            if (p.hemVal) {
+              const hy = y + ph - (p.cuffDepth > 0 ? p.cuffDepth * 2 + 2.2 : 2.2);
+              s.push(`<line x1="${hemL.toFixed(2)}" y1="${hy.toFixed(2)}" x2="${hemR.toFixed(2)}" y2="${hy.toFixed(2)}" stroke="${aC}" stroke-width="0.09"/>`);
+              s.push(`<line x1="${hemL.toFixed(2)}" y1="${(hy-tick).toFixed(2)}" x2="${hemL.toFixed(2)}" y2="${(hy+tick).toFixed(2)}" stroke="${aC}" stroke-width="0.09"/>`);
+              s.push(`<line x1="${hemR.toFixed(2)}" y1="${(hy-tick).toFixed(2)}" x2="${hemR.toFixed(2)}" y2="${(hy+tick).toFixed(2)}" stroke="${aC}" stroke-width="0.09"/>`);
+              s.push(`<text x="${((hemL+hemR)/2).toFixed(2)}" y="${(hy+1.0).toFixed(2)}" text-anchor="middle" font-size="${aFs.toFixed(2)}" fill="${aC}" font-family="${F}">Leg opening ${p.hemVal}"</text>`);
+            }
+
+            // Side-seam hip pocket (front only)
+            if (isFront && p.pocketStyle) {
+              const pktY  = y + ph * p.rf * 0.45;   // pocket mouth sits above the seat line
+              const pktX1 = ssX + 0.4;
+              const pktX2 = pktX1 + Math.min(pw * 0.35, 5.5);  // ~5" pocket mouth
+              s.push(`<line x1="${pktX1.toFixed(2)}" y1="${pktY.toFixed(2)}" x2="${pktX2.toFixed(2)}" y2="${pktY.toFixed(2)}" stroke="#888" stroke-width="0.15"/>`);
+              if (p.pocketStyle === 'flap') {
+                // flap: small rect hanging below the mouth
+                const fx = pktX1, fw = pktX2 - pktX1, fh = Math.min(1.5, pw * 0.12);
+                s.push(`<rect x="${fx.toFixed(2)}" y="${pktY.toFixed(2)}" width="${fw.toFixed(2)}" height="${fh.toFixed(2)}" fill="none" stroke="#777" stroke-width="0.1"/>`);
+              } else if (p.pocketStyle === 'jetted') {
+                // jetted: two parallel lines
+                s.push(`<line x1="${pktX1.toFixed(2)}" y1="${(pktY+0.25).toFixed(2)}" x2="${pktX2.toFixed(2)}" y2="${(pktY+0.25).toFixed(2)}" stroke="#777" stroke-width="0.09"/>`);
+              } else if (p.pocketStyle === 'patch') {
+                // patch: a rectangle on the piece
+                const ph2 = Math.min(pw * 0.55, 6.5), pw2 = pktX2 - pktX1;
+                s.push(`<rect x="${pktX1.toFixed(2)}" y="${pktY.toFixed(2)}" width="${pw2.toFixed(2)}" height="${ph2.toFixed(2)}" fill="none" stroke="#777" stroke-width="0.1"/>`);
+              }
+              s.push(`<text x="${((pktX1+pktX2)/2).toFixed(2)}" y="${(pktY-0.4).toFixed(2)}" text-anchor="middle" font-size="${(aFs*0.78).toFixed(2)}" fill="#777" font-family="${F}">${p.pocketStyle}</text>`);
+            }
+          }
+
+          // Cuff / turn-up fold lines — shown on all 4 panels
+          if (p.cuffDepth > 0) {
+            const foldY = y + ph - p.cuffDepth * 2;   // visible cuff crease (outseam level)
+            const hemY  = y + ph - p.cuffDepth;        // hem edge inside the turn-up
+            s.push(`<line x1="${ssX.toFixed(2)}" y1="${foldY.toFixed(2)}" x2="${(x+pw*0.95).toFixed(2)}" y2="${foldY.toFixed(2)}" stroke="#999" stroke-width="0.14" stroke-dasharray="0.9,0.5"/>`);
+            s.push(`<line x1="${ssX.toFixed(2)}" y1="${hemY.toFixed(2)}"  x2="${(x+pw*0.95).toFixed(2)}" y2="${hemY.toFixed(2)}"  stroke="#666" stroke-width="0.1"  stroke-dasharray="0.4,0.4"/>`);
+            if (!piece.flip180) {
+              const lx = x + pw * 0.55;
+              s.push(`<text x="${lx.toFixed(2)}" y="${(foldY-0.4).toFixed(2)}" font-size="${(aFs*0.82).toFixed(2)}" fill="#888" font-family="${F}">Turn-up ${p.cuffDepth}"</text>`);
+            }
+          }
+        }
+
+        // ── Labels: horizontal, readable ─────────────────────────────
+        {
+          const dimStr = `${pw.toFixed(1)}" × ${ph.toFixed(1)}"`;
+          const chars  = displayN.length;
+          const dChars = dimStr.length;
+          const GTXT   = 0.4;
+          const fs    = Math.min(1.9, pw / (Math.max(chars, dChars) * 0.62), (ph * 0.8 - GTXT) / (1 + 0.68));
+          const dimFs = fs * 0.68;
+          const showLabel = fs    >= 0.5 && pw > 2 && ph > 2;
+          const showDim   = dimFs >= 0.35 && ph > 4 && pw > 2;
+          if (showLabel && showDim) {
+            const ny = cy - GTXT / 2 - dimFs / 2;
+            const dy = cy + GTXT / 2 + fs    / 2;
+            s.push(`<text x="${cx}" y="${ny}" text-anchor="middle" dominant-baseline="middle" ` +
+              `font-size="${fs.toFixed(2)}" fill="#FFFFFF" font-family="${F}" font-weight="500">${displayN}</text>`);
+            s.push(`<text x="${cx}" y="${dy}" text-anchor="middle" dominant-baseline="middle" ` +
+              `font-size="${dimFs.toFixed(2)}" fill="#888" font-family="${F}">${dimStr}</text>`);
+          } else if (showLabel) {
+            s.push(`<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" ` +
+              `font-size="${fs.toFixed(2)}" fill="#FFFFFF" font-family="${F}" font-weight="500">${displayN}</text>`);
+          } else if (showDim) {
+            s.push(`<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" ` +
+              `font-size="${dimFs.toFixed(2)}" fill="#888" font-family="${F}">${dimStr}</text>`);
+          }
+        }
+
+        x += pw + PG;
+      });
+
+      // Row separation — thin dashed line
+      if (ri < rows.length - 1) {
+        const lineY = y + rowH + GAP / 2;
+        s.push(`<line x1="1.2" y1="${lineY}" x2="${FW-1.2}" y2="${lineY}" stroke="#222" stroke-width="0.18" stroke-dasharray="1.5,1"/>`);
+      }
+
+      y += rowH + GAP;
+    });
+
+    // Total yardage label on right selvedge
+    const yds = (totalH / 36).toFixed(1);
+    s.push(`<text x="${FW-0.4}" y="${totalH/2}" text-anchor="middle" dominant-baseline="middle" ` +
+      `font-size="1.6" fill="#444" font-family="${F}" ` +
+      `transform="rotate(90,${FW-0.4},${totalH/2})">${yds} yds total</text>`);
+
+    return `<svg viewBox="0 0 ${FW} ${totalH.toFixed(1)}" xmlns="http://www.w3.org/2000/svg">${s.join('')}</svg>`;
+  }
+
+  function buildPatternLayouts() {
+    const container = document.getElementById('patternLayouts');
+    container.innerHTML = '';
+    const names = { suit2:'2-Piece Suit · Jacket & Pants', suit3:'3-Piece Suit · Jacket, Pants & Vest', sportcoat:'Sport Coat', slacks:'Slacks', shirt:'Dress Shirt' };
+    state.garments.forEach(g => {
+      const rows = getLayoutRows(g, state.measurements);
+      if (!rows.length) return;
+      const wrap = document.createElement('div');
+      wrap.className = 'layout-garment';
+      wrap.innerHTML = `<div class="layout-garment-label">${names[g]}</div><div class="layout-fabric-wrap">${buildLayoutSVG(rows)}</div>`;
+      container.appendChild(wrap);
+    });
+  }
+
+  function startOver() {
+    state.garments.clear();
+    state.measurements = {};
+    document.querySelectorAll('.garment-btn').forEach(b => b.classList.remove('selected'));
+    goToPage(0);
+  }
+
+  async function handleFeedback(e) {
+    e.preventDefault();
+    const form = e.target;
+    const btn  = form.querySelector('button[type=submit]');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        form.reset();
+        document.getElementById('feedbackMsg').style.display = 'block';
+        btn.style.display = 'none';
+      } else {
+        btn.textContent = 'Try again';
+        btn.disabled = false;
+      }
+    } catch {
+      btn.textContent = 'Try again';
+      btn.disabled = false;
+    }
+  }
+</script>
+
+<section id="feedbackSection" style="
+  max-width: 520px;
+  margin: 40px auto 0;
+  padding: 0 24px;
+  font-family: var(--sans);
+">
+  <div style="border-top: 1px solid var(--rule); padding-top: 32px;">
+    <div style="font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--black); margin-bottom: 6px;">Leave feedback</div>
+    <div style="font-size: 12px; color: var(--light-gray); margin-bottom: 18px;">Found a bug? Have a suggestion? Let us know.</div>
+
+    <form id="feedbackForm" action="https://formspree.io/f/mzdldwkk" method="POST" onsubmit="handleFeedback(event)">
+      <input type="hidden" name="_subject" value="Cloth &amp; Chalk Feedback" />
+
+      <div style="margin-bottom: 12px;">
+        <input type="email" name="email" placeholder="Your email (optional)"
+          style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 4px; font-family: var(--sans); font-size: 13px; background: var(--warm-white); color: var(--black); outline: none;" />
+      </div>
+
+      <div style="margin-bottom: 14px;">
+        <textarea name="message" placeholder="Your feedback…" required rows="4"
+          style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 4px; font-family: var(--sans); font-size: 13px; background: var(--warm-white); color: var(--black); resize: vertical; outline: none;"></textarea>
+      </div>
+
+      <button type="submit" style="
+        background: var(--black); color: var(--cream);
+        border: none; border-radius: 4px;
+        padding: 11px 24px; font-family: var(--sans);
+        font-size: 13px; letter-spacing: 0.04em;
+        cursor: pointer; transition: opacity 0.2s;
+      " onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+        Send feedback
+      </button>
+
+      <div id="feedbackMsg" style="margin-top: 12px; font-size: 12px; color: var(--light-gray); display: none;">
+        Thanks — we'll read every note.
+      </div>
+    </form>
+  </div>
+</section>
+
+<footer style="
+  text-align: center;
+  padding: 18px 24px;
+  font-family: var(--sans);
+  font-size: 11px;
+  color: #999;
+  border-top: 1px solid var(--rule);
+  margin-top: 32px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+">
+  ⚠ Work in progress — figures are estimates only
+</footer>
+</body>
+</html>
