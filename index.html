@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
     :root {
       --black:      #0C0C0C;
       --off-black:  #1C1C1C;
@@ -22,14 +22,14 @@
       --serif: 'Playfair Display', Georgia, serif;
       --sans:  'Inter', -apple-system, sans-serif;
     }
-
+ 
     body {
       font-family: var(--sans);
       background: var(--cream);
       color: var(--text);
       min-height: 100vh;
     }
-
+ 
     /* ── Header ── */
     header {
       background: var(--black);
@@ -88,10 +88,10 @@
       color: var(--black);
       font-weight: 700;
     }
-
+ 
     /* ── Layout ── */
     .container { max-width: 520px; margin: 0 auto; padding: 28px 18px 52px; }
-
+ 
     /* ── Progress bar ── */
     .progress-track {
       display: flex;
@@ -116,7 +116,7 @@
     }
     .progress-node.done   { background: var(--black); }
     .progress-node.active { background: var(--black); transform: scale(1.5); }
-
+ 
     /* ── Section label ── */
     .section-eyebrow {
       font-size: 10px;
@@ -134,7 +134,7 @@
       margin-bottom: 24px;
       line-height: 1.2;
     }
-
+ 
     /* ── Mode selection ── */
     .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .mode-btn {
@@ -173,7 +173,7 @@
       color: var(--warm-gray);
       line-height: 1.5;
     }
-
+ 
     /* ── Garment selector ── */
     .garment-list {
       display: grid;
@@ -246,7 +246,7 @@
     .garment-btn.selected .g-check-badge { opacity: 1; transform: scale(1); }
     .garment-btn.selected .g-img { background: var(--cream-dark); }
     .garment-btn:not(.selected):hover { border-color: var(--charcoal); }
-
+ 
     /* ── Measurement fields ── */
     .measure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 16px; }
     .measure-group { display: flex; flex-direction: column; }
@@ -268,6 +268,64 @@
       color: #e74c3c;
       min-height: 14px;
       margin-top: 3px;
+    }
+    .options-section-title {
+      font-family: var(--serif);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--black);
+      margin: 22px 0 8px;
+    }
+    .options-section-title:first-child { margin-top: 0; }
+    .options-group-title {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--light-gray);
+      margin-bottom: 7px;
+    }
+    .option-grid {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .option-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .option-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .option-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+    .option-card {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid var(--rule);
+      background: var(--warm-white);
+      border-radius: 4px;
+      padding: 0;
+      cursor: pointer;
+      text-align: center;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      overflow: hidden;
+    }
+    .option-card.selected { border-color: var(--black); box-shadow: 0 0 0 1px var(--black); }
+    .option-card:not(.selected):hover { border-color: var(--charcoal); }
+    .oc-img {
+      background: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 6px 6px;
+      height: 58px;
+    }
+    .oc-img svg { width: 100%; max-width: 38px; height: auto; }
+    .oc-label {
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--black);
+      padding: 5px 4px 6px;
+      border-top: 1px solid var(--rule);
+      display: block;
+      letter-spacing: 0.02em;
     }
     .measure-input {
       display: flex;
@@ -297,7 +355,7 @@
       padding: 8px 0 8px 6px;
       align-self: flex-end;
     }
-
+ 
     /* ── Buttons ── */
     .btn-primary {
       width: 100%;
@@ -318,7 +376,7 @@
     }
     .btn-primary:hover  { background: var(--off-black); }
     .btn-primary:active { background: var(--charcoal); }
-
+ 
     .btn-secondary {
       width: 100%;
       background: transparent;
@@ -336,7 +394,7 @@
       text-align: center;
     }
     .btn-secondary:hover { color: var(--black); }
-
+ 
     /* ── Results ── */
     .result-eyebrow {
       font-size: 10px;
@@ -364,7 +422,7 @@
       background: var(--black);
       margin-bottom: 24px;
     }
-
+ 
     .result-item {
       padding: 18px 0;
       border-bottom: 1px solid var(--rule);
@@ -412,7 +470,7 @@
       color: var(--charcoal);
       font-weight: 500;
     }
-
+ 
     .totals-grid {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
@@ -454,7 +512,34 @@
       color: var(--light-gray);
       margin-top: 3px;
     }
-
+    .tc-amount-m {
+      font-family: var(--sans);
+      font-size: 15px;
+      color: var(--charcoal);
+      margin-top: 6px;
+      line-height: 1;
+    }
+    .total-cell.primary .tc-amount-m { color: rgba(245,240,232,0.75); }
+    .tc-unit-m {
+      font-size: 9px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--light-gray);
+      margin-top: 2px;
+    }
+    .total-cell.primary .tc-unit-m { color: rgba(245,240,232,0.5); }
+    .result-item-meters {
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--charcoal);
+      margin-top: 3px;
+    }
+    .result-item-meters span {
+      font-size: 10px;
+      color: var(--light-gray);
+      margin-left: 2px;
+    }
+ 
     .tip-box {
       background: var(--cream-dark);
       border-left: 2px solid var(--charcoal);
@@ -465,11 +550,11 @@
       line-height: 1.6;
     }
     .tip-box strong { font-weight: 600; color: var(--black); }
-
+ 
     /* ── Page transitions ── */
     .page { display: none; }
     .page.active { display: block; }
-
+ 
     /* ── Pattern layout ── */
     .layout-section { margin-top: 32px; }
     .layout-section-title {
@@ -501,7 +586,7 @@
       -webkit-overflow-scrolling: touch;
     }
     .layout-fabric-wrap svg { display: block; width: 100%; height: auto; }
-
+ 
     /* ── Validation ── */
     .error-text {
       font-size: 11px;
@@ -514,7 +599,7 @@
   </style>
 </head>
 <body>
-
+ 
 <header>
   <div class="header-spacer"></div>
   <div class="header-center">
@@ -526,9 +611,9 @@
     <button id="unitMeters"            onclick="setUnit('meters')">m</button>
   </div>
 </header>
-
+ 
 <div class="container">
-
+ 
   <!-- Progress indicator -->
   <div class="progress-track" id="progressTrack">
     <div class="progress-node active" id="pn0"></div>
@@ -538,11 +623,13 @@
     <div class="progress-node"  id="pn2"></div>
     <div class="progress-step"  id="ps2"></div>
     <div class="progress-node"  id="pn3"></div>
+    <div class="progress-step"  id="ps3"></div>
+    <div class="progress-node"  id="pn4"></div>
   </div>
-
+ 
   <!-- ══ PAGE 0: Measure Mode ══ -->
   <div class="page active" id="page0">
-    <div class="section-eyebrow">Step 1 of 3</div>
+    <div class="section-eyebrow">Step 1 of 4</div>
     <div class="section-title">How are you<br>measuring?</div>
     <div class="mode-grid">
       <button class="mode-btn" onclick="selectMode('body')">
@@ -557,13 +644,13 @@
       </button>
     </div>
   </div>
-
+ 
   <!-- ══ PAGE 1: Garment selection ══ -->
   <div class="page" id="page1">
-    <div class="section-eyebrow">Step 2 of 3</div>
+    <div class="section-eyebrow">Step 2 of 4</div>
     <div class="section-title">What are you<br>making?</div>
     <div class="garment-list" id="garmentGrid">
-
+ 
       <!-- 2-Piece Suit -->
       <button class="garment-btn suit" data-garment="suit2" onclick="toggleGarment(this)">
         <div class="g-check-badge">✓</div>
@@ -606,7 +693,7 @@
           <span class="g-sub">Jacket + Trousers</span>
         </div>
       </button>
-
+ 
       <!-- 3-Piece Suit -->
       <button class="garment-btn suit" data-garment="suit3" onclick="toggleGarment(this)">
         <div class="g-check-badge">✓</div>
@@ -653,7 +740,7 @@
           <span class="g-sub">+ Waistcoat</span>
         </div>
       </button>
-
+ 
       <!-- Sport Coat -->
       <button class="garment-btn sep" data-garment="sportcoat" onclick="toggleGarment(this)">
         <div class="g-check-badge">✓</div>
@@ -695,7 +782,7 @@
           <span class="g-sub">Single jacket</span>
         </div>
       </button>
-
+ 
       <!-- Slacks -->
       <button class="garment-btn sep" data-garment="slacks" onclick="toggleGarment(this)">
         <div class="g-check-badge">✓</div>
@@ -732,7 +819,7 @@
           <span class="g-sub">Trousers only</span>
         </div>
       </button>
-
+ 
       <!-- Waistcoat / Vest -->
       <button class="garment-btn sep" data-garment="vest" onclick="toggleGarment(this)">
         <div class="g-check-badge">✓</div>
@@ -768,7 +855,7 @@
           <span class="g-sub">Vest only</span>
         </div>
       </button>
-
+ 
       <!-- Dress Shirt — full width -->
       <button class="garment-btn full-width" data-garment="shirt" onclick="toggleGarment(this)">
         <div class="g-check-badge">✓</div>
@@ -816,24 +903,33 @@
           <span class="g-sub">Button-down / Formal</span>
         </div>
       </button>
-
+ 
     </div>
     <button class="btn-secondary" onclick="goToPage(0)" style="margin-top:20px">← Back</button>
   </div>
-
-  <!-- ══ PAGE 2: Measurements ══ -->
+ 
+  <!-- ══ PAGE 2: Style options ══ -->
   <div class="page" id="page2">
-    <div class="section-eyebrow">Step 3 of 3</div>
+    <div class="section-eyebrow">Step 3 of 4</div>
+    <div class="section-title">Style Options</div>
+    <div id="optionsFields"></div>
+    <button class="btn-primary" onclick="goToMeasurements()">Next →</button>
+    <button class="btn-secondary" onclick="goToPage(1)" style="margin-top:10px">← Back</button>
+  </div>
+ 
+  <!-- ══ PAGE 3: Measurements ══ -->
+  <div class="page" id="page3">
+    <div class="section-eyebrow">Step 4 of 4</div>
     <div class="section-title" id="measureCardTitle">Measurements</div>
     <div class="measure-grid" id="measureFields">
       <!-- Populated dynamically -->
     </div>
     <button class="btn-primary" onclick="calculate()">Calculate Fabric</button>
-    <button class="btn-secondary" onclick="goToPage(1)">← Back</button>
+    <button class="btn-secondary" onclick="goToPage(2)">← Back</button>
   </div>
-
-  <!-- ══ PAGE 3: Results ══ -->
-  <div class="page" id="page3">
+ 
+  <!-- ══ PAGE 4: Results ══ -->
+  <div class="page" id="page4">
     <div class="result-eyebrow">Estimate Ready</div>
     <div class="result-headline">Fabric Required</div>
     <div class="result-subtitle" id="resultSubtitle">58″ wide · body measures</div>
@@ -843,32 +939,38 @@
       <div class="total-cell primary">
         <div class="tc-label">Cloth</div>
         <div class="tc-amount" id="totalShell">—</div>
-        <div class="tc-unit">yards</div>
+        <div class="tc-unit">yds</div>
+        <div class="tc-amount-m" id="totalShellM">—</div>
+        <div class="tc-unit-m">m</div>
       </div>
       <div class="total-cell">
         <div class="tc-label">Lining</div>
         <div class="tc-amount" id="totalLining">—</div>
-        <div class="tc-unit">yards</div>
+        <div class="tc-unit">yds</div>
+        <div class="tc-amount-m" id="totalLiningM">—</div>
+        <div class="tc-unit-m">m</div>
       </div>
       <div class="total-cell">
         <div class="tc-label">Interfacing</div>
         <div class="tc-amount" id="totalInterf">—</div>
-        <div class="tc-unit">yards</div>
+        <div class="tc-unit">yds</div>
+        <div class="tc-amount-m" id="totalInterfM">—</div>
+        <div class="tc-unit-m">m</div>
       </div>
     </div>
     <div class="tip-box" id="tipBox"></div>
-
+ 
     <div class="layout-section">
       <div class="layout-section-title">Pattern Layout</div>
       <div class="layout-section-sub">How pieces fit on 58″ wide cloth</div>
       <div id="patternLayouts"></div>
     </div>
-
+ 
     <button class="btn-primary" onclick="startOver()">Start Over</button>
   </div>
-
+ 
 </div>
-
+ 
 <script>
   // ── State ──
   const state = {
@@ -876,9 +978,19 @@
     fabricWidth: 58,
     measureMode: 'body', // 'body' | 'garment'
     unit: 'yards',       // 'yards' | 'meters'
-    measurements: {}
+    measurements: {},
+    options: {
+      lapel:         'notch',    // 'notch' | 'peak' | 'shawl' | 'standup'
+      lapelWidth:    3.25,       // inches — user-specified width
+      pockets:       'flap',     // 'flap' | 'jetted' | 'patch'
+      ticketPocket:  false,
+      waistbandWidth:'standard', // 'narrow' | 'standard' | 'wide'
+      cuffs:         'none',  // 'none' | '1' | '1.25' | '1.5' | '1.75' | '2'
+      vestBack:      'lining',   // 'lining' | 'fabric'
+      vestPockets:   'jetted',   // 'jetted' | 'flap'
+    }
   };
-
+ 
   // ── Measurement field definitions ──
   // Two variants per field: body measure hints vs finished garment hints
   const fields = {
@@ -907,7 +1019,7 @@
       neck:        { label: 'Collar (finished)',        hint: 'Collar band length',          unit: 'in', min: 13,  max: 24  },
     }
   };
-
+ 
   // Which fields each garment type needs
   const garmentFields = {
     suit2:     ['chest','shoulder','backLength','sleeveLength','waist','hip','outseam','urise'],
@@ -917,34 +1029,47 @@
     vest:      ['chest','shoulder','backLength'],
     shirt:     ['chest','shoulder','shirtLength','sleeveLength','neck'],
   };
-
+ 
   // ── Yardage formulas ──
   // All base formulas calibrated for 60" wide fabric.
   // widthFactor scales up for narrower fabric.
   // Body mode adds ease allowance (~8-10%); finished garment mode uses pieces as-is.
   function widthFactor(w) { return 60 / w; }
   function easeFactor() { return state.measureMode === 'body' ? 1.09 : 1.0; }
-
+ 
   function calcJacket(m, wf) {
-    const yards60 = (m.backLength * 1.5 + m.sleeveLength + 12) / 36;
+    let yards60 = (m.backLength * 1.5 + m.sleeveLength + 12) / 36;
+    if (state.options.lapel === 'peak')    yards60 += 0.15;  // wider facing
+    if (state.options.lapel === 'shawl')   yards60 += 0.25;  // large self-faced shawl piece
+    if (state.options.lapel === 'standup') yards60 -= 0.10;  // no lapel facing, tiny collar
+    // Width delta vs. standard for that lapel type (~0.04 yd per extra inch of facing)
+    const _baseLW = { notch:3.25, peak:3.5, shawl:3.5, standup:1.5 };
+    yards60 += (parseFloat(state.options.lapelWidth) - (_baseLW[state.options.lapel] || 3.25)) * 0.04;
+    if (state.options.pockets === 'patch') yards60 += 0.25;
+    if (state.options.ticketPocket)        yards60 += 0.1;
     return parseFloat((yards60 * wf * easeFactor()).toFixed(2));
   }
-
+ 
   function calcTrousers(m, wf) {
-    const yards60 = (m.outseam * 1.2 + 8) / 36;
+    let yards60 = (m.outseam * 1.2 + 8) / 36;
+    const cuffDepth = parseFloat(state.options.cuffs) || 0; // 'none' → NaN → 0
+    if (cuffDepth > 0) yards60 += (cuffDepth * 4) / 36;    // 2 legs × 2× fold
+    if (state.options.waistbandWidth === 'wide')    yards60 += 0.1;
     return parseFloat((yards60 * wf * easeFactor()).toFixed(2));
   }
-
+ 
   function calcVest(m, wf) {
-    const yards60 = (m.backLength * 0.7 + 4) / 36;
+    let yards60 = (m.backLength * 0.7 + 4) / 36;
+    if (state.options.vestBack === 'fabric')    yards60 += 0.35;
+    if (state.options.vestPockets === 'flap')   yards60 += 0.1;
     return parseFloat((yards60 * wf * easeFactor()).toFixed(2));
   }
-
+ 
   function calcShirt(m, wf) {
     const yards60 = (m.shirtLength + m.sleeveLength + 16) / 36;
     return parseFloat((yards60 * wf * easeFactor()).toFixed(2));
   }
-
+ 
   // ── Lining estimates ──
   function calcLining(type, m) {
     if (type === 'suit2' || type === 'suit3' || type === 'sportcoat') {
@@ -953,24 +1078,27 @@
     if (type === 'slacks') return parseFloat(((m.outseam / 36) * 0.75).toFixed(2));
     return 0;
   }
-
+ 
   // ── UI helpers ──
   function setUnit(u) {
     state.unit = u;
     document.getElementById('unitYards').classList.toggle('active', u === 'yards');
     document.getElementById('unitMeters').classList.toggle('active', u === 'meters');
-    // Rebuild measurement fields if they're currently shown, so units update live
+    // Rebuild whichever fields are currently visible
+    if (document.getElementById('optionsFields')?.children.length) {
+      buildOptionsFields();
+    }
     if (document.getElementById('measureFields')?.children.length) {
       buildMeasurementFields();
     }
   }
-
+ 
   function selectMode(mode) {
     state.measureMode = mode;
     state.measurements = {}; // clear saved values when switching mode
     goToPage(1);
   }
-
+ 
   function toggleGarment(btn) {
     const g = btn.dataset.garment;
     // Clear any previous selection
@@ -980,15 +1108,15 @@
     state.garments.add(g);
     btn.classList.add('selected');
     // Small delay so the selection is visible before navigating
-    setTimeout(() => goToMeasurements(), 160);
+    setTimeout(() => goToOptions(), 160);
   }
-
+ 
   function goToPage(n) {
     document.querySelectorAll('.page').forEach((p, i) => {
       p.classList.toggle('active', i === n);
     });
     // Update progress nodes and segments
-    for (let i = 0; i <= 3; i++) {
+    for (let i = 0; i <= 4; i++) {
       const node = document.getElementById('pn' + i);
       if (node) {
         node.classList.toggle('active', i === n);
@@ -1001,31 +1129,341 @@
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-
-  function goToMeasurements() {
+ 
+  function goToOptions() {
     if (state.garments.size === 0) {
       document.getElementById('garmentError').classList.add('show');
       return;
     }
-    buildMeasurementFields();
+    buildOptionsFields();
     goToPage(2);
   }
-
+ 
+  function goToMeasurements() {
+    buildMeasurementFields();
+    goToPage(3);
+  }
+ 
+  function buildOptionsFields() {
+    const hasJacket  = ['suit2','suit3','sportcoat'].some(g => state.garments.has(g));
+    const hasTrouser = ['suit2','suit3','slacks'].some(g => state.garments.has(g));
+    const hasVest    = state.garments.has('suit3') || state.garments.has('vest');
+    const o = state.options;
+    const container = document.getElementById('optionsFields');
+ 
+    const S = `fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#2A2A2A" stroke-linecap="round" stroke-linejoin="round"`;
+ 
+    // ── Lapel SVGs ────────────────────────────────────────────────────
+    const svgNotch = `<svg viewBox="0 0 60 76" ${S}>
+      <path stroke-width="0.9" d="M10,6 L10,74 L50,74 L50,6"/>
+      <path stroke-width="0.9" d="M10,6 C14,9 22,14 24,23"/>
+      <path stroke-width="0.9" d="M50,6 C46,9 38,14 36,23"/>
+      <path stroke-width="0.9" d="M10,16 C13,20 19,25 24,23 L30,40"/>
+      <path stroke-width="0.9" d="M50,16 C47,20 41,25 36,23 L30,40"/>
+      <line stroke-width="0.55" x1="30" y1="40" x2="30" y2="74"/>
+    </svg>`;
+ 
+    const svgPeak = `<svg viewBox="0 0 60 76" ${S}>
+      <path stroke-width="0.9" d="M10,6 L10,74 L50,74 L50,6"/>
+      <path stroke-width="0.9" d="M10,6 C15,9 24,14 26,22"/>
+      <path stroke-width="0.9" d="M50,6 C45,9 36,14 34,22"/>
+      <path stroke-width="0.9" d="M10,18 C12,13 16,9 20,7 L26,22 L30,40"/>
+      <path stroke-width="0.9" d="M50,18 C48,13 44,9 40,7 L34,22 L30,40"/>
+      <line stroke-width="0.55" x1="30" y1="40" x2="30" y2="74"/>
+    </svg>`;
+ 
+    const svgShawl = `<svg viewBox="0 0 60 76" ${S}>
+      <path stroke-width="0.9" d="M10,6 L10,74 L50,74 L50,6"/>
+      <path stroke-width="0.9" d="M10,6 C11,12 14,20 20,28 C24,34 28,38 30,40"/>
+      <path stroke-width="0.9" d="M50,6 C49,12 46,20 40,28 C36,34 32,38 30,40"/>
+      <line stroke-width="0.55" x1="30" y1="40" x2="30" y2="74"/>
+    </svg>`;
+ 
+    const svgStandup = `<svg viewBox="0 0 60 76" ${S}>
+      <path stroke-width="0.9" d="M10,6 L10,74 L50,74 L50,6"/>
+      <path stroke-width="0.9" d="M22,6 L22,18 C22,23 26,25 30,25 C34,25 38,23 38,18 L38,6"/>
+      <path stroke-width="0.9" d="M22,18 C22,28 24,35 30,40"/>
+      <path stroke-width="0.9" d="M38,18 C38,28 36,35 30,40"/>
+      <line stroke-width="0.55" x1="30" y1="40" x2="30" y2="74"/>
+      <line stroke-width="0.55" x1="22" y1="13" x2="38" y2="13"/>
+    </svg>`;
+ 
+    // ── Pocket SVGs ───────────────────────────────────────────────────
+    const svgFlap = `<svg viewBox="0 0 64 52" ${S}>
+      <rect x="8" y="4" width="48" height="44" stroke-width="0.65"/>
+      <rect x="16" y="26" width="32" height="18" stroke-width="0.9"/>
+      <path stroke-width="0.9" d="M14,26 L50,26 L50,34 C50,38 48,40 46,40 L18,40 C16,40 14,38 14,34 Z"/>
+    </svg>`;
+ 
+    const svgJetted = `<svg viewBox="0 0 64 52" ${S}>
+      <rect x="8" y="4" width="48" height="44" stroke-width="0.65"/>
+      <rect x="16" y="21" width="32" height="4" stroke-width="0.9"/>
+      <rect x="16" y="27" width="32" height="4" stroke-width="0.9"/>
+    </svg>`;
+ 
+    const svgPatch = `<svg viewBox="0 0 64 52" ${S}>
+      <rect x="8" y="4" width="48" height="44" stroke-width="0.65"/>
+      <rect x="16" y="12" width="32" height="30" stroke-width="0.9"/>
+      <line stroke-width="1.3" x1="16" y1="12" x2="48" y2="12"/>
+      <line stroke-width="0.45" stroke-dasharray="2,2" x1="19" y1="15" x2="19" y2="39"/>
+      <line stroke-width="0.45" stroke-dasharray="2,2" x1="45" y1="15" x2="45" y2="39"/>
+      <line stroke-width="0.45" stroke-dasharray="2,2" x1="19" y1="39" x2="45" y2="39"/>
+    </svg>`;
+ 
+    // ── Ticket pocket SVGs ────────────────────────────────────────────
+    const svgNoTicket = `<svg viewBox="0 0 64 58" ${S}>
+      <rect x="8" y="4" width="48" height="50" stroke-width="0.65"/>
+      <path stroke-width="0.9" d="M14,34 L50,34 L50,42 C50,46 48,48 46,48 L18,48 C16,48 14,46 14,42 Z"/>
+    </svg>`;
+ 
+    const svgYesTicket = `<svg viewBox="0 0 64 58" ${S}>
+      <rect x="8" y="4" width="48" height="50" stroke-width="0.65"/>
+      <path stroke-width="0.9" d="M14,36 L50,36 L50,44 C50,48 48,50 46,50 L18,50 C16,50 14,48 14,44 Z"/>
+      <path stroke-width="0.9" d="M20,16 L44,16 L44,23 C44,25 43,26 42,26 L22,26 C21,26 20,25 20,23 Z"/>
+    </svg>`;
+ 
+    // ── Waistband SVGs ────────────────────────────────────────────────
+    const svgWBnarrow = `<svg viewBox="0 0 70 56" ${S}>
+      <path stroke-width="0.9" d="M8,18 L62,18 L64,54 L6,54 Z"/>
+      <rect x="8" y="9" width="54" height="9" rx="1" stroke-width="0.9"/>
+      <line stroke-width="0.5" x1="13" y1="9" x2="13" y2="18"/>
+      <line stroke-width="0.5" x1="35" y1="9" x2="35" y2="18"/>
+      <line stroke-width="0.5" x1="57" y1="9" x2="57" y2="18"/>
+    </svg>`;
+ 
+    const svgWBstandard = `<svg viewBox="0 0 70 56" ${S}>
+      <path stroke-width="0.9" d="M8,22 L62,22 L64,54 L6,54 Z"/>
+      <rect x="8" y="6" width="54" height="16" rx="1" stroke-width="0.9"/>
+      <line stroke-width="0.5" x1="13" y1="6" x2="13" y2="22"/>
+      <line stroke-width="0.5" x1="35" y1="6" x2="35" y2="22"/>
+      <line stroke-width="0.5" x1="57" y1="6" x2="57" y2="22"/>
+    </svg>`;
+ 
+    const svgWBwide = `<svg viewBox="0 0 70 56" ${S}>
+      <path stroke-width="0.9" d="M8,28 L62,28 L64,54 L6,54 Z"/>
+      <rect x="8" y="3" width="54" height="25" rx="1" stroke-width="0.9"/>
+      <line stroke-width="0.5" x1="13" y1="3" x2="13" y2="28"/>
+      <line stroke-width="0.5" x1="35" y1="3" x2="35" y2="28"/>
+      <line stroke-width="0.5" x1="57" y1="3" x2="57" y2="28"/>
+    </svg>`;
+ 
+    // ── Cuffs SVGs ────────────────────────────────────────────────────
+    const svgNoCuffs = `<svg viewBox="0 0 50 60" ${S}>
+      <path stroke-width="0.9" d="M8,6 C8,38 10,50 10,56 L40,56 C40,50 42,38 42,6"/>
+      <line stroke-width="0.9" x1="8" y1="6" x2="42" y2="6"/>
+      <line stroke-width="0.9" x1="10" y1="56" x2="40" y2="56"/>
+    </svg>`;
+    const svgCuffIcon = `<svg viewBox="0 0 50 62" ${S}>
+      <path stroke-width="0.9" d="M8,6 C8,34 10,47 10,49 L40,49 C40,47 42,34 42,6"/>
+      <line stroke-width="0.9" x1="8" y1="6" x2="42" y2="6"/>
+      <line stroke-width="0.9" x1="10" y1="49" x2="40" y2="49"/>
+      <path stroke-width="0.9" d="M10,49 L7,58 L43,58 L40,49"/>
+      <line stroke-width="0.9" x1="7" y1="58" x2="43" y2="58"/>
+    </svg>`;
+ 
+    // ── Vest back SVGs ────────────────────────────────────────────────
+    const svgVestLining = `<svg viewBox="0 0 60 74" ${S}>
+      <path stroke-width="0.9" d="M30,6 C26,6 20,8 16,12 L10,20 L10,72 L50,72 L50,20 L44,12 C40,8 34,6 30,6 Z"/>
+      <path stroke-width="0.9" d="M10,20 C14,18 18,22 20,26"/>
+      <path stroke-width="0.9" d="M50,20 C46,18 42,22 40,26"/>
+      <line stroke-width="0.45" stroke-dasharray="3,3" x1="14" y1="36" x2="46" y2="36"/>
+      <line stroke-width="0.45" stroke-dasharray="3,3" x1="14" y1="43" x2="46" y2="43"/>
+      <line stroke-width="0.45" stroke-dasharray="3,3" x1="14" y1="50" x2="46" y2="50"/>
+      <line stroke-width="0.45" stroke-dasharray="3,3" x1="14" y1="57" x2="46" y2="57"/>
+      <line stroke-width="0.45" stroke-dasharray="3,3" x1="14" y1="64" x2="46" y2="64"/>
+    </svg>`;
+ 
+    const svgVestFabric = `<svg viewBox="0 0 60 74" ${S}>
+      <path stroke-width="0.9" d="M30,6 C26,6 20,8 16,12 L10,20 L10,72 L50,72 L50,20 L44,12 C40,8 34,6 30,6 Z"/>
+      <path stroke-width="0.9" d="M10,20 C14,18 18,22 20,26"/>
+      <path stroke-width="0.9" d="M50,20 C46,18 42,22 40,26"/>
+      <line stroke-width="0.55" x1="30" y1="6" x2="30" y2="72"/>
+    </svg>`;
+ 
+    // ── Helpers ───────────────────────────────────────────────────────
+    function card(key, val, label, svg) {
+      const active = o[key] === val ? ' selected' : '';
+      const v = typeof val === 'boolean' ? String(val) : val;
+      return `<button class="option-card${active}" onclick="selectOption('${key}','${v}',this)">
+        <div class="oc-img">${svg}</div>
+        <span class="oc-label">${label}</span>
+      </button>`;
+    }
+    function group(title, cols, cards) {
+      return `<div class="options-group-title">${title}</div>
+        <div class="option-grid" style="grid-template-columns:repeat(${cols},1fr)">${cards.join('')}</div>`;
+    }
+ 
+    let html = '';
+    const useCm    = state.unit === 'meters';
+    const inToU    = v => +(useCm ? v * 2.54 : v).toFixed(1);
+    const lapelUnit = useCm ? 'cm' : '"';
+ 
+    if (hasJacket) {
+      const LAPEL_LIMITS = { notch:[2.5,4.0], peak:[3.0,4.5], shawl:[3.0,5.0], standup:[1.0,2.0] };
+      const LAPEL_LABELS = { notch:'Lapel width', peak:'Lapel width', shawl:'Lapel width', standup:'Collar height' };
+      const lapelLim = LAPEL_LIMITS[o.lapel] || [2.5, 4.5];
+      const lapelLbl = LAPEL_LABELS[o.lapel] || 'Lapel width';
+      const lapelW   = inToU(o.lapelWidth || 3.25);
+      const lapelMin = inToU(lapelLim[0]), lapelMax = inToU(lapelLim[1]);
+      html += `<div class="options-section-title">Jacket</div>`;
+      html += `<div class="options-group-title">Lapel style</div>
+        <div class="option-grid" style="grid-template-columns:repeat(4,1fr); margin-bottom:6px;">
+          <button class="option-card${o.lapel==='notch'  ?' selected':''}" onclick="setLapelType('notch',this)"><div class="oc-img">${svgNotch}</div><span class="oc-label">Notch</span></button>
+          <button class="option-card${o.lapel==='peak'   ?' selected':''}" onclick="setLapelType('peak',this)"><div class="oc-img">${svgPeak}</div><span class="oc-label">Peak</span></button>
+          <button class="option-card${o.lapel==='shawl'  ?' selected':''}" onclick="setLapelType('shawl',this)"><div class="oc-img">${svgShawl}</div><span class="oc-label">Shawl</span></button>
+          <button class="option-card${o.lapel==='standup'?' selected':''}" onclick="setLapelType('standup',this)"><div class="oc-img">${svgStandup}</div><span class="oc-label">Stand-up</span></button>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:18px; padding:8px 10px; background:var(--cream); border-radius:4px;">
+          <span id="lapelWidthLabel" style="font-size:11px; color:var(--charcoal); white-space:nowrap;">${lapelLbl}</span>
+          <input type="number" id="lapelWidthInput"
+            value="${lapelW}" min="${lapelMin}" max="${lapelMax}" step="0.1"
+            onchange="setLapelWidth(this)"
+            style="flex:1; padding:6px 8px; border:1px solid var(--rule); border-radius:4px; background:var(--warm-white); font-family:var(--sans); font-size:13px; color:var(--black);" />
+          <span style="font-size:11px; color:var(--charcoal);">${lapelUnit}</span>
+          <span id="lapelWidthHint" style="font-size:10px; color:var(--light-gray); white-space:nowrap;">${lapelMin}–${lapelMax} ${lapelUnit}</span>
+        </div>`;
+      html += group('Pockets', 3, [
+        card('pockets', 'flap',   'Flap',   svgFlap),
+        card('pockets', 'jetted', 'Jetted', svgJetted),
+        card('pockets', 'patch',  'Patch',  svgPatch),
+      ]);
+      html += group('Ticket pocket', 2, [
+        card('ticketPocket', false, 'None', svgNoTicket),
+        card('ticketPocket', true,  'Yes',  svgYesTicket),
+      ]);
+    }
+ 
+    if (hasTrouser) {
+      html += `<div class="options-section-title">Trousers</div>`;
+      html += group('Waistband', 3, [
+        card('waistbandWidth', 'narrow',   'Narrow (1")',    svgWBnarrow),
+        card('waistbandWidth', 'standard', 'Standard (1½")', svgWBstandard),
+        card('waistbandWidth', 'wide',     'Wide (2")',      svgWBwide),
+      ]);
+      const cuffWithActive = o.cuffs !== 'none' ? ' selected' : '';
+      const cuffNoneActive = o.cuffs === 'none' ? ' selected' : '';
+      const cuffSel = o.cuffs !== 'none' ? o.cuffs : '1.5';
+      html += `<div class="options-group-title">Cuffs / turn-ups</div>
+        <div class="option-grid" style="grid-template-columns:repeat(2,1fr); margin-bottom:6px;">
+          <button class="option-card${cuffNoneActive}" onclick="setCuffs('none',this)">
+            <div class="oc-img">${svgNoCuffs}</div>
+            <span class="oc-label">No cuff</span>
+          </button>
+          <button class="option-card${cuffWithActive}" onclick="setCuffs('with',this)">
+            <div class="oc-img">${svgCuffIcon}</div>
+            <span class="oc-label">With cuffs</span>
+          </button>
+        </div>
+        <div id="cuffSizeRow" style="display:${o.cuffs !== 'none' ? 'flex' : 'none'}; align-items:center; gap:10px; margin-bottom:18px; padding:8px 10px; background:var(--cream); border-radius:4px;">
+          <span style="font-size:11px; color:var(--charcoal); white-space:nowrap;">Cuff depth</span>
+          <input type="number" id="cuffSizeInput"
+            value="${+(useCm ? parseFloat(cuffSel)*2.54 : parseFloat(cuffSel)).toFixed(1)}"
+            min="${useCm ? 1.9 : 0.8}" max="${useCm ? 6.4 : 2.5}" step="0.1"
+            onchange="setCuffWidth(this)"
+            style="flex:1; padding:6px 8px; border:1px solid var(--rule); border-radius:4px; background:var(--warm-white); font-family:var(--sans); font-size:13px; color:var(--black);" />
+          <span style="font-size:11px; color:var(--charcoal);">${lapelUnit}</span>
+          <span style="font-size:10px; color:var(--light-gray); white-space:nowrap;">${useCm ? '1.9–6.4 cm' : '¾" – 2½"'}</span>
+        </div>`;
+    }
+ 
+    if (hasVest) {
+      html += `<div class="options-section-title">Waistcoat</div>`;
+      html += group('Pockets', 2, [
+        card('vestPockets', 'jetted', 'Jetted', svgJetted),
+        card('vestPockets', 'flap',   'Flap',   svgFlap),
+      ]);
+      html += group('Back', 2, [
+        card('vestBack', 'lining', 'Lining back',      svgVestLining),
+        card('vestBack', 'fabric', 'Full fabric back', svgVestFabric),
+      ]);
+    }
+ 
+    container.innerHTML = html;
+  }
+ 
+  function selectOption(key, val, btn) {
+    if (val === 'true')  val = true;
+    if (val === 'false') val = false;
+    state.options[key] = val;
+    btn.closest('.option-grid').querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+    btn.classList.add('selected');
+  }
+ 
+  const _LAPEL_LIMITS  = { notch:[2.5,4.0], peak:[3.0,4.5], shawl:[3.0,5.0], standup:[1.0,2.0] };
+  const _LAPEL_DEFAULTS = { notch:3.25, peak:3.5, shawl:3.5, standup:1.5 };
+  const _LAPEL_LABELS  = { notch:'Lapel width', peak:'Lapel width', shawl:'Lapel width', standup:'Collar height' };
+ 
+  function setLapelType(val, btn) {
+    btn.closest('.option-grid').querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+    btn.classList.add('selected');
+    state.options.lapel = val;
+    const [min, max] = _LAPEL_LIMITS[val];
+    const def = _LAPEL_DEFAULTS[val];
+    state.options.lapelWidth = def;
+    const useCm = state.unit === 'meters';
+    const toU = v => useCm ? +(v * 2.54).toFixed(1) : v;
+    const unit = useCm ? 'cm' : '"';
+    const inp  = document.getElementById('lapelWidthInput');
+    const hint = document.getElementById('lapelWidthHint');
+    const lbl  = document.getElementById('lapelWidthLabel');
+    if (inp)  { inp.min = toU(min); inp.max = toU(max); inp.value = toU(def); inp.step = 0.1; }
+    if (hint) hint.textContent = `${toU(min)}–${toU(max)} ${unit}`;
+    if (lbl)  lbl.textContent  = _LAPEL_LABELS[val] || 'Lapel width';
+  }
+ 
+  function setLapelWidth(inp) {
+    const useCm = state.unit === 'meters';
+    const [minIn, maxIn] = _LAPEL_LIMITS[state.options.lapel] || [2.5, 4.5];
+    const [min, max] = useCm ? [+(minIn*2.54).toFixed(1), +(maxIn*2.54).toFixed(1)] : [minIn, maxIn];
+    const raw = +Math.max(min, Math.min(max, parseFloat(inp.value) || min)).toFixed(1);
+    state.options.lapelWidth = +(useCm ? raw / 2.54 : raw).toFixed(2);
+    inp.value = raw;
+  }
+ 
+  function setCuffs(val, btn) {
+    btn.closest('.option-grid').querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+    btn.classList.add('selected');
+    const sizeRow = document.getElementById('cuffSizeRow');
+    if (val === 'none') {
+      state.options.cuffs = 'none';
+      sizeRow.style.display = 'none';
+    } else {
+      const inp = document.getElementById('cuffSizeInput');
+      if (inp) {
+        const useCm = state.unit === 'meters';
+        const raw = parseFloat(inp.value) || (useCm ? 3.8 : 1.5);
+        state.options.cuffs = String(+(useCm ? raw / 2.54 : raw).toFixed(3));
+      } else {
+        state.options.cuffs = '1.5';
+      }
+      sizeRow.style.display = 'flex';
+    }
+  }
+ 
+  function setCuffWidth(inp) {
+    const useCm = state.unit === 'meters';
+    const [minV, maxV] = useCm ? [1.9, 6.4] : [0.8, 2.5];
+    const raw = +Math.max(minV, Math.min(maxV, parseFloat(inp.value) || (useCm ? 3.8 : 1.5))).toFixed(1);
+    state.options.cuffs = String(+(useCm ? raw / 2.54 : raw).toFixed(2));
+    inp.value = raw;
+  }
+ 
   function buildMeasurementFields() {
     const needed = new Set();
     state.garments.forEach(g => garmentFields[g].forEach(f => needed.add(f)));
-
+ 
     const fieldDefs = fields[state.measureMode];
     const title = state.measureMode === 'body' ? 'Body Measurements' : 'Finished Garment Measurements';
     document.getElementById('measureCardTitle').textContent = title;
-
+ 
     const container = document.getElementById('measureFields');
     container.innerHTML = '';
-
+ 
     const useCm  = state.unit === 'meters';   // input in cm when output is meters
     const toDisp = v => useCm ? +(v * 2.54).toFixed(1) : v;  // stored inches → display unit
     const unitLbl = useCm ? 'cm' : 'in';
-
+ 
     const order = ['chest','shoulder','backLength','sleeveLength','neck','waist','hip','outseam','urise','shirtLength'];
     order.forEach(key => {
       if (!needed.has(key)) return;
@@ -1050,12 +1488,12 @@
       container.appendChild(div);
     });
   }
-
+ 
   function calculate() {
     // Read measurements
     const needed = new Set();
     state.garments.forEach(g => garmentFields[g].forEach(f => needed.add(f)));
-
+ 
     let valid = true;
     const m = {};
     const fieldDefs = fields[state.measureMode];
@@ -1091,21 +1529,21 @@
       }
     });
     if (!valid) return;
-
+ 
     const wf = widthFactor(state.fabricWidth);
     const container = document.getElementById('resultItems');
     container.innerHTML = '';
     let grandShell = 0, grandLining = 0, grandInterf = 0;
-
+ 
     const names = {
       suit2: '2-Piece Suit', suit3: '3-Piece Suit',
       sportcoat: 'Sport Coat', slacks: 'Slacks', vest: 'Waistcoat', shirt: 'Dress Shirt'
     };
-
+ 
     state.garments.forEach(g => {
       let shell = 0, lining = 0, interf = 0;
       const clothRows = [], liningRows = [], interfRows = [];
-
+ 
       if (g === 'suit2') {
         const jkt = calcJacket(m, wf), trs = calcTrousers(m, wf);
         shell = parseFloat((jkt + trs).toFixed(2));
@@ -1147,22 +1585,23 @@
         liningRows.push({ label: 'Back + facing lining', val: lining });
         interfRows.push({ label: 'Fusible', val: interf });
       }
-
+ 
       grandShell  += shell;
       grandLining += lining;
       grandInterf += interf;
-
-      const isM = state.unit === 'meters';
-      const cvt = v => isM ? v * 0.9144 : v;
-      const uLbl = isM ? 'm' : 'yds';
-      const fmt = v => v > 0 ? cvt(v).toFixed(isM ? 2 : 2) + ' ' + uLbl : '—';
-
+ 
+      const toM  = v => (v * 0.9144).toFixed(2);
+      const fmt  = v => v > 0 ? `${v.toFixed(2)} yds / ${toM(v)} m` : '—';
+ 
       const item = document.createElement('div');
       item.className = 'result-item';
       item.innerHTML = `
         <div class="result-item-top">
           <div class="result-item-name">${names[g]}</div>
-          <div class="result-item-yards">${cvt(shell).toFixed(isM ? 2 : 1)} <span>cloth ${uLbl}</span></div>
+          <div>
+            <div class="result-item-yards">${shell.toFixed(2)} <span>yds cloth</span></div>
+            <div class="result-item-meters">${toM(shell)} <span>m</span></div>
+          </div>
         </div>
         <div class="result-breakdown">
           ${clothRows.map(r => `
@@ -1179,31 +1618,29 @@
         </div>`;
       container.appendChild(item);
     });
-
-    const isMeters = state.unit === 'meters';
-    const convert  = v => isMeters ? v * 0.9144 : v;
-    const unitLabel = isMeters ? 'm' : 'yds';
-    const buf = v => (convert(v) * 1.1).toFixed(isMeters ? 2 : 1);
-
-    document.getElementById('totalShell').textContent  = buf(grandShell);
-    document.getElementById('totalLining').textContent = grandLining > 0 ? buf(grandLining) : '—';
-    document.getElementById('totalInterf').textContent = grandInterf > 0 ? buf(grandInterf) : '—';
-    // Update unit labels in the total cells
-    document.querySelectorAll('.tc-unit').forEach(el => el.textContent = unitLabel);
-
+ 
+    const buf  = v => (v * 1.1).toFixed(2);
+    const bufM = v => (v * 0.9144 * 1.1).toFixed(2);
+ 
+    document.getElementById('totalShell').textContent   = buf(grandShell);
+    document.getElementById('totalShellM').textContent  = bufM(grandShell);
+    document.getElementById('totalLining').textContent  = grandLining > 0 ? buf(grandLining)  : '—';
+    document.getElementById('totalLiningM').textContent = grandLining > 0 ? bufM(grandLining) : '—';
+    document.getElementById('totalInterf').textContent  = grandInterf > 0 ? buf(grandInterf)  : '—';
+    document.getElementById('totalInterfM').textContent = grandInterf > 0 ? bufM(grandInterf) : '—';
+ 
     const modeLabel = state.measureMode === 'body' ? 'body measures' : 'finished garment';
-    document.getElementById('resultSubtitle').textContent =
-      `58″ wide · ${modeLabel} · ${unitLabel}`;
-
-    const extraCloth = (convert(grandShell) * 0.15 * 1.1);
+    document.getElementById('resultSubtitle').textContent = `58″ wide · ${modeLabel}`;
+ 
+    const extra = grandShell * 0.15 * 1.1;
     document.getElementById('tipBox').innerHTML =
       `<strong>Note:</strong> All totals include a 10% buffer. ` +
-      `For plaids or large repeats, add an extra ${extraCloth.toFixed(isMeters ? 2 : 1)} ${unitLabel} to cloth.`;
-
+      `For plaids or large repeats, add an extra ${extra.toFixed(2)} yds / ${(extra * 0.9144).toFixed(2)} m to cloth.`;
+ 
     buildPatternLayouts();
-    goToPage(3);
+    goToPage(4);
   }
-
+ 
   // ── Pattern Layout ──────────────────────────────────────────────────
   // Greedy first-fit decreasing packer: sorts pieces by height desc,
   // then fills each row horizontally before starting a new one.
@@ -1220,20 +1657,19 @@
     const waist    = (m.waist      || 34) + (ease ? 1 : 0);
     const neck     = (m.neck       || 15);
     const shoulder = (m.shoulder   || 18);
-
+ 
     const bkW   = chest / 4 + 2.5;
     const frW   = chest / 4 + 3;
     const tsW   = shoulder / 3 + 3;
     const usW   = shoulder / 3 + 1;
-    const facW  = 7;
     const slvH  = sleeve + 7;
     const legFW = hip / 4 + 2.5;
     const legBW = hip / 4 + 4;
-
+ 
     // Usable width between selvedges, minus piece gap buffer
     const AVAIL = 54.8;
     const PG    = 0.45;
-
+ 
     // Pack a flat piece list into rows using FFD (first-fit decreasing by height)
     function pack(pieces) {
       const sorted  = [...pieces].sort((a, b) => b.h - a.h || b.w - a.w);
@@ -1256,7 +1692,47 @@
       }
       return rows;
     }
-
+ 
+    // Options shortcuts
+    const opt = state.options;
+    const wbH = opt.waistbandWidth === 'narrow' ? 3 : opt.waistbandWidth === 'wide' ? 6 : 4.5;
+    const cuffDepth = parseFloat(opt.cuffs) || 0;
+    const trsH = outseam + cuffDepth * 2;  // fold doubles the fabric needed
+ 
+    // Facing size: base width per lapel type, then scaled by user's lapel width
+    const _facBase = { notch:7, peak:9, shawl:5, standup:2.5 };
+    const _lwBase  = { notch:3.25, peak:3.5, shawl:3.5, standup:1.5 };
+    const _lapelW  = parseFloat(opt.lapelWidth) || _lwBase[opt.lapel] || 3.25;
+    const facW = (_facBase[opt.lapel] || 7) + (_lapelW - (_lwBase[opt.lapel] || 3.25));
+    const facH = opt.lapel === 'standup' ? back * 0.45 : back * 0.65;
+ 
+    // Collar pieces by lapel type
+    const collarPieces = opt.lapel === 'standup'
+      ? [ { n:'Stand Collar', w:neck*0.75, h:4 } ]
+      : opt.lapel === 'shawl'
+        // Shawl wraps shoulder-to-shoulder + down the front, so significantly wider
+        ? [ { n:'Shawl Col.', w:neck*1.4, h:7, shape:'collar' } ]
+        // Notch and peak share the same collar structure; peak difference is in the facing
+        : [ { n:'Collar',    w:neck*0.8,  h:5, shape:'collar' },
+            { n:'Col. Band', w:neck*0.75, h:3, shape:'collar-band' } ];
+ 
+    // Vest pocket layout pieces driven by vestPockets option
+    const vestPocketPieces = opt.vestPockets === 'flap'
+      ? [ { n:'V.Flap', w:4, h:2 }, { n:'V.Flap', w:4, h:2 }, { n:'V.Welt ×4', w:8, h:2 } ]
+      : [ { n:'V.Welt ×4', w:8, h:2 } ];
+ 
+    // Pocket pieces by pocket style
+    const pocketPieces = opt.pockets === 'jetted'
+      ? [ { n:'Welt ×4', w:10, h:3 } ]
+      : opt.pockets === 'patch'
+        ? [ { n:'Patch', w:6.5, h:7 }, { n:'Patch', w:6.5, h:7 },
+            { n:'Welt ×2', w:10, h:3 } ]
+        : [ { n:'Flap', w:5.5, h:2.5 }, { n:'Flap', w:5.5, h:2.5 },
+            { n:'Welt ×4', w:10, h:3 } ];
+ 
+    const ticketPieces = opt.ticketPocket
+      ? [ { n:'Ticket Flap', w:4, h:2 } ] : [];
+ 
     // Shared piece lists
     const jacketPieces = [
       { n:'Back',      w:bkW,       h:back,       shape:'jacket-back' },
@@ -1267,60 +1743,57 @@
       { n:'Top Slv',   w:tsW,       h:slvH,       shape:'jacket-sleeve-top' },
       { n:'Und Slv',   w:usW,       h:slvH,       shape:'jacket-sleeve-under' },
       { n:'Und Slv',   w:usW,       h:slvH,       shape:'jacket-sleeve-under' },
-      { n:'Facing',    w:facW,      h:back*0.65,  shape:'facing' },
-      { n:'Facing',    w:facW,      h:back*0.65,  shape:'facing',             mirror:true },
-      { n:'Flap',      w:5.5,       h:2.5 },   // hip pocket flap ×2
-      { n:'Flap',      w:5.5,       h:2.5 },
-      { n:'Collar',    w:neck*0.75, h:5,          shape:'collar' },
-      { n:'Collar Bd', w:neck*0.75, h:3,          shape:'collar-band' },
-      { n:'Welt ×4',   w:10,        h:3 },
+      { n:'Facing',    w:facW,      h:facH,  shape:'facing' },
+      { n:'Facing',    w:facW,      h:facH,  shape:'facing',             mirror:true },
+      ...collarPieces,
+      ...pocketPieces,
+      ...ticketPieces,
     ];
-
+ 
     const trouserPieces = [
-      { n:'Front L',   w:legFW,         h:outseam,  shape:'trouser-front' },
-      { n:'Front R',   w:legFW,         h:outseam,  shape:'trouser-front',    mirror:true },
-      { n:'Back L',    w:legBW,         h:outseam,  shape:'trouser-back' },
-      { n:'Back R',    w:legBW,         h:outseam,  shape:'trouser-back',     mirror:true },
-      { n:'Waistband', w:waist/2+2,     h:4.5,      shape:'waistband' },
+      { n:'Front L',   w:legFW,         h:trsH,  shape:'trouser-front' },
+      { n:'Front R',   w:legFW,         h:trsH,  shape:'trouser-front',    mirror:true },
+      { n:'Back L',    w:legBW,         h:trsH,  shape:'trouser-back' },
+      { n:'Back R',    w:legBW,         h:trsH,  shape:'trouser-back',     mirror:true },
+      { n:'Waistband', w:waist/2+2,     h:wbH,   shape:'waistband' },
     ];
-
+ 
     if (garment === 'suit2') {
       return [...pack(jacketPieces), ...pack(trouserPieces)];
     }
-
+ 
     if (garment === 'sportcoat') {
       return pack(jacketPieces);
     }
-
+ 
     if (garment === 'suit3') {
       const vstW = chest / 4 + 2;
       const vstH = back * 0.72;
       const vestPieces = [
         { n:'Vest Front', w:vstW,        h:vstH, shape:'vest-front' },
         { n:'Vest Front', w:vstW,        h:vstH, shape:'vest-front', mirror:true },
-        { n:'Vest Back',  w:vstW * 1.05, h:vstH, shape:'jacket-back' },
+        ...(opt.vestBack === 'fabric' ? [{ n:'Vest Back', w:vstW * 1.05, h:vstH, shape:'jacket-back' }] : []),
+        ...vestPocketPieces,
       ];
       return [...pack([...jacketPieces, ...vestPieces]), ...pack(trouserPieces)];
     }
-
+ 
     if (garment === 'slacks') {
       return pack(trouserPieces);
     }
-
+ 
     if (garment === 'vest') {
       const vstW = chest / 4 + 2;
       const vstH = back * 0.72;
       const vestPieces = [
         { n:'Front L',  w:vstW,        h:vstH, shape:'vest-front' },
         { n:'Front R',  w:vstW,        h:vstH, shape:'vest-front', mirror:true },
-        { n:'Back',     w:vstW * 1.05, h:vstH, shape:'jacket-back' },
-        { n:'Flap',     w:5,           h:2 },
-        { n:'Flap',     w:5,           h:2 },
-        { n:'Welt ×4',  w:9,           h:2.5 },
+        ...(opt.vestBack === 'fabric' ? [{ n:'Back', w:vstW * 1.05, h:vstH, shape:'jacket-back' }] : []),
+        ...vestPocketPieces,
       ];
       return pack(vestPieces);
     }
-
+ 
     if (garment === 'shirt') {
       const bodyW  = chest / 4 + 2;
       const slvW   = shoulder / 3 + 3;
@@ -1339,10 +1812,10 @@
       ];
       return pack(shirtPieces);
     }
-
+ 
     return [];
   }
-
+ 
   // Returns SVG path `d` for each piece silhouette type.
   // (x,y) = bounding box top-left, (w,h) = size in inches.
   // mirror=true flips horizontally for right-hand pieces.
@@ -1354,7 +1827,7 @@
     const M  = (px, py) => `M ${mx(px)},${my(py)}`;
     const C  = (x1,y1,x2,y2,ex,ey) => `C ${mx(x1)},${my(y1)} ${mx(x2)},${my(y2)} ${mx(ex)},${my(ey)}`;
     const Q  = (cx,cy,ex,ey)        => `Q ${mx(cx)},${my(cy)} ${mx(ex)},${my(ey)}`;
-
+ 
     switch (type) {
       case 'jacket-back':
         // CB on left (slight inward curve for fit).
@@ -1372,7 +1845,7 @@
           C(x+w*0.07, y+h*0.65, x+w*0.04, y+h*0.35, x+w*0.05, y+h*0.025),  // CB seam
           'Z'
         ].join(' ');
-
+ 
       case 'jacket-front':
         // CF on right (straight with slight neckline step).
         // Armscye on left: a pronounced inward scoop — the deepest point is
@@ -1388,7 +1861,7 @@
           C(x,        y+h*0.04, x+w*0.07, y,   x+w*0.20, y),              // armscye to shoulder
           'Z'
         ].join(' ');
-
+ 
       case 'vest-front':
         // Like jacket-front but shorter and without a sleeve — shallower armscye.
         return [
@@ -1402,7 +1875,7 @@
           C(x,        y+h*0.03, x+w*0.07, y,        x+w*0.16, y),
           'Z'
         ].join(' ');
-
+ 
       case 'jacket-sleeve-top':
         // Two-piece top sleeve.
         // Cap is ASYMMETRIC: back (left in layout) is fuller/higher than front.
@@ -1416,7 +1889,7 @@
           C(x+w*0.10,  y+h*0.82, x+w*0.01, y+h*0.52, x, y+h*0.21),    // back seam taper
           'Z'
         ].join(' ');
-
+ 
       case 'jacket-sleeve-under':
         // Narrower, very flat cap — barely rises above the seam line.
         return [
@@ -1428,7 +1901,7 @@
           L(x,         y+h*0.055),
           'Z'
         ].join(' ');
-
+ 
       case 'facing':
         // Lapel facing: wide at shoulder, tapers to a point near the hem.
         return [
@@ -1439,7 +1912,7 @@
           L(x,        y),
           'Z'
         ].join(' ');
-
+ 
       case 'trouser-front':
         // J-shaped crotch: gentle sweep at top inner edge, then straight inseam.
         // Side seam curves slightly for the hip.
@@ -1452,7 +1925,7 @@
           C(x+w*0.03,  y+h*0.65, x, y+h*0.32,  x,   y),          // side seam (hip curve)
           'Z'
         ].join(' ');
-
+ 
       case 'trouser-back':
         // Dramatic sweeping C-curve: waist lifts at CB (longer back rise),
         // then arcs down and out for the seat before the inseam.
@@ -1465,7 +1938,7 @@
           C(x+w*0.02,  y+h*0.65, x,        y+h*0.35, x+w*0.06, y+h*0.07), // side seam
           'Z'
         ].join(' ');
-
+ 
       case 'waistband':
         // Slight outward belly curve on bottom edge (reflects curved waist seam).
         return [
@@ -1476,7 +1949,7 @@
           L(x,    y),
           'Z'
         ].join(' ');
-
+ 
       case 'shirt-back':
         // Shallow armscye (shirts have less armscye depth than jackets).
         // CB neck concave notch; shoulder seam very slightly sloped.
@@ -1491,7 +1964,7 @@
           C(x,        y+h*0.05, x+w*0.03, y+h*0.01, x+w*0.03, y+h*0.02),
           'Z'
         ].join(' ');
-
+ 
       case 'shirt-front':
         // Armscye concave on left, placket/CF edge straight on right.
         return [
@@ -1503,7 +1976,7 @@
           C(x,        y+h*0.06, x+w*0.05, y+h*0.01, x+w*0.15, y),
           'Z'
         ].join(' ');
-
+ 
       case 'shirt-sleeve':
         // Shirt sleeve: high symmetrical cap, seams taper to a narrower cuff.
         return [
@@ -1515,7 +1988,7 @@
           C(x+w*0.09,  y+h*0.83, x+w*0.01, y+h*0.52, x, y+h*0.23),
           'Z'
         ].join(' ');
-
+ 
       case 'collar':
         // Spread collar: curved neckline edge with two collar points at bottom corners.
         return [
@@ -1528,7 +2001,7 @@
           L(x,         y+h*0.45),
           'Z'
         ].join(' ');
-
+ 
       case 'collar-band':
         // Slightly curved strip that follows the neckline.
         return [
@@ -1540,7 +2013,7 @@
           L(x,         y+h*0.35),
           'Z'
         ].join(' ');
-
+ 
       case 'pocket-bag':
         // Bag with a notched top-right corner (welt opening side) and rounded base.
         return [
@@ -1554,27 +2027,27 @@
           L(x,         y),
           'Z'
         ].join(' ');
-
+ 
       default:
         return `M ${f(x)},${f(y)} L ${f(x+w)},${f(y)} L ${f(x+w)},${f(y+h)} L ${f(x)},${f(y+h)} Z`;
     }
   }
-
+ 
   function buildLayoutSVG(rows) {
     const FW  = 58;
     const GAP = 1.5;
     const PAD = 1.5;
     const PG  = 0.45; // piece gap
-
+ 
     let totalH = PAD;
     rows.forEach(row => {
       totalH += Math.max(...row.map(p => p.h)) + GAP;
     });
     totalH += PAD - GAP;
-
+ 
     const s = [];
     const F  = 'Inter,system-ui,sans-serif';
-
+ 
     // Fabric background — black
     s.push(`<rect width="${FW}" height="${totalH}" fill="#0C0C0C"/>`);
     // Subtle 10" grid
@@ -1588,12 +2061,12 @@
     s.push(`<line x1="${FW-1.1}" y1="0" x2="${FW-1.1}" y2="${totalH}" stroke="#333" stroke-width="0.12"/>`);
     // Width label
     s.push(`<text x="${FW/2}" y="${PAD*0.62}" text-anchor="middle" font-size="1.6" fill="#444" font-family="${F}">← 58″ fabric width →</text>`);
-
+ 
     let y = PAD;
     rows.forEach((row, ri) => {
       const rowH = Math.max(...row.map(p => p.h));
       let x = PG + 1.2; // offset for selvedge
-
+ 
       row.forEach(piece => {
         const pw    = Math.min(piece.w, FW - x - PG - 1.2);
         const ph    = piece.h;
@@ -1601,30 +2074,30 @@
         const mir   = !!piece.mirror;
         const cx    = x + pw / 2;
         const cy    = y + ph / 2;
-
+ 
         const d = piecePath(shape, x, y, pw, ph, mir);
-
+ 
         // ── Piece: white outline on black ────────────────────────────
         s.push(`<path d="${d}" fill="none" stroke="#FFFFFF" stroke-width="0.18" stroke-linejoin="round"/>`);
-
+ 
         // Fold line (CB on fold)
         if (piece.fold) {
           s.push(`<line x1="${x}" y1="${y}" x2="${x}" y2="${y+ph}" stroke="#FFF" stroke-width="0.2" stroke-dasharray="1,0.6"/>`);
         }
-
+ 
         // ── Labels: horizontal, readable ─────────────────────────────
         const dimStr = `${pw.toFixed(1)}" × ${ph.toFixed(1)}"`;
         const chars  = piece.n.length;
         const dChars = dimStr.length;
         const GTXT   = 0.4; // gap between name and dim lines
-
+ 
         // fs: string width must fit in pw; two lines + gap must fit in ph
         const fs    = Math.min(1.9, pw / (Math.max(chars, dChars) * 0.62), (ph * 0.8 - GTXT) / (1 + 0.68));
         const dimFs = fs * 0.68;
-
+ 
         const showLabel = fs    >= 0.5 && pw > 2 && ph > 2;
         const showDim   = dimFs >= 0.35 && ph > 4 && pw > 2;
-
+ 
         if (showLabel && showDim) {
           const ny = cy - GTXT / 2 - dimFs / 2;
           const dy = cy + GTXT / 2 + fs    / 2;
@@ -1639,28 +2112,28 @@
           s.push(`<text x="${cx}" y="${cy}" text-anchor="middle" dominant-baseline="middle" ` +
             `font-size="${dimFs.toFixed(2)}" fill="#888" font-family="${F}">${dimStr}</text>`);
         }
-
+ 
         x += pw + PG;
       });
-
+ 
       // Row separation — thin dashed line
       if (ri < rows.length - 1) {
         const lineY = y + rowH + GAP / 2;
         s.push(`<line x1="1.2" y1="${lineY}" x2="${FW-1.2}" y2="${lineY}" stroke="#222" stroke-width="0.18" stroke-dasharray="1.5,1"/>`);
       }
-
+ 
       y += rowH + GAP;
     });
-
+ 
     // Total yardage label on right selvedge
     const yds = (totalH / 36).toFixed(1);
     s.push(`<text x="${FW-0.4}" y="${totalH/2}" text-anchor="middle" dominant-baseline="middle" ` +
       `font-size="1.6" fill="#444" font-family="${F}" ` +
       `transform="rotate(90,${FW-0.4},${totalH/2})">${yds} yds total</text>`);
-
+ 
     return `<svg viewBox="0 0 ${FW} ${totalH.toFixed(1)}" xmlns="http://www.w3.org/2000/svg">${s.join('')}</svg>`;
   }
-
+ 
   function buildPatternLayouts() {
     const container = document.getElementById('patternLayouts');
     container.innerHTML = '';
@@ -1674,14 +2147,14 @@
       container.appendChild(wrap);
     });
   }
-
+ 
   function startOver() {
     state.garments.clear();
     state.measurements = {};
     document.querySelectorAll('.garment-btn').forEach(b => b.classList.remove('selected'));
     goToPage(0);
   }
-
+ 
   async function handleFeedback(e) {
     e.preventDefault();
     const form = e.target;
@@ -1708,7 +2181,7 @@
     }
   }
 </script>
-
+ 
 <section id="feedbackSection" style="
   max-width: 520px;
   margin: 40px auto 0;
@@ -1718,20 +2191,20 @@
   <div style="border-top: 1px solid var(--rule); padding-top: 32px;">
     <div style="font-family: var(--serif); font-size: 18px; font-weight: 600; color: var(--black); margin-bottom: 6px;">Leave feedback</div>
     <div style="font-size: 12px; color: var(--light-gray); margin-bottom: 18px;">Found a bug? Have a suggestion? Let us know.</div>
-
+ 
     <form id="feedbackForm" action="https://formspree.io/f/mzdldwkk" method="POST" onsubmit="handleFeedback(event)">
       <input type="hidden" name="_subject" value="Cloth &amp; Chalk Feedback" />
-
+ 
       <div style="margin-bottom: 12px;">
         <input type="email" name="email" placeholder="Your email (optional)"
           style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 4px; font-family: var(--sans); font-size: 13px; background: var(--warm-white); color: var(--black); outline: none;" />
       </div>
-
+ 
       <div style="margin-bottom: 14px;">
         <textarea name="message" placeholder="Your feedback…" required rows="4"
           style="width: 100%; box-sizing: border-box; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 4px; font-family: var(--sans); font-size: 13px; background: var(--warm-white); color: var(--black); resize: vertical; outline: none;"></textarea>
       </div>
-
+ 
       <button type="submit" style="
         background: var(--black); color: var(--cream);
         border: none; border-radius: 4px;
@@ -1741,14 +2214,14 @@
       " onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
         Send feedback
       </button>
-
+ 
       <div id="feedbackMsg" style="margin-top: 12px; font-size: 12px; color: var(--light-gray); display: none;">
         Thanks — we'll read every note.
       </div>
     </form>
   </div>
 </section>
-
+ 
 <footer style="
   text-align: center;
   padding: 18px 24px;
