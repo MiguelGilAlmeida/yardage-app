@@ -38,7 +38,7 @@
   }
   </script>
 
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,600;6..96,700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5191383046823498"
      crossorigin="anonymous"></script>
   <style>
@@ -55,8 +55,8 @@
       --cream-dark: #EDE8DF;
       --warm-white: #FDFAF5;
       --text:       #1C1C1C;
-      --serif: 'Playfair Display', Georgia, serif;
-      --sans:  'Inter', -apple-system, sans-serif;
+      --serif: 'Bodoni Moda', Georgia, serif;
+      --sans:  'Jost', -apple-system, sans-serif;
     }
 
     body {
@@ -126,7 +126,7 @@
     }
 
     /* ── Layout ── */
-    .container { max-width: 520px; margin: 0 auto; padding: 28px 18px 52px; }
+    .container { max-width: 520px; margin: 0 auto; padding: 28px 18px 28px; }
 
     /* ── Progress bar ── */
     .progress-track {
@@ -419,7 +419,7 @@
       background: transparent;
       color: var(--warm-gray);
       border: none;
-      padding: 14px;
+      padding: 14px 14px 4px;
       font-family: var(--sans);
       font-size: 12px;
       font-weight: 500;
@@ -655,8 +655,8 @@
 <header>
   <div class="header-spacer"></div>
   <div class="header-center">
-    <div class="wordmark">Cloth & Chalk</div>
-    <div class="tagline">Fabric Estimator · 58″ Wide</div>
+    <div class="wordmark" onclick="startOver()" style="cursor:pointer;">Cloth & Chalk</div>
+    <div class="tagline">Fabric Calculator · 58″ Wide</div>
   </div>
   <div class="header-unit">
     <button id="unitYards"  class="active" onclick="setUnit('yards')">yds</button>
@@ -681,7 +681,14 @@
 
   <!-- ══ PAGE 0: Measure Mode ══ -->
   <div class="page active" id="page0">
-    <div class="section-eyebrow">Step 1 of 4</div>
+    <div style="margin-bottom:28px; padding-bottom:24px; border-bottom:1px solid var(--rule);">
+      <div style="font-family:var(--serif); font-size:26px; font-weight:600; color:var(--black); line-height:1.25; margin-bottom:10px;">
+        The Mission.
+      </div>
+      <p style="font-size:13px; color:var(--black); line-height:1.7; letter-spacing:0.2px; margin:0; text-align:justify;">
+        This calculator estimates the fabric you need based on your measurements, so you can order with confidence — no waste, no shortfall. Estimates account for piece layout across your fabric width. Results will always vary slightly by tailor, seam allowances, and working method, but we get you as close as possible.
+      </p>
+    </div>
     <div class="section-title">How are you<br>measuring?</div>
     <div class="mode-grid">
       <button class="mode-btn" onclick="selectMode('body')">
@@ -745,7 +752,7 @@
 
   <!-- ══ PAGE 1: Garment selection ══ -->
   <div class="page" id="page1">
-    <div class="section-eyebrow">Step 2 of 4</div>
+    <div class="section-eyebrow">Step 1 of 4</div>
     <div class="section-title">What are you<br>making?</div>
     <div class="garment-list" id="garmentGrid">
 
@@ -982,7 +989,7 @@
 
   <!-- ══ PAGE 2: Style options ══ -->
   <div class="page" id="page2">
-    <div class="section-eyebrow">Step 3 of 4</div>
+    <div class="section-eyebrow">Step 2 of 4</div>
     <div class="section-title">Style Options</div>
     <div id="optionsFields"></div>
     <button class="btn-primary" onclick="goToMeasurements()">Next →</button>
@@ -991,7 +998,7 @@
 
   <!-- ══ PAGE 3: Measurements ══ -->
   <div class="page" id="page3">
-    <div class="section-eyebrow">Step 4 of 4</div>
+    <div class="section-eyebrow">Step 3 of 4</div>
     <div class="section-title" id="measureCardTitle">Measurements</div>
     <div class="measure-grid" id="measureFields">
       <!-- Populated dynamically -->
@@ -1030,19 +1037,47 @@
         <div class="tc-unit-m">m</div>
       </div>
     </div>
+    <div class="recommended-box" id="recommendedBox" style="display:none; background:var(--black); color:var(--warm-white); padding:16px; margin-top:16px; text-align:center;">
+      <div style="font-size:9px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase; color:var(--light-gray); margin-bottom:8px;">Suggested Order — Cloth</div>
+      <div style="font-family:var(--serif); font-size:36px; font-weight:400; line-height:1;" id="recShell">—</div>
+      <div style="font-size:9px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--light-gray); margin-top:4px;">yds</div>
+      <div style="font-family:var(--sans); font-size:15px; color:rgba(245,240,232,0.75); margin-top:8px;" id="recShellM">—</div>
+      <div style="font-size:9px; letter-spacing:1px; text-transform:uppercase; color:rgba(245,240,232,0.5); margin-top:2px;">m</div>
+    </div>
     <div class="tip-box" id="tipBox"></div>
 
     <div class="layout-section">
       <div class="layout-section-title">Pattern Layout</div>
       <div class="layout-section-sub">How pieces fit on 58″ wide cloth</div>
       <div id="patternLayouts"></div>
+      <p style="margin-top:14px; font-size:11px; color:var(--warm-gray); line-height:1.6; letter-spacing:0.2px;">
+        This layout is a representative diagram. Piece shapes and proportions are derived from your measurements and aim to be as accurate as possible, but should not be used as cutting patterns. Yardage estimates are a guide only — actual requirements vary by fabric width, pattern repeat, seam allowances, and the working practices of individual tailors and manufacturers. Always confirm yardage with your tailor before ordering fabric.
+      </p>
     </div>
 
     <button class="btn-primary" onclick="startOver()">Start Over</button>
+
+    <!-- Waitlist -->
+    <div style="margin-top:36px; padding-top:24px; border-top:1px solid var(--rule);">
+      <div style="font-size:9px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase; color:var(--warm-gray); margin-bottom:8px;">Coming Soon</div>
+      <div style="font-family:var(--serif); font-size:20px; font-weight:600; color:var(--black); margin-bottom:8px;">A full tailor's toolkit is coming.</div>
+      <p style="font-size:13px; color:var(--charcoal); line-height:1.7; margin-bottom:16px;">We're building an app for working tailors and custom clothiers — save client profiles, store their measurements, log what each customer ordered, and attach photos of the fabrics used. Everything in one place, so nothing gets lost between fittings. Join the waitlist to hear when it launches.</p>
+      <div id="waitlistForm">
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <input id="waitlistEmail" type="email" placeholder="your@email.com"
+            style="flex:1; min-width:0; padding:12px 14px; border:1px solid var(--rule); background:var(--warm-white); font-family:var(--sans); font-size:13px; color:var(--black); outline:none; border-radius:0;" />
+          <button onclick="joinWaitlist()"
+            style="padding:12px 20px; background:var(--black); color:var(--warm-white); border:none; font-family:var(--sans); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase; cursor:pointer; white-space:nowrap;">
+            Join Waitlist
+          </button>
+        </div>
+        <div id="waitlistMsg" style="font-size:12px; margin-top:8px; color:var(--warm-gray);"></div>
+      </div>
+    </div>
   </div>
 
-</div>
 
+</div>
 <script>
   // ── State ──
   const state = {
@@ -1060,7 +1095,7 @@
       cuffs:         'none',  // 'none' | '1' | '1.25' | '1.5' | '1.75' | '2'
       vestBack:      'lining',   // 'lining' | 'fabric'
       vestPockets:   'jetted',   // 'jetted' | 'flap'
-      fit:           'regular',  // 'slim' | 'tapered' | 'regular' | 'full'
+      fit:           'modern',   // 'slim' | 'modern' | 'classic'
     }
   };
 
@@ -1124,15 +1159,14 @@
   // Vest uses chest/2 (vests always fit closer than the jacket above them).
   const _FIT_EASE = {
     //              chest   waist   seat   bicep  thigh
-    slim:    { chest: 1.5,  waist: 0.5,  seat: 1,   bicep: 0.5,  thigh: 1   },
-    tapered: { chest: 2.5,  waist: 0.75, seat: 1.5, bicep: 0.75, thigh: 1.5 },
-    regular: { chest: 3,    waist: 1,    seat: 2,   bicep: 1,    thigh: 2   },
-    full:    { chest: 4.5,  waist: 2,    seat: 3,   bicep: 1.5,  thigh: 3   },
+    slim:    { chest: 2,    waist: 0.75, seat: 1.5, bicep: 0.75, thigh: 1.5 },
+    modern:  { chest: 3,    waist: 1,    seat: 2,   bicep: 1,    thigh: 2   },
+    classic: { chest: 4.5,  waist: 2,    seat: 3,   bicep: 1.5,  thigh: 3   },
   };
 
   function calcJacket(m, wf) {
     const body = state.measureMode === 'body';
-    const fit  = state.options.fit || 'regular';
+    const fit  = state.options.fit || 'modern';
     const finishedChest = (m.chest || 40) + (body ? _FIT_EASE[fit].chest : 0);
 
     // Base formula: back + fronts (~1.5× backLength) + sleeves + collar/facing/pocket bags (~12")
@@ -1154,7 +1188,7 @@
 
   function calcTrousers(m, wf) {
     const body = state.measureMode === 'body';
-    const fit  = state.options.fit || 'regular';
+    const fit  = state.options.fit || 'modern';
     const finishedWaist = (m.waist || 34) + (body ? _FIT_EASE[fit].waist : 0);
     const finishedHip   = (m.hip   || 42) + (body ? _FIT_EASE[fit].seat  : 0);
 
@@ -1174,7 +1208,7 @@
 
   function calcVest(m, wf) {
     const body = state.measureMode === 'body';
-    const fit  = state.options.fit || 'regular';
+    const fit  = state.options.fit || 'modern';
     const finishedChest = (m.chest || 40) + (body ? _FIT_EASE[fit].chest / 2 : 0);
     const finishedWaist = (m.waist || 34) + (body ? _FIT_EASE[fit].waist / 2 : 0);
 
@@ -1190,7 +1224,7 @@
 
   function calcShirt(m, wf) {
     const body = state.measureMode === 'body';
-    const fit  = state.options.fit || 'regular';
+    const fit  = state.options.fit || 'modern';
     const finishedChest = (m.chest || 40) + (body ? _FIT_EASE[fit].chest : 0);
 
     let yards60 = (m.shirtLength + m.sleeveLength + 16) / 36;
@@ -1204,7 +1238,7 @@
   function calcLining(type, m) {
     if (type === 'suit2' || type === 'suit3' || type === 'sportcoat') {
       const body = state.measureMode === 'body';
-      const fit  = state.options.fit || 'regular';
+      const fit  = state.options.fit || 'modern';
       const finishedChest = (m.chest || 40) + (body ? _FIT_EASE[fit].chest : 0);
       const base = (m.backLength * 1.5 + m.sleeveLength + 10) / 36;
       const chestAdj = Math.max(0, (finishedChest - 43) * 0.018);
@@ -1230,7 +1264,7 @@
 
   function selectMode(mode) {
     state.measureMode = mode;
-    state.measurements = {}; // clear saved values when switching mode
+    state.measurements = {};
     goToPage(1);
   }
 
@@ -1426,7 +1460,7 @@
       <circle cx="22" cy="36" r="1.2" fill="#2A2A2A" stroke="none"/>
       <circle cx="22" cy="44" r="1.2" fill="#2A2A2A" stroke="none"/>
     </svg>`;
-    const svgFitTapered = `<svg viewBox="0 0 44 58" ${S}>
+    const svgFitModern = `<svg viewBox="0 0 44 58" ${S}>
       <path fill="var(--cream)" stroke-width="1.1" d="M22,4 L13,8 C10,20 14,38 13,52 L31,52 C30,38 34,20 31,8 Z"/>
       <path stroke-width="0.8" d="M22,4 L13,8 L16,26 L22,30"/>
       <path stroke-width="0.8" d="M22,4 L31,8 L28,26 L22,30"/>
@@ -1436,17 +1470,7 @@
       <circle cx="22" cy="36" r="1.2" fill="#2A2A2A" stroke="none"/>
       <circle cx="22" cy="44" r="1.2" fill="#2A2A2A" stroke="none"/>
     </svg>`;
-    const svgFitRegular = `<svg viewBox="0 0 44 58" ${S}>
-      <path fill="var(--cream)" stroke-width="1.1" d="M22,4 L11,8 C9,20 11,38 10,52 L34,52 C33,38 35,20 33,8 Z"/>
-      <path stroke-width="0.8" d="M22,4 L11,8 L15,26 L22,30"/>
-      <path stroke-width="0.8" d="M22,4 L33,8 L29,26 L22,30"/>
-      <path stroke-width="0.6" d="M15,26 C18,22 20,21 22,20 C24,21 26,22 29,26"/>
-      <path stroke-width="0.6" d="M15,26 L17,23 M29,26 L27,23"/>
-      <line stroke-width="0.4" x1="22" y1="30" x2="22" y2="52"/>
-      <circle cx="22" cy="36" r="1.2" fill="#2A2A2A" stroke="none"/>
-      <circle cx="22" cy="44" r="1.2" fill="#2A2A2A" stroke="none"/>
-    </svg>`;
-    const svgFitFull = `<svg viewBox="0 0 44 58" ${S}>
+    const svgFitClassic = `<svg viewBox="0 0 44 58" ${S}>
       <path fill="var(--cream)" stroke-width="1.1" d="M22,4 L9,8 C8,20 8,38 8,52 L36,52 C36,38 36,20 35,8 Z"/>
       <path stroke-width="0.8" d="M22,4 L9,8 L13,26 L22,30"/>
       <path stroke-width="0.8" d="M22,4 L35,8 L31,26 L22,30"/>
@@ -1479,11 +1503,10 @@
     // ── Fit (body mode only — ease is irrelevant for finished measurements) ──
     if (state.measureMode === 'body') {
       html += `<div class="options-section-title">Fit</div>
-        <div class="option-grid" style="grid-template-columns:repeat(4,1fr); margin-bottom:20px;">
+        <div class="option-grid" style="grid-template-columns:repeat(3,1fr); margin-bottom:20px;">
           ${card('fit','slim',    'Slim',    svgFitSlim)}
-          ${card('fit','tapered', 'Tapered', svgFitTapered)}
-          ${card('fit','regular', 'Regular', svgFitRegular)}
-          ${card('fit','full',    'Full',    svgFitFull)}
+          ${card('fit','modern',  'Modern',  svgFitModern)}
+          ${card('fit','classic', 'Classic', svgFitClassic)}
         </div>`;
     }
 
@@ -1746,40 +1769,38 @@
       const clothRows = [], liningRows = [], interfRows = [];
 
       if (g === 'suit2') {
-        const jkt = calcJacket(m, wf), trs = calcTrousers(m, wf);
-        shell = parseFloat((jkt + trs).toFixed(2));
+        shell = layoutYards(g, m);
         lining = calcLining(g, m);
         interf = 0.75;
-        clothRows.push({ label: 'Jacket', val: jkt }, { label: 'Pants', val: trs });
+        clothRows.push({ label: 'Jacket + Pants shell', val: shell });
         liningRows.push({ label: 'Jacket + pant lining', val: lining });
         interfRows.push({ label: 'Canvas / fusible', val: interf });
       } else if (g === 'suit3') {
-        const jkt = calcJacket(m, wf), trs = calcTrousers(m, wf), vst = calcVest(m, wf);
-        shell = parseFloat((jkt + trs + vst).toFixed(2));
+        shell = layoutYards(g, m);
         lining = parseFloat((calcLining('suit2', m) + 0.4).toFixed(2));
         interf = 0.75;
-        clothRows.push({ label: 'Jacket', val: jkt }, { label: 'Pants', val: trs }, { label: 'Waistcoat', val: vst });
+        clothRows.push({ label: 'Jacket, Pants + Waistcoat shell', val: shell });
         liningRows.push({ label: 'Jacket + pant lining', val: lining });
         interfRows.push({ label: 'Canvas / fusible', val: interf });
       } else if (g === 'sportcoat') {
-        shell = calcJacket(m, wf);
+        shell = layoutYards(g, m);
         lining = calcLining(g, m);
         interf = 0.5;
         clothRows.push({ label: 'Jacket shell', val: shell });
         liningRows.push({ label: 'Jacket lining', val: lining });
         interfRows.push({ label: 'Canvas / fusible', val: interf });
       } else if (g === 'slacks') {
-        shell = calcTrousers(m, wf);
+        shell = layoutYards(g, m);
         lining = calcLining(g, m);
         clothRows.push({ label: 'Pant shell', val: shell });
         liningRows.push({ label: 'Pocketing / lining', val: lining });
       } else if (g === 'shirt') {
-        shell = calcShirt(m, wf);
+        shell = layoutYards(g, m);
         interf = 0.3;
         clothRows.push({ label: 'Shirt shell', val: shell });
         interfRows.push({ label: 'Collar / cuff fusing', val: interf });
       } else if (g === 'vest') {
-        shell  = calcVest(m, wf);
+        shell = layoutYards(g, m);
         lining = parseFloat((shell * 0.85).toFixed(2));
         interf = 0.25;
         clothRows.push({ label: 'Waistcoat shell', val: shell });
@@ -1820,42 +1841,56 @@
       container.appendChild(item);
     });
 
-    const buf  = v => (v * 1.1).toFixed(2);
-    const bufM = v => (v * 0.9144 * 1.1).toFixed(2);
+    const toM = v => (v * 0.9144).toFixed(2);
 
-    document.getElementById('totalShell').textContent   = buf(grandShell);
-    document.getElementById('totalShellM').textContent  = bufM(grandShell);
-    document.getElementById('totalLining').textContent  = grandLining > 0 ? buf(grandLining)  : '—';
-    document.getElementById('totalLiningM').textContent = grandLining > 0 ? bufM(grandLining) : '—';
-    document.getElementById('totalInterf').textContent  = grandInterf > 0 ? buf(grandInterf)  : '—';
-    document.getElementById('totalInterfM').textContent = grandInterf > 0 ? bufM(grandInterf) : '—';
+    document.getElementById('totalShell').textContent   = grandShell.toFixed(2);
+    document.getElementById('totalShellM').textContent  = toM(grandShell);
+    document.getElementById('totalLining').textContent  = grandLining > 0 ? grandLining.toFixed(2) : '—';
+    document.getElementById('totalLiningM').textContent = grandLining > 0 ? toM(grandLining) : '—';
+    document.getElementById('totalInterf').textContent  = grandInterf > 0 ? grandInterf.toFixed(2) : '—';
+    document.getElementById('totalInterfM').textContent = grandInterf > 0 ? toM(grandInterf) : '—';
 
     const modeLabel = state.measureMode === 'body' ? 'body measures' : 'finished garment';
     document.getElementById('resultSubtitle').textContent = `58″ wide · ${modeLabel}`;
 
-    const extra = grandShell * 0.15 * 1.1;
+    const recommended  = (grandShell * 1.1).toFixed(2);
+    const recommendedM = (grandShell * 1.1 * 0.9144).toFixed(2);
+    const extraPlaid   = (grandShell * 0.25).toFixed(2);
+    document.getElementById('recShell').textContent  = recommended;
+    document.getElementById('recShellM').textContent = `${recommendedM} m`;
+    document.getElementById('recommendedBox').style.display = 'block';
     document.getElementById('tipBox').innerHTML =
-      `<strong>Note:</strong> All totals include a 10% buffer. ` +
-      `For plaids or large repeats, add an extra ${extra.toFixed(2)} yds / ${(extra * 0.9144).toFixed(2)} m to cloth.`;
+      `Includes a 10% buffer for cutting and handling. ` +
+      `For plaids or large pattern repeats, add an extra <strong>${extraPlaid} yds</strong> to the suggested order.`;
 
     buildPatternLayouts();
     goToPage(4);
   }
 
   // ── Pattern Layout ──────────────────────────────────────────────────
+  // Derives shell yardage from the actual layout (same source as the diagram label).
+  function layoutYards(garment, m) {
+    const GAP = 1.5, PAD = 1.5;
+    const rows = getLayoutRows(garment, m);
+    if (!rows || !rows.length) return 0;
+    let totalH = PAD;
+    rows.forEach(row => { totalH += Math.max(...row.map(p => p.h)) + GAP; });
+    totalH += PAD - GAP;
+    return parseFloat((totalH / 36).toFixed(2));
+  }
+
   // Greedy first-fit decreasing packer: sorts pieces by height desc,
   // then fills each row horizontally before starting a new one.
   // Pieces within a section (jacket / trousers) are kept together.
   function getLayoutRows(garment, m) {
     const SA = 1.25;
     const _body = state.measureMode === 'body';
-    const _fit  = state.options.fit || 'regular';
+    const _fit  = state.options.fit || 'modern';
     // Layout ease = wearing ease + extra cutting/SA margin; keys mirror _FIT_EASE
     const _LAY  = {
-      slim:    { chest: 3,   waist: 0.5,  seat: 1   },
-      tapered: { chest: 4.5, waist: 0.75, seat: 1.5 },
-      regular: { chest: 5,   waist: 1,    seat: 2   },
-      full:    { chest: 7.5, waist: 2,    seat: 4   },
+      slim:    { chest: 3.5, waist: 0.75, seat: 1.5 },
+      modern:  { chest: 5,   waist: 1,    seat: 2   },
+      classic: { chest: 7.5, waist: 2,    seat: 4   },
     };
     const _le   = _body ? (_LAY[_fit] || _LAY.regular) : { chest:0, waist:0, seat:0 };
     const chest    = (m.chest      || 40) + _le.chest;
@@ -2536,6 +2571,39 @@
       wrap.innerHTML = `<div class="layout-garment-label">${names[g]}</div><div class="layout-fabric-wrap">${buildLayoutSVG(rows)}</div>`;
       container.appendChild(wrap);
     });
+  }
+
+  async function joinWaitlist() {
+    const email = document.getElementById('waitlistEmail').value.trim();
+    const msg   = document.getElementById('waitlistMsg');
+    if (!email || !email.includes('@')) {
+      msg.style.color = '#c0392b';
+      msg.textContent = 'Please enter a valid email address.';
+      return;
+    }
+    msg.style.color = 'var(--warm-gray)';
+    msg.textContent = 'Submitting…';
+    try {
+      const res = await fetch('/.netlify/functions/join-waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json();
+      if (data.duplicate) {
+        msg.style.color = 'var(--black)';
+        msg.textContent = '✓ You\'re already on the list.';
+      } else if (data.success) {
+        msg.style.color = 'var(--black)';
+        msg.textContent = '✓ You\'re on the list. We\'ll be in touch.';
+        document.getElementById('waitlistEmail').value = '';
+      } else {
+        throw new Error(data.message || 'Unknown error');
+      }
+    } catch(e) {
+      msg.style.color = '#c0392b';
+      msg.textContent = 'Something went wrong. Please try again.';
+    }
   }
 
   function startOver() {
