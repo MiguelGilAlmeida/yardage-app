@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://clothchalk.netlify.app/sitemap.xml
+Sitemap: https://clothchalk.app/sitemap.xml
