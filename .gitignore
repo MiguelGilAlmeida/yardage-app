@@ -1,0 +1,20 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Environment variables — never commit these
+.env
+.env.local
+.env.*.local
+
+# Editor
+.vscode/
+.idea/
+
+# Dependencies (if you ever add a build step)
+node_modules/
+
+# Build output
+dist/
+build/
