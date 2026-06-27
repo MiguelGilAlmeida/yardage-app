@@ -1198,11 +1198,6 @@
   };
 
   // Sample measurements for quick testing (body mode, inches)
-  const SAMPLE_DEFAULTS = {
-    body:    { chest:40, stomach:36, bicep:14, shoulder:18, sleeveLength:24, backLength:30, waist:34, hip:40, thigh:23, outseam:42, inseam:30, legOpen:15, shirtLength:30, neck:15.5, cuff:8.5, urise:30 },
-    garment: { chest:43, stomach:39, bicep:15, shoulder:18.5, sleeveLength:24.5, backLength:31, waist:35, hip:42, thigh:25, outseam:42, inseam:30, legOpen:16, shirtLength:31, neck:16, cuff:9, urise:31 },
-  };
-
   // Which fields each garment type needs
   const garmentFields = {
     suit2:     ['chest','stomach','bicep','shoulder','sleeveLength','backLength','waist','hip','thigh','outseam','inseam','legOpen'],
@@ -1847,8 +1842,7 @@
       const dMax   = toDisp(f.max);
       const step   = useCm ? 0.5 : 0.25;
       const savedIn = state.measurements[key];
-      const sampleIn = SAMPLE_DEFAULTS[state.measureMode]?.[key];
-      const dispVal = savedIn ? toDisp(savedIn) : (sampleIn !== undefined ? toDisp(sampleIn) : '');
+      const dispVal = savedIn ? toDisp(savedIn) : '';
       const div = document.createElement('div');
       div.className = 'measure-group';
       div.innerHTML = `
