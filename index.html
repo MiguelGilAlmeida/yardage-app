@@ -342,6 +342,9 @@
     .option-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
     .option-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
     .option-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+    .option-grid.cols-4 .oc-img { height: 44px; padding: 6px 4px 4px; }
+    .option-grid.cols-4 .oc-img svg { max-width: 28px; }
+    .option-grid.cols-4 .oc-label { font-size: 10px; padding: 4px 2px 5px; letter-spacing: 0; }
     .option-card {
       display: block;
       width: 100%;
@@ -1024,6 +1027,7 @@
       </button>
 
     </div>
+    <div id="garmentError" class="field-error" style="min-height:0; margin-top:8px;"></div>
     <button class="btn-secondary" onclick="goToPage(0)" style="margin-top:20px">← Back</button>
   </div>
 
@@ -1128,13 +1132,17 @@
     measurements: {
     },
     options: {
-      pockets:       'flap',     // 'flap' | 'jetted' | 'patch'
+      pockets:       'flap',
       ticketPocket:  false,
-      waistbandWidth: 1.5,       // inches
-      cuffs:         'none',  // 'none' | '1' | '1.25' | '1.5' | '1.75' | '2'
-      vestBack:      'lining',   // 'lining' | 'fabric'
-      vestPockets:   'jetted',   // 'jetted' | 'flap'
-      fit:           'modern',   // 'slim' | 'modern' | 'classic'
+      waistbandWidth: 1.5,
+      cuffs:         'none',
+      vestBack:      'lining',
+      vestPockets:   'jetted',
+      fit:           'modern',
+      fabricType:    'plain',
+      patternType:   'stripe',
+      patternRepeatW: '',
+      patternRepeatH: '',
     }
   };
 
@@ -1181,11 +1189,17 @@
     }
   };
 
+  // Sample measurements for quick testing (body mode, inches)
+  const SAMPLE_DEFAULTS = {
+    body:    { chest:40, stomach:36, bicep:14, shoulder:18, sleeveLength:24, backLength:30, waist:34, hip:40, thigh:23, outseam:42, inseam:30, legOpen:15, shirtLength:30, neck:15.5, cuff:8.5, urise:30 },
+    garment: { chest:43, stomach:39, bicep:15, shoulder:18.5, sleeveLength:24.5, backLength:31, waist:35, hip:42, thigh:25, outseam:42, inseam:30, legOpen:16, shirtLength:31, neck:16, cuff:9, urise:31 },
+  };
+
   // Which fields each garment type needs
   const garmentFields = {
-    suit2:     ['chest','stomach','bicep','shoulder','sleeveLength','waist','hip','thigh','outseam','inseam','legOpen'],
-    suit3:     ['chest','stomach','bicep','shoulder','sleeveLength','waist','hip','thigh','outseam','inseam','legOpen'],
-    sportcoat: ['chest','stomach','bicep','shoulder','sleeveLength'],
+    suit2:     ['chest','stomach','bicep','shoulder','sleeveLength','backLength','waist','hip','thigh','outseam','inseam','legOpen'],
+    suit3:     ['chest','stomach','bicep','shoulder','sleeveLength','backLength','waist','hip','thigh','outseam','inseam','legOpen'],
+    sportcoat: ['chest','stomach','bicep','shoulder','sleeveLength','backLength'],
     slacks:    ['waist','hip','thigh','outseam','inseam','legOpen'],
     vest:      ['chest','stomach','backLength','waist'],
     shirt:     ['chest','shoulder','shirtLength','sleeveLength','bicep','neck','cuff'],
@@ -1209,6 +1223,13 @@
     classic: { chest: 4.5,  waist: 2,    seat: 3,   bicep: 1.5,  thigh: 3   },
   };
 
+  const PATTERN_EXTRA = {
+    stripe:      0.15,
+    check:       0.25,
+    houndstooth: 0.12,
+    windowpane:  0.20,
+  };
+
   function calcJacket(m, wf) {
     const body = state.measureMode === 'body';
     const fit  = state.options.fit || 'modern';
@@ -1217,7 +1238,7 @@
     const finishedChest = effectiveChest + (body ? _FIT_EASE[fit].chest : 0);
 
     // Base formula: back + fronts (~1.5× backLength) + sleeves + collar/facing/pocket bags (~12")
-    let yards60 = (m.backLength * 1.5 + m.sleeveLength + 12) / 36;
+    let yards60 = ((m.backLength || 30) * 1.5 + m.sleeveLength + 12) / 36;
 
     // Layout efficiency: calibrated at 43" finished chest. Wider panels leave more
     // unusable selvedge — roughly 0.022 yd extra per inch above baseline.
@@ -1285,7 +1306,7 @@
       const body = state.measureMode === 'body';
       const fit  = state.options.fit || 'modern';
       const finishedChest = (m.chest || 40) + (body ? _FIT_EASE[fit].chest : 0);
-      const base = (m.backLength * 1.5 + m.sleeveLength + 10) / 36;
+      const base = ((m.backLength || 30) * 1.5 + m.sleeveLength + 10) / 36;
       const chestAdj = Math.max(0, (finishedChest - 43) * 0.018);
       return parseFloat(((base + chestAdj) * 0.85).toFixed(2));
     }
@@ -1330,6 +1351,8 @@
     goToPage(1);
   }
 
+  let _garmentTimer = null;
+
   function toggleGarment(btn) {
     const g = btn.dataset.garment;
     // Clear any previous selection
@@ -1339,10 +1362,21 @@
     state.garments.add(g);
     btn.classList.add('selected');
     // Small delay so the selection is visible before navigating
-    setTimeout(() => goToOptions(), 160);
+    clearTimeout(_garmentTimer);
+    _garmentTimer = setTimeout(() => { _garmentTimer = null; goToOptions(); }, 160);
   }
 
   function goToPage(n) {
+    // Cancel any pending garment→options navigation when leaving page 1 for a non-options page
+    if (n !== 2 && _garmentTimer) {
+      clearTimeout(_garmentTimer);
+      _garmentTimer = null;
+    }
+    // Also clear garment error message when leaving page 1
+    if (n !== 1) {
+      const errEl = document.getElementById('garmentError');
+      if (errEl) errEl.textContent = '';
+    }
     const pages = document.querySelectorAll('.page');
     const alreadyHere = pages[n]?.classList.contains('active');
     pages.forEach((p, i) => {
@@ -1360,14 +1394,17 @@
         seg.classList.toggle('done', i < n);
       }
     }
-    if (!alreadyHere) window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (!alreadyHere) window.scrollTo(0, 0);
   }
 
   function goToOptions() {
     if (state.garments.size === 0) {
-      document.getElementById('garmentError').classList.add('show');
+      const errEl = document.getElementById('garmentError');
+      if (errEl) errEl.textContent = 'Please select a garment.';
       return;
     }
+    const errEl = document.getElementById('garmentError');
+    if (errEl) errEl.textContent = '';
     buildOptionsFields();
     goToPage(2);
   }
@@ -1511,6 +1548,61 @@
       <circle cx="22" cy="44" r="1.2" fill="#2A2A2A" stroke="none"/>
     </svg>`;
 
+    // ── Fabric type SVGs ─────────────────────────────────────────────
+    const svgPlain = `<svg viewBox="0 0 64 52" ${S}>
+      <rect x="8" y="4" width="48" height="44" stroke-width="0.65"/>
+      <line x1="8" y1="15" x2="56" y2="15" stroke-width="0.35" stroke-dasharray="1,2.5"/>
+      <line x1="8" y1="26" x2="56" y2="26" stroke-width="0.35" stroke-dasharray="1,2.5"/>
+      <line x1="8" y1="37" x2="56" y2="37" stroke-width="0.35" stroke-dasharray="1,2.5"/>
+    </svg>`;
+    const svgPatterned = `<svg viewBox="0 0 64 52" ${S}>
+      <rect x="8" y="4" width="48" height="44" stroke-width="0.65"/>
+      <line x1="22" y1="4" x2="22" y2="48" stroke-width="1.4"/>
+      <line x1="36" y1="4" x2="36" y2="48" stroke-width="1.4"/>
+      <line x1="50" y1="4" x2="50" y2="48" stroke-width="1.4"/>
+      <line x1="8"  y1="19" x2="56" y2="19" stroke-width="0.5"/>
+      <line x1="8"  y1="33" x2="56" y2="33" stroke-width="0.5"/>
+    </svg>`;
+
+    // ── Pattern type SVGs ─────────────────────────────────────────────
+    const svgStripe = `<svg viewBox="0 0 64 52" ${S}>
+      <rect x="8" y="4" width="48" height="44" stroke-width="0.65"/>
+      <line x1="19" y1="4" x2="19" y2="48" stroke-width="3"/>
+      <line x1="32" y1="4" x2="32" y2="48" stroke-width="3"/>
+      <line x1="45" y1="4" x2="45" y2="48" stroke-width="3"/>
+    </svg>`;
+    const svgCheck = `<svg viewBox="0 0 64 52" ${S}>
+      <rect x="8" y="4" width="48" height="44" stroke-width="0.65"/>
+      <line x1="20" y1="4" x2="20" y2="48" stroke-width="1.1"/>
+      <line x1="32" y1="4" x2="32" y2="48" stroke-width="1.1"/>
+      <line x1="44" y1="4" x2="44" y2="48" stroke-width="1.1"/>
+      <line x1="8"  y1="16" x2="56" y2="16" stroke-width="1.1"/>
+      <line x1="8"  y1="28" x2="56" y2="28" stroke-width="1.1"/>
+      <line x1="8"  y1="40" x2="56" y2="40" stroke-width="1.1"/>
+    </svg>`;
+    const svgHoundstooth = `<svg viewBox="0 0 64 52" ${S}>
+      <rect x="8" y="4" width="48" height="44" stroke-width="0.65"/>
+      <path stroke-width="0.8" d="M14,10 L22,10 L22,18 L18,18 L18,22 L14,22 Z"/>
+      <path stroke-width="0.8" d="M30,10 L38,10 L38,18 L34,18 L34,22 L30,22 Z"/>
+      <path stroke-width="0.8" d="M46,10 L54,10 L54,18 L50,18 L50,22 L46,22 Z"/>
+      <path stroke-width="0.8" d="M22,22 L30,22 L30,30 L26,30 L26,34 L22,34 Z"/>
+      <path stroke-width="0.8" d="M38,22 L46,22 L46,30 L42,30 L42,34 L38,34 Z"/>
+      <path stroke-width="0.8" d="M14,34 L22,34 L22,42 L18,42 L18,46 L14,46 Z"/>
+      <path stroke-width="0.8" d="M30,34 L38,34 L38,42 L34,42 L34,46 L30,46 Z"/>
+      <path stroke-width="0.8" d="M46,34 L54,34 L54,42 L50,42 L50,46 L46,46 Z"/>
+    </svg>`;
+    const svgWindowpane = `<svg viewBox="0 0 64 52" ${S}>
+      <rect x="8" y="4" width="48" height="44" stroke-width="0.65"/>
+      <line x1="8"  y1="15" x2="56" y2="15" stroke-width="0.35" stroke-dasharray="1,2.5"/>
+      <line x1="8"  y1="26" x2="56" y2="26" stroke-width="0.35" stroke-dasharray="1,2.5"/>
+      <line x1="8"  y1="37" x2="56" y2="37" stroke-width="0.35" stroke-dasharray="1,2.5"/>
+      <line x1="19" y1="4" x2="19" y2="48" stroke-width="0.35" stroke-dasharray="1,2.5"/>
+      <line x1="32" y1="4" x2="32" y2="48" stroke-width="0.35" stroke-dasharray="1,2.5"/>
+      <line x1="45" y1="4" x2="45" y2="48" stroke-width="0.35" stroke-dasharray="1,2.5"/>
+      <line x1="8"  y1="26" x2="56" y2="26" stroke-width="1.0"/>
+      <line x1="32" y1="4"  x2="32" y2="48" stroke-width="1.0"/>
+    </svg>`;
+
     // ── Helpers ───────────────────────────────────────────────────────
     function card(key, val, label, svg) {
       const active = o[key] === val ? ' selected' : '';
@@ -1525,10 +1617,53 @@
         <div class="option-grid" style="grid-template-columns:repeat(${cols},1fr)">${cards.join('')}</div>`;
     }
 
-    let html = '';
     const useCm    = state.unit === 'meters';
     const inToU    = v => +(useCm ? v * 2.54 : v).toFixed(1);
     const unitLabel = useCm ? 'cm' : '"';
+
+    let html = '';
+
+    // ── Fabric type ────────────────────────────────────────────────────
+    html += `<div class="options-section-title">Fabric</div>
+      <div class="option-grid" style="grid-template-columns:repeat(2,1fr); margin-bottom:10px;">
+        <button class="option-card${o.fabricType==='plain'?' selected':''}" onclick="selectFabricType('plain',this)">
+          <div class="oc-img">${svgPlain}</div>
+          <span class="oc-label">Plain</span>
+        </button>
+        <button class="option-card${o.fabricType==='pattern'?' selected':''}" onclick="selectFabricType('pattern',this)">
+          <div class="oc-img">${svgPatterned}</div>
+          <span class="oc-label">Pattern</span>
+        </button>
+      </div>
+      <div id="patternTypeSection" style="display:${o.fabricType==='pattern'?'block':'none'}; margin-bottom:18px;">
+        <div class="options-group-title">Pattern type</div>
+        <div class="option-grid cols-4" style="margin-bottom:14px;">
+          ${card('patternType','stripe','Stripe',svgStripe)}
+          ${card('patternType','check','Check/Plaid',svgCheck)}
+          ${card('patternType','houndstooth','Houndstooth',svgHoundstooth)}
+          ${card('patternType','windowpane','Windowpane',svgWindowpane)}
+        </div>
+        <div class="options-group-title">Pattern repeat size</div>
+        <div style="display:flex; gap:10px; margin-bottom:0; align-items:flex-end;">
+          <div style="flex:1;">
+            <div style="font-size:9px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--light-gray); margin-bottom:4px;">Width (${unitLabel})</div>
+            <input type="number" id="patternRepeatW"
+              value="${o.patternRepeatW ? +(useCm ? o.patternRepeatW*2.54 : o.patternRepeatW).toFixed(1) : ''}"
+              min="${inToU(0.25)}" max="${inToU(24)}" step="${useCm ? 0.5 : 0.25}" placeholder="—"
+              onchange="setPatternRepeat('W',this)"
+              style="width:100%; padding:6px 8px; border:1px solid var(--rule); border-radius:4px; background:var(--warm-white); font-family:var(--sans); font-size:13px; color:var(--black);" />
+          </div>
+          <div id="patternRepeatHWrap" style="flex:1; display:${o.patternType==='stripe'?'none':'block'};">
+            <div style="font-size:9px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--light-gray); margin-bottom:4px;">Height (${unitLabel})</div>
+            <input type="number" id="patternRepeatH"
+              value="${o.patternRepeatH ? +(useCm ? o.patternRepeatH*2.54 : o.patternRepeatH).toFixed(1) : ''}"
+              min="${inToU(0.25)}" max="${inToU(24)}" step="${useCm ? 0.5 : 0.25}" placeholder="—"
+              onchange="setPatternRepeat('H',this)"
+              style="width:100%; padding:6px 8px; border:1px solid var(--rule); border-radius:4px; background:var(--warm-white); font-family:var(--sans); font-size:13px; color:var(--black);" />
+          </div>
+        </div>
+        <div style="font-size:10px; color:var(--light-gray); margin-top:5px; margin-bottom:4px;">Leave blank to use default estimates per pattern type.</div>
+      </div>`;
 
     // ── Fit (body mode only — ease is irrelevant for finished measurements) ──
     if (state.measureMode === 'body') {
@@ -1612,6 +1747,24 @@
     state.options[key] = val;
     btn.closest('.option-grid').querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
     btn.classList.add('selected');
+    if (key === 'patternType') {
+      const hw = document.getElementById('patternRepeatHWrap');
+      if (hw) hw.style.display = val === 'stripe' ? 'none' : 'block';
+    }
+  }
+
+  function selectFabricType(val, btn) {
+    state.options.fabricType = val;
+    btn.closest('.option-grid').querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+    btn.classList.add('selected');
+    const sec = document.getElementById('patternTypeSection');
+    if (sec) sec.style.display = val === 'pattern' ? 'block' : 'none';
+  }
+
+  function setPatternRepeat(axis, inp) {
+    const useCm = state.unit === 'meters';
+    const raw = parseFloat(inp.value);
+    state.options[`patternRepeat${axis}`] = raw > 0 ? String(+(useCm ? raw / 2.54 : raw).toFixed(3)) : '';
   }
 
   function setCuffs(val, btn) {
@@ -1667,7 +1820,7 @@
 
     // Coat section: left = body measurements, right = finished specs
     const coatBodyKeys     = ['chest', 'stomach', 'bicep'];
-    const coatFinishedKeys = ['shoulder', 'sleeveLength'];
+    const coatFinishedKeys = ['shoulder', 'sleeveLength', 'backLength'];
     // Other coat fields that render normally (shirt-only, vest-only)
     const coatExtraKeys    = ['backLength', 'neck', 'cuff', 'shirtLength'];
     // Trouser section: left = body, right = finished specs
@@ -1686,7 +1839,8 @@
       const dMax   = toDisp(f.max);
       const step   = useCm ? 0.5 : 0.25;
       const savedIn = state.measurements[key];
-      const dispVal = savedIn ? toDisp(savedIn) : '';
+      const sampleIn = SAMPLE_DEFAULTS[state.measureMode]?.[key];
+      const dispVal = savedIn ? toDisp(savedIn) : (sampleIn !== undefined ? toDisp(sampleIn) : '');
       const div = document.createElement('div');
       div.className = 'measure-group';
       div.innerHTML = `
@@ -1886,6 +2040,14 @@
         interfRows.push({ label: 'Fusible', val: interf });
       }
 
+      if (state.options.fabricType === 'pattern') {
+        const repeatH = parseFloat(state.options.patternRepeatH) || 0;
+        const extra = repeatH > 0
+          ? Math.min(0.5, repeatH / 18)
+          : (PATTERN_EXTRA[state.options.patternType] || 0.15);
+        shell = parseFloat((shell * (1 + extra)).toFixed(2));
+      }
+
       grandShell  += shell;
       grandLining += lining;
       grandInterf += interf;
@@ -1947,9 +2109,24 @@
     document.getElementById('recShellM').textContent    = _isMet ? `${recommended} yds` : `${recommendedM} m`;
     document.getElementById('recShellUnitAlt').textContent = _isMet ? 'yds' : 'm';
     document.getElementById('recommendedBox').style.display = 'block';
+    const _patternNote = (() => {
+      if (state.options.fabricType !== 'pattern') {
+        return `For plaids or large pattern repeats, add an extra <strong>${extraPlaid}</strong> to the suggested order.`;
+      }
+      const _pNames = { stripe:'stripe', check:'check / plaid', houndstooth:'houndstooth', windowpane:'windowpane' };
+      const _repeatH = parseFloat(state.options.patternRepeatH) || 0;
+      const _repeatW = parseFloat(state.options.patternRepeatW) || 0;
+      const _pExtra = _repeatH > 0
+        ? Math.min(0.5, _repeatH / 18)
+        : (PATTERN_EXTRA[state.options.patternType] || 0.15);
+      const _fmtR = v => _isMet ? `${(v*2.54).toFixed(1)} cm` : `${v}"`;
+      const _repeatStr = (_repeatW > 0 || _repeatH > 0)
+        ? ` · repeat ${[_repeatW>0?`W ${_fmtR(_repeatW)}`:'', _repeatH>0?`H ${_fmtR(_repeatH)}`:''].filter(Boolean).join(' × ')}`
+        : '';
+      return `Pattern matching for <strong>${_pNames[state.options.patternType] || 'patterned'} fabric</strong>${_repeatStr} is already included (+${Math.round(_pExtra * 100)}% on shell cloth).`;
+    })();
     document.getElementById('tipBox').innerHTML =
-      `Includes a 10% buffer for cutting and handling. ` +
-      `For plaids or large pattern repeats, add an extra <strong>${extraPlaid}</strong> to the suggested order.`;
+      `Includes a 10% buffer for cutting and handling. ${_patternNote}`;
 
     buildPatternLayouts();
     goToPage(4);
@@ -2487,6 +2664,49 @@
     }
   }
 
+  function buildFabricPatternDef(type, repeatW, repeatH) {
+    const dW = { stripe: 2.5, check: 3.5, houndstooth: 2, windowpane: 7 };
+    const rW = repeatW > 0 ? repeatW : (dW[type] || 3);
+    const rH = repeatH > 0 ? repeatH : rW;
+    const f  = v => +v.toFixed(3);
+    const lc = '#222222';
+
+    switch (type) {
+      case 'stripe':
+        // Single vertical line per repeat
+        return `<pattern id="fp" x="0" y="0" width="${f(rW)}" height="1000" patternUnits="userSpaceOnUse">
+          <line x1="0" y1="0" x2="0" y2="1000" stroke="${lc}" stroke-width="0.22"/>
+        </pattern>`;
+
+      case 'check': {
+        // Paired lines in both directions — suggests plaid bar structure
+        const o = f(rW * 0.14);
+        return `<pattern id="fp" x="0" y="0" width="${f(rW)}" height="${f(rH)}" patternUnits="userSpaceOnUse">
+          <line x1="0"    y1="0" x2="0"    y2="${f(rH)}" stroke="${lc}" stroke-width="0.20"/>
+          <line x1="${o}" y1="0" x2="${o}" y2="${f(rH)}" stroke="${lc}" stroke-width="0.10"/>
+          <line x1="0" y1="0"    x2="${f(rW)}" y2="0"    stroke="${lc}" stroke-width="0.20"/>
+          <line x1="0" y1="${o}" x2="${f(rW)}" y2="${o}" stroke="${lc}" stroke-width="0.10"/>
+        </pattern>`;
+      }
+
+      case 'houndstooth':
+        // Two crossing diagonals per tile — diamond/tweed feel
+        return `<pattern id="fp" x="0" y="0" width="${f(rW)}" height="${f(rW)}" patternUnits="userSpaceOnUse">
+          <line x1="0" y1="0" x2="${f(rW)}" y2="${f(rW)}" stroke="${lc}" stroke-width="0.14"/>
+          <line x1="${f(rW)}" y1="0" x2="0" y2="${f(rW)}" stroke="${lc}" stroke-width="0.14"/>
+        </pattern>`;
+
+      case 'windowpane':
+        // Single thin grid — wide-spaced clean lines
+        return `<pattern id="fp" x="0" y="0" width="${f(rW)}" height="${f(rH)}" patternUnits="userSpaceOnUse">
+          <line x1="${f(rW)}" y1="0" x2="${f(rW)}" y2="${f(rH)}" stroke="${lc}" stroke-width="0.22"/>
+          <line x1="0" y1="${f(rH)}" x2="${f(rW)}" y2="${f(rH)}" stroke="${lc}" stroke-width="0.22"/>
+        </pattern>`;
+
+      default: return null;
+    }
+  }
+
   function buildLayoutSVG(rows) {
     const FW  = state.fabricWidth;
     const GAP = 1.5;
@@ -2505,8 +2725,20 @@
     const _metric = state.unit === 'meters';
     const fmtIn = v => _metric ? `${(v * 2.54).toFixed(1)} cm` : `${v}"`;
 
+    // Fabric pattern defs
+    const _fabPat = state.options.fabricType === 'pattern'
+      ? buildFabricPatternDef(
+          state.options.patternType,
+          parseFloat(state.options.patternRepeatW) || 0,
+          parseFloat(state.options.patternRepeatH) || 0
+        )
+      : null;
+    if (_fabPat) s.push(`<defs>${_fabPat}</defs>`);
+
     // Fabric background — black
     s.push(`<rect width="${FW}" height="${totalH}" fill="#0C0C0C"/>`);
+    if (_fabPat) s.push(`<rect width="${FW}" height="${totalH}" fill="url(#fp)"/>`);
+
     // Subtle 10" grid
     for (let gx = 10; gx < FW; gx += 10) {
       s.push(`<line x1="${gx}" y1="0" x2="${gx}" y2="${totalH}" stroke="#1E1E1E" stroke-width="0.15"/>`);
