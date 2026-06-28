@@ -2161,11 +2161,14 @@
         const label = _mDefs[k]?.label || k;
         const val   = state.measurements[k];
         const disp  = _mIsMet ? `${(val * 2.54).toFixed(1)} cm` : `${val}"`;
-        return `<div class="result-breakdown-row"><span>${label}</span><strong>${disp}</strong></div>`;
+        return `<div>
+          <div style="font-size:9px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--warm-gray);">${label}</div>
+          <div style="font-size:15px;color:var(--black);margin-top:2px;">${disp}</div>
+        </div>`;
       }).join('');
     container.innerHTML = `<div style="margin-bottom:24px;">
-      <div style="font-size:9px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--warm-gray); margin-bottom:10px;">Measurements</div>
-      <div class="result-breakdown">${_mRows}</div>
+      <div style="font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--warm-gray);margin-bottom:12px;">Measurements</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px 8px;">${_mRows}</div>
     </div>`;
 
     const toM    = v => (v * 0.9144).toFixed(2);
