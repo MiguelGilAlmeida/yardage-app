@@ -1879,9 +1879,12 @@
       return div;
     }
 
+    const rendered = new Set();
+
     function appendField(key) {
+      if (rendered.has(key)) return;
       const el = makeField(key);
-      if (el) container.appendChild(el);
+      if (el) { rendered.add(key); container.appendChild(el); }
     }
 
     function appendSectionHeader(label) {
@@ -1916,6 +1919,7 @@
           // Left: body field or placeholder
           if (bodyKey && needed.has(bodyKey) && fieldDefs[bodyKey]) {
             container.appendChild(makeField(bodyKey));
+            rendered.add(bodyKey);
           } else if (bodyKey !== undefined) {
             const ph = document.createElement('div');
             ph.className = 'measure-group measure-placeholder';
@@ -1925,6 +1929,7 @@
           // Right: finished field or placeholder
           if (finKey && needed.has(finKey) && fieldDefs[finKey]) {
             container.appendChild(makeField(finKey));
+            rendered.add(finKey);
           } else {
             const ph = document.createElement('div');
             ph.className = 'measure-group measure-placeholder';
@@ -1951,6 +1956,7 @@
 
         if (bodyKey && needed.has(bodyKey) && fieldDefs[bodyKey]) {
           container.appendChild(makeField(bodyKey));
+          rendered.add(bodyKey);
         } else {
           const ph = document.createElement('div');
           ph.className = 'measure-group measure-placeholder';
@@ -1959,6 +1965,7 @@
 
         if (finKey && needed.has(finKey) && fieldDefs[finKey]) {
           container.appendChild(makeField(finKey));
+          rendered.add(finKey);
         } else {
           const ph = document.createElement('div');
           ph.className = 'measure-group measure-placeholder';
