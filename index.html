@@ -1220,12 +1220,12 @@
 
   // Minimum fields required to produce any estimate — others are optional (improve accuracy)
   const garmentRequired = {
-    suit2:     ['chest', 'sleeveLength', 'backLength', 'outseam'],
-    suit3:     ['chest', 'sleeveLength', 'backLength', 'outseam'],
-    sportcoat: ['chest', 'sleeveLength', 'backLength'],
-    slacks:    ['outseam'],
-    vest:      ['chest', 'backLength'],
-    shirt:     ['chest', 'shirtLength', 'sleeveLength'],
+    suit2:     ['chest', 'backLength', 'waist', 'hip', 'outseam', 'inseam'],
+    suit3:     ['chest', 'backLength', 'waist', 'hip', 'outseam', 'inseam'],
+    sportcoat: ['chest', 'backLength'],
+    slacks:    ['waist', 'hip', 'outseam', 'inseam'],
+    vest:      ['chest', 'backLength', 'waist'],
+    shirt:     ['chest', 'shirtLength'],
   };
 
   // ── Yardage formulas ──
