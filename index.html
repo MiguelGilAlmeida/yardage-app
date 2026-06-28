@@ -2150,37 +2150,23 @@
       grandLining += lining;
       grandInterf += interf;
 
-      const toM  = v => (v * 0.9144).toFixed(2);
-      const isMet = state.unit === 'meters';
-      const fmt  = v => v > 0
-        ? (isMet ? `${toM(v)} m / ${v.toFixed(2)} yds` : `${v.toFixed(2)} yds / ${toM(v)} m`)
-        : '—';
-
-      const item = document.createElement('div');
-      item.className = 'result-item';
-      item.innerHTML = `
-        <div class="result-item-top">
-          <div class="result-item-name">${names[g]}</div>
-          <div>
-            <div class="result-item-yards">${shell.toFixed(2)} <span>${isMet ? 'yds' : 'yds cloth'}</span></div>
-            <div class="result-item-meters">${toM(shell)} <span>${isMet ? 'm cloth' : 'm'}</span></div>
-          </div>
-        </div>
-        <div class="result-breakdown">
-          ${clothRows.map(r => `
-            <div class="result-breakdown-row">
-              <span>${r.label}</span><strong>${fmt(r.val)}</strong>
-            </div>`).join('')}
-          ${liningRows.length ? `<div class="result-breakdown-row" style="margin-top:6px;padding-top:6px;border-top:1px solid var(--rule)">
-              <span style="color:var(--charcoal);font-weight:500">Lining</span><strong>${fmt(lining)}</strong>
-            </div>
-            ${liningRows.length > 1 ? liningRows.map(r => `<div class="result-breakdown-row"><span>${r.label}</span><strong>${fmt(r.val)}</strong></div>`).join('') : ''}` : ''}
-          ${interfRows.length ? `<div class="result-breakdown-row" style="margin-top:6px;padding-top:6px;border-top:1px solid var(--rule)">
-              <span style="color:var(--charcoal);font-weight:500">Interfacing</span><strong>${fmt(interf)}</strong>
-            </div>` : ''}
-        </div>`;
-      container.appendChild(item);
     });
+
+    const _mIsMet = state.unit === 'meters';
+    const _mDefs  = fields[state.measureMode];
+    const _mOrder = ['chest','stomach','shoulder','backLength','sleeveLength','bicep','waist','hip','outseam','inseam','urise','neck','shirtLength','vestLength'];
+    const _mRows  = _mOrder
+      .filter(k => state.measurements[k] !== undefined)
+      .map(k => {
+        const label = _mDefs[k]?.label || k;
+        const val   = state.measurements[k];
+        const disp  = _mIsMet ? `${(val * 2.54).toFixed(1)} cm` : `${val}"`;
+        return `<div class="result-breakdown-row"><span>${label}</span><strong>${disp}</strong></div>`;
+      }).join('');
+    container.innerHTML = `<div style="margin-bottom:24px;">
+      <div style="font-size:9px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--warm-gray); margin-bottom:10px;">Measurements</div>
+      <div class="result-breakdown">${_mRows}</div>
+    </div>`;
 
     const toM    = v => (v * 0.9144).toFixed(2);
     const _isMet = state.unit === 'meters';
