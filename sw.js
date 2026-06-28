@@ -1,4 +1,4 @@
-const CACHE_NAME = 'cloth-chalk-v2';
+const CACHE_NAME = 'cloth-chalk-v3';
 const ASSETS = [
   '/',
   '/index.html',
