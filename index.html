@@ -3006,6 +3006,35 @@
     goToPage(0);
   }
 
+  async function joinHomeWaitlist() {
+    const email = document.getElementById('homeWaitlistEmail').value.trim();
+    const msg   = document.getElementById('homeWaitlistMsg');
+    if (!email || !email.includes('@')) {
+      msg.style.color = '#c0392b';
+      msg.textContent = 'Please enter a valid email address.';
+      return;
+    }
+    msg.style.color = 'var(--warm-gray)';
+    msg.textContent = 'Submitting…';
+    try {
+      const res = await fetch('https://formspree.io/f/xvzjryoy', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      if (res.ok) {
+        msg.style.color = 'var(--black)';
+        msg.textContent = '✓ You\'re on the list. We\'ll be in touch.';
+        document.getElementById('homeWaitlistEmail').value = '';
+      } else {
+        throw new Error('Submission failed');
+      }
+    } catch(e) {
+      msg.style.color = '#c0392b';
+      msg.textContent = 'Something went wrong. Please try again.';
+    }
+  }
+
   async function handleFeedback(e) {
     e.preventDefault();
     const form = e.target;
@@ -3032,6 +3061,30 @@
     }
   }
 </script>
+
+<section id="homeWaitlist" style="
+  max-width: 520px;
+  margin: 40px auto 0;
+  padding: 0 24px;
+  font-family: var(--sans);
+">
+  <div style="border-top: 1px solid var(--rule); padding-top: 32px;">
+    <div style="font-size: 9px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--warm-gray); margin-bottom: 8px;">Coming Soon</div>
+    <div style="font-family: var(--serif); font-size: 20px; font-weight: 600; color: var(--black); margin-bottom: 8px;">A full tailor's toolkit is coming.</div>
+    <p style="font-size: 13px; color: var(--charcoal); line-height: 1.7; margin-bottom: 16px;">We're building an app for working tailors and custom clothiers — save client profiles, store their measurements, log what each customer ordered, and attach photos of the fabrics used. Everything in one place, so nothing gets lost between fittings. Join the waitlist to hear when it launches.</p>
+    <div id="homeWaitlistForm">
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <input id="homeWaitlistEmail" type="email" placeholder="your@email.com"
+          style="flex:1; min-width:0; padding:12px 14px; border:1px solid var(--rule); background:var(--warm-white); font-family:var(--sans); font-size:13px; color:var(--black); outline:none; border-radius:0;" />
+        <button onclick="joinHomeWaitlist()"
+          style="padding:12px 20px; background:var(--black); color:var(--warm-white); border:none; font-family:var(--sans); font-size:12px; font-weight:600; letter-spacing:1px; text-transform:uppercase; cursor:pointer; white-space:nowrap;">
+          Join Waitlist
+        </button>
+      </div>
+      <div id="homeWaitlistMsg" style="font-size:12px; margin-top:8px; color:var(--warm-gray);"></div>
+    </div>
+  </div>
+</section>
 
 <section id="feedbackSection" style="
   max-width: 520px;
