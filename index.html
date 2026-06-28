@@ -2965,21 +2965,17 @@
     msg.style.color = 'var(--warm-gray)';
     msg.textContent = 'Submitting…';
     try {
-      const res = await fetch('/api/join-waitlist', {
+      const res = await fetch('https://formspree.io/f/xvzjryoy', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
       });
-      const data = await res.json();
-      if (data.duplicate) {
-        msg.style.color = 'var(--black)';
-        msg.textContent = '✓ You\'re already on the list.';
-      } else if (data.success) {
+      if (res.ok) {
         msg.style.color = 'var(--black)';
         msg.textContent = '✓ You\'re on the list. We\'ll be in touch.';
         document.getElementById('waitlistEmail').value = '';
       } else {
-        throw new Error(data.message || 'Unknown error');
+        throw new Error('Submission failed');
       }
     } catch(e) {
       msg.style.color = '#c0392b';
