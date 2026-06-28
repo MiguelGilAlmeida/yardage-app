@@ -1064,7 +1064,10 @@
   <!-- ══ PAGE 3: Measurements ══ -->
   <div class="page" id="page3">
     <div class="section-eyebrow">Step 3 of 4</div>
-    <div class="section-title" id="measureCardTitle">Measurements</div>
+    <div style="display:flex; align-items:baseline; justify-content:space-between; margin-bottom:24px;">
+      <div class="section-title" id="measureCardTitle" style="margin-bottom:0;">Measurements</div>
+      <button onclick="fillSampleMeasurements()" style="background:none; border:none; font-family:var(--sans); font-size:10px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--light-gray); cursor:pointer; padding:0; text-decoration:underline; text-underline-offset:3px;">Fill sample</button>
+    </div>
     <div class="measure-grid" id="measureFields">
       <!-- Populated dynamically -->
     </div>
@@ -1113,7 +1116,7 @@
 
     <div class="layout-section">
       <div class="layout-section-title">Pattern Layout</div>
-      <div class="layout-section-sub">How pieces fit on 58″ wide cloth</div>
+      <div class="layout-section-sub" id="layoutSectionSub">How pieces fit on 58″ wide cloth</div>
       <div id="patternLayouts"></div>
       <p style="margin-top:14px; font-size:11px; color:var(--warm-gray); line-height:1.6; letter-spacing:0.2px;">
         This layout is a representative diagram. Piece shapes and proportions are derived from your measurements and aim to be as accurate as possible, but should not be used as cutting patterns. Yardage estimates are a guide only — actual requirements vary by fabric width, pattern repeat, seam allowances, and the working practices of individual tailors and manufacturers. Always confirm yardage with your tailor before ordering fabric.
@@ -1357,6 +1360,7 @@
     document.getElementById('width58').classList.toggle('active', w === 58);
     document.getElementById('width60').classList.toggle('active', w === 60);
     document.getElementById('headerTagline').textContent = `Fabric Calculator · ${w}″ Wide`;
+    document.getElementById('layoutSectionSub').textContent = `How pieces fit on ${w}″ wide cloth`;
     // Recalculate if results are showing
     if (document.getElementById('page4')?.classList.contains('active')) {
       calculate();
@@ -2179,7 +2183,8 @@
     document.getElementById('totalInterfM').textContent = grandInterf > 0 ? toM(grandInterf) : '—';
 
     const modeLabel = state.measureMode === 'body' ? 'body measures' : 'finished garment';
-    document.getElementById('resultSubtitle').textContent = `58″ wide · ${modeLabel}`;
+    document.getElementById('resultSubtitle').textContent = `${state.fabricWidth}″ wide · ${modeLabel}`;
+    document.getElementById('layoutSectionSub').textContent = `How pieces fit on ${state.fabricWidth}″ wide cloth`;
 
     const recommended  = (grandShell * 1.1).toFixed(2);
     const recommendedM = (grandShell * 1.1 * 0.9144).toFixed(2);
@@ -2938,7 +2943,7 @@
   function buildPatternLayouts() {
     const container = document.getElementById('patternLayouts');
     container.innerHTML = '';
-    const names = { suit2:'2-Piece Suit · Jacket & Pants', suit3:'3-Piece Suit · Jacket, Pants & Vest', sportcoat:'Sport Coat', slacks:'Slacks', shirt:'Dress Shirt' };
+    const names = { suit2:'2-Piece Suit · Jacket & Pants', suit3:'3-Piece Suit · Jacket, Pants & Vest', sportcoat:'Sport Coat', slacks:'Slacks', vest:'Waistcoat', shirt:'Dress Shirt' };
     state.garments.forEach(g => {
       const rows = getLayoutRows(g, state.measurements);
       if (!rows.length) return;
@@ -2960,7 +2965,7 @@
     msg.style.color = 'var(--warm-gray)';
     msg.textContent = 'Submitting…';
     try {
-      const res = await fetch('/.netlify/functions/join-waitlist', {
+      const res = await fetch('/api/join-waitlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
@@ -2980,6 +2985,21 @@
       msg.style.color = '#c0392b';
       msg.textContent = 'Something went wrong. Please try again.';
     }
+  }
+
+  function fillSampleMeasurements() {
+    const samples = {
+      chest: 40, stomach: 38, bicep: 14, shoulder: 18,
+      sleeveLength: 24, backLength: 30, vestLength: 24,
+      waist: 34, hip: 42, thigh: 23, outseam: 42,
+      inseam: 30, legOpen: 16, shirtLength: 30,
+      neck: 15, calf: 15, cuff: 9, urise: 30,
+    };
+    const useCm = state.unit === 'meters';
+    Object.entries(samples).forEach(([key, val]) => {
+      const input = document.getElementById(`m_${key}`);
+      if (input) input.value = useCm ? +(val * 2.54).toFixed(1) : val;
+    });
   }
 
   function startOver() {
