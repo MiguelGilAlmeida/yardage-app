@@ -6,10 +6,47 @@
   <title>About — Cloth & Chalk</title>
   <meta name="description" content="Cloth & Chalk is a free fabric yardage calculator for bespoke tailors and their clients. Learn what the tool is and who it's built for." />
   <link rel="canonical" href="https://clothchalk.app/about" />
+
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://clothchalk.app/about" />
+  <meta property="og:title"       content="About — Cloth & Chalk" />
+  <meta property="og:description" content="Cloth & Chalk is a free fabric yardage calculator for bespoke tailors and their clients. Learn what the tool is and who it's built for." />
+  <meta property="og:site_name"   content="Cloth & Chalk" />
+  <meta property="og:image"       content="https://clothchalk.app/icons/og-image.png" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary" />
+  <meta name="twitter:title"       content="About — Cloth & Chalk" />
+  <meta name="twitter:description" content="Cloth & Chalk is a free fabric yardage calculator for bespoke tailors and their clients." />
+  <meta name="twitter:image"       content="https://clothchalk.app/icons/og-image.png" />
+
   <link rel="manifest" href="/manifest.json" />
   <meta name="theme-color" content="#0C0C0C" />
   <link rel="apple-touch-icon" href="/icons/icon-192.png" />
   <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,600;6..96,700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Consent Mode v2 — must run before AdSense -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    try {
+      var _tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      window._ccEU = /^Europe\//.test(_tz) ||
+        ['Atlantic/Azores','Atlantic/Madeira','Atlantic/Canary',
+         'America/Cayenne','America/Guadeloupe','America/Martinique',
+         'America/Miquelon','Indian/Reunion','Indian/Mayotte'].indexOf(_tz) !== -1;
+    } catch(e) { window._ccEU = false; }
+    var _s = localStorage.getItem('cc_consent');
+    var _ok = _s === 'granted' || (!window._ccEU && _s !== 'denied');
+    gtag('consent', 'default', {
+      ad_storage:         _ok ? 'granted' : 'denied',
+      ad_user_data:       _ok ? 'granted' : 'denied',
+      ad_personalization: _ok ? 'granted' : 'denied',
+      wait_for_update: _ok ? 0 : 500
+    });
+  </script>
+
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5191383046823498"
      crossorigin="anonymous"></script>
   <style>
@@ -153,6 +190,14 @@
 </head>
 <body>
 
+<div id="cc-banner" style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:9999; background:#1C1C1C; border-top:1px solid #3A3A3A; padding:16px 24px; font-family:'Jost',-apple-system,sans-serif; font-size:13px; color:#C8C4BC; align-items:center; gap:16px; flex-wrap:wrap;">
+  <p style="margin:0; flex:1; min-width:200px; line-height:1.6;">We use cookies for personalised advertising via Google AdSense. If you decline, you'll still see ads but they won't be personalised. <a href="/privacy" style="color:#8A8680; font-weight:500;">Privacy Policy</a></p>
+  <div style="display:flex; gap:10px; flex-shrink:0;">
+    <button id="cc-decline" style="background:transparent; border:1px solid #3A3A3A; color:#8A8680; padding:8px 18px; font-family:inherit; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; border-radius:2px;">Decline</button>
+    <button id="cc-accept" style="background:#F5F0E8; border:none; color:#0C0C0C; padding:8px 18px; font-family:inherit; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; border-radius:2px;">Accept</button>
+  </div>
+</div>
+
 <header>
   <div class="header-center">
     <a class="wordmark" href="/">Cloth &amp; Chalk</a>
@@ -210,5 +255,21 @@
   © Cloth &amp; Chalk &nbsp;·&nbsp; <a href="/about">About</a> &nbsp;·&nbsp; <a href="/privacy">Privacy Policy</a>
 </footer>
 
+<script>
+  (function(){
+    var b = document.getElementById('cc-banner');
+    if (!localStorage.getItem('cc_consent') && window._ccEU) b.style.display = 'flex';
+    document.getElementById('cc-accept').onclick = function(){
+      localStorage.setItem('cc_consent','granted');
+      gtag('consent','update',{ad_storage:'granted',ad_user_data:'granted',ad_personalization:'granted'});
+      b.style.display = 'none';
+    };
+    document.getElementById('cc-decline').onclick = function(){
+      localStorage.setItem('cc_consent','denied');
+      gtag('consent','update',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});
+      b.style.display = 'none';
+    };
+  })();
+</script>
 </body>
 </html>
