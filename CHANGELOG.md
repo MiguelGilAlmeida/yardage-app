@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.02 — 2026-06-29
+
+- Shirt measurements: fixed field alignment in two-column grid
+- Shirt measurements: renamed "Shoulder" to "Yoke"
+
 ## v0.1.01 — 2026-06-29
 
 - Privacy: removed legal boilerplate from privacy policy intro line
