@@ -1980,6 +1980,7 @@
     const hasTrouserGarments = ['suit2', 'suit3', 'slacks'].some(g => state.garments.has(g));
     const hasJacketGarments  = ['suit2', 'suit3', 'sportcoat'].some(g => state.garments.has(g));
     const isVestOnly         = state.garments.size === 1 && state.garments.has('vest');
+    const isShirtOnly        = state.garments.size === 1 && state.garments.has('shirt');
     const hasTrouserPaired   = hasTrouserGarments && (trouserBodyKeys.some(k => needed.has(k)) || trouserFinishedKeys.some(k => needed.has(k)));
     const showSectionHdr     = (hasCoatPaired || hasCoatExtra) && hasTrouserPaired;
     const coatSectionLabel   = hasJacketGarments ? 'Coat' : 'Waistcoat';
@@ -1993,10 +1994,14 @@
       const savedIn  = state.measurements[key];
       const dispVal  = savedIn ? toDisp(savedIn) : '';
       const isReq    = [...state.garments].some(g => garmentRequired[g]?.includes(key));
+      const isShirtCtx = !hasJacketGarments && state.garments.has('shirt');
+      const label    = (key === 'shoulder' && isShirtCtx)
+        ? (state.measureMode === 'body' ? 'Yoke' : 'Yoke (finished)')
+        : f.label;
       const div = document.createElement('div');
       div.className  = `measure-group${isReq ? '' : ' measure-group--optional'}`;
       div.innerHTML = `
-        <label>${f.label}${isReq ? '<span class="field-required-star">*</span>' : '<span class="field-optional-tag">optional</span>'}</label>
+        <label>${label}${isReq ? '<span class="field-required-star">*</span>' : '<span class="field-optional-tag">optional</span>'}</label>
         ${f.hint ? `<div class="hint">${f.hint} (${dMin}–${dMax} ${unitLbl})</div>` : ''}
         <div class="measure-input">
           <input type="number" inputmode="decimal" id="m_${key}" placeholder="0.0"
@@ -2031,7 +2036,8 @@
     }
 
     // ── Coat section ──────────────────────────────────────────────────
-    if (hasCoatPaired || hasCoatExtra) {
+    // Shirt-only skips this section; its fields render via the catch-all below in garmentFields order.
+    if (!isShirtOnly && (hasCoatPaired || hasCoatExtra)) {
       if (showSectionHdr || isVestOnly) appendSectionHeader(coatSectionLabel);
 
       if (hasCoatPaired) {
@@ -2257,7 +2263,11 @@
     const _mRows  = _mOrder
       .filter(k => state.measurements[k] !== undefined)
       .map(k => {
-        const label = _mDefs[k]?.label || k;
+        const _hasJacket = ['suit2', 'suit3', 'sportcoat'].some(g => state.garments.has(g));
+        const _shirtCtx  = !_hasJacket && state.garments.has('shirt');
+        const label = (k === 'shoulder' && _shirtCtx)
+          ? (state.measureMode === 'body' ? 'Yoke' : 'Yoke (finished)')
+          : (_mDefs[k]?.label || k);
         const val   = state.measurements[k];
         const disp  = _mIsMet ? `${(val * 2.54).toFixed(1)} cm` : `${val}"`;
         return `<div>
