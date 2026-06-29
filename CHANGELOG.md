@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.01 — 2026-06-29
+
+- Privacy: removed legal boilerplate from privacy policy intro line
+- Updated version format to X.Y.ZZ
+
 ## v0.1.00 — 2026-06-29
 
 - SEO: added Open Graph, Twitter Card, and `og:image` to all pages
