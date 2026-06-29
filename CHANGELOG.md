@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.1.0 — 2026-06-29
+## v0.1.00 — 2026-06-29
 
 - SEO: added Open Graph, Twitter Card, and `og:image` to all pages
 - SEO: generated 1200×630 social sharing image
