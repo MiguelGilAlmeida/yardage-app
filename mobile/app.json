@@ -8,7 +8,8 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "app.clothchalk.mobile"
     },
     "android": {
       "adaptiveIcon": {
@@ -21,6 +22,21 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-5191383046823498~9014168785",
+          "iosAppId": "ca-app-pub-5191383046823498~9014168785"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "23b57c1b-4feb-4c02-9fa0-f8ba53b1a7d9"
+      }
+    },
+    "owner": "miguelgil"
   }
 }

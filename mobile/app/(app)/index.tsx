@@ -10,9 +10,14 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native'
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads'
 import { SvgXml } from 'react-native-svg'
-import { calculate, getLayoutRows, GARMENT_NAMES } from '../../../shared/calculations/index'
-import { DEFAULT_OPTIONS, GARMENT_FIELDS } from '../../../shared/types/index'
+
+const BANNER_AD_UNIT_ID = __DEV__
+  ? TestIds.BANNER
+  : (process.env.EXPO_PUBLIC_ADMOB_BANNER_ID ?? '')
+import { calculate, getLayoutRows, GARMENT_NAMES } from '../../shared/calculations/index'
+import { DEFAULT_OPTIONS, GARMENT_FIELDS } from '../../shared/types/index'
 import { colors, fonts, radius } from '../../lib/theme'
 import type {
   CalculationResult,
@@ -1148,6 +1153,12 @@ export default function CalculatorScreen() {
 
         <View style={styles.bottomSpacer} />
       </ScrollView>
+
+      <BannerAd
+        unitId={BANNER_AD_UNIT_ID}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+        requestOptions={{ requestNonPersonalizedAdsOnly: false }}
+      />
     </View>
   )
 }
