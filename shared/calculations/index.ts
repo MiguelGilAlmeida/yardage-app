@@ -9,7 +9,7 @@ import {
 import { layoutYards } from './layout.js'
 import { calcLining, INTERFACING } from './lining.js'
 
-export { layoutYards } from './layout.js'
+export { layoutYards, getLayoutRows } from './layout.js'
 export { calcLining, INTERFACING } from './lining.js'
 
 // ── Width factor ──────────────────────────────────────────────────────────────

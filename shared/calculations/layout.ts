@@ -3,9 +3,14 @@ import { FIT_EASE, GarmentType, MeasureMode, Measurements, CalculatorOptions } f
 // ── Piece geometry ────────────────────────────────────────────────────────────
 
 interface Piece {
-  n: string    // name (for debugging)
-  w: number    // width in inches
-  h: number    // height in inches
+  n:       string
+  w:       number
+  h:       number
+  shape?:   string
+  mirror?:  boolean
+  fold?:    boolean
+  flip180?: boolean
+  props?:   Record<string, number>
 }
 
 type PackedPiece = { piece: Piece; xOff: number; yOff: number }
@@ -120,11 +125,6 @@ function pack(pieces: Piece[], avail: number): PackedPiece[][] {
   return rows.filter(row => row.length > 0)
 }
 
-// ── Piece geometry ────────────────────────────────────────────────────────────
-//
-// All dimensions in inches. Piece dimensions are calibrated around the packed
-// bounding box — only w and h matter for yardage; shape/path are web-only.
-
 function getPieces(
   garment: GarmentType,
   m: Measurements,
@@ -174,8 +174,8 @@ function getPieces(
   const legBW = Math.max(hip / 4 + 2.5,  thigh * 0.55 + 0.75)
 
   const collarPieces: Piece[] = [
-    { n: 'Collar',    w: neck * 0.80, h: 5 },
-    { n: 'Col. Band', w: neck * 0.75, h: 3 },
+    { n: 'Collar',    w: neck * 0.80, h: 5, shape: 'collar' },
+    { n: 'Col. Band', w: neck * 0.75, h: 3, shape: 'collar-band' },
   ]
 
   const vestPocketPieces: Piece[] = opts.vestPockets === 'flap'
@@ -185,7 +185,7 @@ function getPieces(
   const pocketPieces: Piece[] = opts.pockets === 'jetted'
     ? [{ n: 'Welt ×4', w: 10, h: 3 }]
     : opts.pockets === 'patch'
-      ? [{ n: 'Patch', w: 6.5, h: 7 }, { n: 'Patch', w: 6.5, h: 7 }, { n: 'Welt ×2', w: 10, h: 3 }]
+      ? [{ n: 'Patch', w: 6.5, h: 7, shape: 'pocket-bag' }, { n: 'Patch', w: 6.5, h: 7, shape: 'pocket-bag' }, { n: 'Welt ×2', w: 10, h: 3 }]
       : [{ n: 'Flap', w: 5.5, h: 2.5 }, { n: 'Flap', w: 5.5, h: 2.5 }, { n: 'Welt ×4', w: 10, h: 3 }]
 
   const ticketPieces: Piece[] = opts.ticketPocket
@@ -193,35 +193,36 @@ function getPieces(
     : []
 
   const jacket: Piece[] = [
-    { n: 'Back',    w: bkW,  h: back },
-    { n: 'Back',    w: bkW,  h: back },
-    { n: 'Front L', w: frW,  h: back },
-    { n: 'Front R', w: frW,  h: back },
-    { n: 'Top Slv', w: tsW,  h: slvH },
-    { n: 'Top Slv', w: tsW,  h: slvH },
-    { n: 'Und Slv', w: usW,  h: slvH },
-    { n: 'Und Slv', w: usW,  h: slvH },
-    { n: 'Facing',  w: facW, h: facH },
-    { n: 'Facing',  w: facW, h: facH },
+    { n: 'Back',    w: bkW,  h: back,  shape: 'jacket-back' },
+    { n: 'Back',    w: bkW,  h: back,  shape: 'jacket-back',          mirror: true },
+    { n: 'Front L', w: frW,  h: back,  shape: 'jacket-front' },
+    { n: 'Front R', w: frW,  h: back,  shape: 'jacket-front',         mirror: true },
+    { n: 'Top Slv', w: tsW,  h: slvH,  shape: 'jacket-sleeve-top' },
+    { n: 'Top Slv', w: tsW,  h: slvH,  shape: 'jacket-sleeve-top' },
+    { n: 'Und Slv', w: usW,  h: slvH,  shape: 'jacket-sleeve-under' },
+    { n: 'Und Slv', w: usW,  h: slvH,  shape: 'jacket-sleeve-under' },
+    { n: 'Facing',  w: facW, h: facH,  shape: 'facing' },
+    { n: 'Facing',  w: facW, h: facH,  shape: 'facing',               mirror: true },
     ...collarPieces,
     ...pocketPieces,
     ...ticketPieces,
   ]
 
   const trousers: Piece[] = [
-    { n: 'Front L',    w: legFW,          h: trsH },
-    { n: 'Front R',    w: legFW,          h: trsH },
-    { n: 'Back L',     w: legBW,          h: trsH },
-    { n: 'Back R',     w: legBW,          h: trsH },
-    { n: 'Waistband',  w: waist / 2 + 2,  h: wbH  },
+    { n: 'Front L',   w: legFW,         h: trsH, shape: 'trouser-front' },
+    { n: 'Front R',   w: legFW,         h: trsH, shape: 'trouser-front', flip180: true },
+    { n: 'Back L',    w: legBW,         h: trsH, shape: 'trouser-back' },
+    { n: 'Back R',    w: legBW,         h: trsH, shape: 'trouser-back',  flip180: true },
+    { n: 'Waistband', w: waist / 2 + 2, h: wbH,  shape: 'waistband' },
   ]
 
   const vstW = chest / 4 + 2
   const vest: Piece[] = [
-    { n: 'Vest Front', w: vstW,          h: vestBack },
-    { n: 'Vest Front', w: vstW,          h: vestBack },
+    { n: 'Vest Front', w: vstW,          h: vestBack, shape: 'vest-front' },
+    { n: 'Vest Front', w: vstW,          h: vestBack, shape: 'vest-front',    mirror: true },
     ...(opts.vestBack === 'fabric'
-      ? [{ n: 'Back L', w: vstW * 1.05, h: vestBack }, { n: 'Back R', w: vstW * 1.05, h: vestBack }]
+      ? [{ n: 'Back L', w: vstW * 1.05, h: vestBack, shape: 'jacket-back' },
+         { n: 'Back R', w: vstW * 1.05, h: vestBack, shape: 'jacket-back', mirror: true }]
       : []),
     ...vestPocketPieces,
   ]
@@ -230,16 +231,16 @@ function getPieces(
   const slvW   = bicep / 2 + 2
   const shSlvH = sleeve + 5
   const shirt: Piece[] = [
-    { n: 'Back',    w: bodyW,             h: shirtL       },
-    { n: 'Front L', w: bodyW,             h: shirtL       },
-    { n: 'Front R', w: bodyW,             h: shirtL       },
-    { n: 'Sleeve',  w: slvW,              h: shSlvH       },
-    { n: 'Sleeve',  w: slvW,              h: shSlvH       },
-    { n: 'Yoke',    w: bodyW * 2 + 2,     h: 7            },
-    { n: 'Collar',  w: neck * 0.75,       h: 5            },
-    { n: 'Band ×2', w: neck * 0.75,       h: 3            },
-    { n: 'Cuff ×2', w: cuff / 2 + 1,     h: 4.5          },
-    { n: 'Placket', w: 3,                 h: shirtL * 0.55 },
+    { n: 'Back',    w: bodyW,         h: shirtL,        shape: 'shirt-back',  fold: true },
+    { n: 'Front L', w: bodyW,         h: shirtL,        shape: 'shirt-front' },
+    { n: 'Front R', w: bodyW,         h: shirtL,        shape: 'shirt-front', mirror: true },
+    { n: 'Sleeve',  w: slvW,          h: shSlvH,        shape: 'shirt-sleeve' },
+    { n: 'Sleeve',  w: slvW,          h: shSlvH,        shape: 'shirt-sleeve', mirror: true },
+    { n: 'Yoke',    w: bodyW * 2 + 2, h: 7,             shape: 'collar' },
+    { n: 'Collar',  w: neck * 0.75,   h: 5,             shape: 'collar' },
+    { n: 'Band ×2', w: neck * 0.75,   h: 3,             shape: 'collar-band' },
+    { n: 'Cuff ×2', w: cuff / 2 + 1,  h: 4.5 },
+    { n: 'Placket', w: 3,              h: shirtL * 0.55 },
   ]
 
   return { jacket, trousers, vest, shirt }
