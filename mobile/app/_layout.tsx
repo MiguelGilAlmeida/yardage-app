@@ -11,7 +11,6 @@ import {
   Jost_500Medium,
   Jost_600SemiBold,
 } from '@expo-google-fonts/jost'
-import mobileAds from 'react-native-google-mobile-ads'
 import { supabase } from '../lib/supabase'
 import { useAuthStore } from '../lib/store'
 import { colors } from '../lib/theme'
@@ -31,8 +30,6 @@ export default function RootLayout() {
   })
 
   useEffect(() => {
-    mobileAds().initialize().catch(() => {})
-
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
       setLoading(false)
