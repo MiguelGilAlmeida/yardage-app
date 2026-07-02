@@ -1,0 +1,47 @@
+{
+  "expo": {
+    "name": "Cloth & Chalk",
+    "slug": "cloth-and-chalk",
+    "scheme": "clothchalk",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.clothchalk.mobile",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "GADDelayAppMeasurementInit": true
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "react-native-google-mobile-ads",
+        {
+          "androidAppId": "ca-app-pub-5191383046823498~9014168785",
+          "iosAppId": "ca-app-pub-5191383046823498~9014168785"
+        }
+      ],
+      "./plugins/withRCTFatalHandler"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "23b57c1b-4feb-4c02-9fa0-f8ba53b1a7d9"
+      }
+    },
+    "owner": "miguelgil"
+  }
+}
