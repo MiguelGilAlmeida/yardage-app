@@ -11,13 +11,16 @@ import {
   Jost_500Medium,
   Jost_600SemiBold,
 } from '@expo-google-fonts/jost'
+import mobileAds from 'react-native-google-mobile-ads'
 import { supabase } from '../lib/supabase'
 import { useAuthStore } from '../lib/store'
+import { AdContext } from '../lib/adContext'
 import { colors } from '../lib/theme'
 
 export default function RootLayout() {
   const { session, setSession } = useAuthStore()
   const [loading, setLoading] = useState(true)
+  const [adsReady, setAdsReady] = useState(false)
   const router = useRouter()
   const segments = useSegments()
 
@@ -30,6 +33,8 @@ export default function RootLayout() {
   })
 
   useEffect(() => {
+    mobileAds().initialize().then(() => setAdsReady(true)).catch(() => setAdsReady(true))
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
       setLoading(false)
@@ -59,5 +64,9 @@ export default function RootLayout() {
     )
   }
 
-  return <Stack screenOptions={{ headerShown: false }} />
+  return (
+    <AdContext.Provider value={adsReady}>
+      <Stack screenOptions={{ headerShown: false }} />
+    </AdContext.Provider>
+  )
 }

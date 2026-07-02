@@ -9,7 +9,11 @@
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "app.clothchalk.mobile"
+      "bundleIdentifier": "app.clothchalk.mobile",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "GADDelayAppMeasurementInit": true
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -30,7 +34,8 @@
           "androidAppId": "ca-app-pub-5191383046823498~9014168785",
           "iosAppId": "ca-app-pub-5191383046823498~9014168785"
         }
-      ]
+      ],
+      "./plugins/withRCTFatalHandler"
     ],
     "extra": {
       "eas": {

@@ -10,7 +10,14 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native'
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads'
 import { SvgXml } from 'react-native-svg'
+import { useAdsReady } from '../../lib/adContext'
+
+const BANNER_AD_UNIT_ID = __DEV__
+  ? TestIds.BANNER
+  : (process.env.EXPO_PUBLIC_ADMOB_BANNER_ID ?? '')
+
 import { calculate, getLayoutRows, GARMENT_NAMES } from '../../shared/calculations/index'
 import { DEFAULT_OPTIONS, GARMENT_FIELDS } from '../../shared/types/index'
 import { colors, fonts, radius } from '../../lib/theme'
@@ -535,6 +542,7 @@ function fmt(yards: number, unit: 'yards' | 'meters') {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function CalculatorScreen() {
+  const adsReady    = useAdsReady()
   const { width: screenWidth } = useWindowDimensions()
   const scrollRef   = useRef<ScrollView>(null)
 
@@ -1149,6 +1157,13 @@ export default function CalculatorScreen() {
         <View style={styles.bottomSpacer} />
       </ScrollView>
 
+      {adsReady && (
+        <BannerAd
+          unitId={BANNER_AD_UNIT_ID}
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+          requestOptions={{ requestNonPersonalizedAdsOnly: false }}
+        />
+      )}
     </View>
   )
 }
