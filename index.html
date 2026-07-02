@@ -2359,7 +2359,7 @@
       classic: { chest: 7.5, waist: 2,    seat: 4   },
     };
     const _le   = _body ? (_LAY[_fit] || _LAY.regular) : { chest:0, waist:0, seat:0 };
-    const chest    = (m.chest      || 40) + _le.chest;
+    const chest    = Math.max(m.chest || 40, m.stomach || 0) + _le.chest;
     const back     = (m.backLength || 30) + SA;
     const vestBack = (m.vestLength || m.backLength * 0.78 || 24) + SA;
     const sleeve   = (m.sleeveLength || 24) + SA;
@@ -2603,7 +2603,7 @@
 
     if (garment === 'vest') {
       const vstW = chest / 4 + 2;
-      const vstH = back;
+      const vstH = vestBack;
       const vestPieces = [
         { n:'Front L',  w:vstW,        h:vstH, shape:'vest-front' },
         { n:'Front R',  w:vstW,        h:vstH, shape:'vest-front', mirror:true },

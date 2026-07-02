@@ -137,7 +137,7 @@ function getPieces(
   const fit   = opts.fit
   const le    = body ? LAYOUT_EASE[fit] : { chest: 0, waist: 0, seat: 0 }
 
-  const chest    = (m.chest      || 40) + le.chest
+  const chest    = Math.max(m.chest || 40, m.stomach || 0) + le.chest
   const back     = (m.backLength || 30) + SA
   const vestBack = (m.vestLength || (m.backLength ?? 30) * 0.78 || 24) + SA
   const sleeve   = (m.sleeveLength || 24) + SA
@@ -172,6 +172,16 @@ function getPieces(
 
   const legFW = Math.max(hip / 4 + 0.75, thigh * 0.42 + 0.75)
   const legBW = Math.max(hip / 4 + 2.5,  thigh * 0.55 + 0.75)
+
+  const legOpCirc  = m.legOpen || 16
+  const mRise      = m.urise   || 11
+  const riseFrac   = Math.min(0.34, mRise / trsH)
+  const fWaistFrac = Math.min(0.80, (waist / 4) / legFW)
+  const bWaistFrac = Math.min(0.74, (waist / 4) / legBW)
+  const fHemFrac   = Math.min(0.94, (legOpCirc * 0.42 + 0.5) / legFW)
+  const bHemFrac   = Math.min(0.96, (legOpCirc * 0.55 + 0.75) / legBW)
+  const fProps     = { wf: fWaistFrac, hif: fHemFrac, rf: riseFrac }
+  const bProps     = { wf: bWaistFrac, hif: bHemFrac, rf: riseFrac }
 
   const collarPieces: Piece[] = [
     { n: 'Collar',    w: neck * 0.80, h: 5, shape: 'collar' },
@@ -209,10 +219,10 @@ function getPieces(
   ]
 
   const trousers: Piece[] = [
-    { n: 'Front L',   w: legFW,         h: trsH, shape: 'trouser-front' },
-    { n: 'Front R',   w: legFW,         h: trsH, shape: 'trouser-front', flip180: true },
-    { n: 'Back L',    w: legBW,         h: trsH, shape: 'trouser-back' },
-    { n: 'Back R',    w: legBW,         h: trsH, shape: 'trouser-back',  flip180: true },
+    { n: 'Front L',   w: legFW,         h: trsH, shape: 'trouser-front', props: fProps },
+    { n: 'Front R',   w: legFW,         h: trsH, shape: 'trouser-front', flip180: true, props: fProps },
+    { n: 'Back L',    w: legBW,         h: trsH, shape: 'trouser-back',  props: bProps },
+    { n: 'Back R',    w: legBW,         h: trsH, shape: 'trouser-back',  flip180: true, props: bProps },
     { n: 'Waistband', w: waist / 2 + 2, h: wbH,  shape: 'waistband' },
   ]
 

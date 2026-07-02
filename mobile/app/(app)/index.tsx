@@ -12,6 +12,7 @@ import {
 } from 'react-native'
 import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads'
 import { SvgXml } from 'react-native-svg'
+import { Ionicons } from '@expo/vector-icons'
 import { useAdsReady } from '../../lib/adContext'
 
 const BANNER_AD_UNIT_ID = __DEV__ || !process.env.EXPO_PUBLIC_ADMOB_BANNER_ID
@@ -19,7 +20,7 @@ const BANNER_AD_UNIT_ID = __DEV__ || !process.env.EXPO_PUBLIC_ADMOB_BANNER_ID
   : process.env.EXPO_PUBLIC_ADMOB_BANNER_ID
 
 import { calculate, getLayoutRows, GARMENT_NAMES } from '../../shared/calculations/index'
-import { DEFAULT_OPTIONS, GARMENT_FIELDS } from '../../shared/types/index'
+import { DEFAULT_OPTIONS, GARMENT_FIELDS, GARMENT_REQUIRED } from '../../shared/types/index'
 import { colors, fonts, radius } from '../../lib/theme'
 import type {
   CalculationResult,
@@ -513,25 +514,48 @@ function buildLayoutSvg(
 const COMMON_WIDTHS = [45, 54, 58, 60]
 const FIT_OPTIONS: FitStyle[] = ['slim', 'modern', 'classic']
 
-const FIELD_LABELS: Record<keyof Measurements, string> = {
-  chest:        'Chest',
-  stomach:      'Stomach',
-  bicep:        'Bicep',
-  shoulder:     'Shoulder',
-  sleeveLength: 'Sleeve Length',
-  backLength:   'Back Length',
-  vestLength:   'Vest Length',
-  waist:        'Waist',
-  hip:          'Hip / Seat',
-  outseam:      'Outseam',
-  inseam:       'Inseam',
-  legOpen:      'Leg Opening',
-  shirtLength:  'Shirt Length',
-  neck:         'Neck',
-  thigh:        'Thigh',
-  calf:         'Calf',
-  cuff:         'Cuff',
-  urise:        'U-Rise',
+interface FieldDef { label: string; hint: string; min: number; max: number }
+const FIELD_DEFS: Record<MeasureMode, Record<keyof Measurements, FieldDef>> = {
+  body: {
+    chest:        { label: 'Chest',              hint: 'Fullest part of chest',              min: 28, max: 65 },
+    stomach:      { label: 'Stomach',            hint: 'Fullest part of stomach / belly',    min: 28, max: 70 },
+    bicep:        { label: 'Bicep',              hint: 'Arm circumference at fullest point', min: 10, max: 22 },
+    shoulder:     { label: 'Finished Shoulder',  hint: 'Seam to seam across back',           min: 12, max: 22 },
+    sleeveLength: { label: 'Finished Sleeve',    hint: 'Shoulder seam to cuff edge',         min: 20, max: 32 },
+    backLength:   { label: 'Jacket Length',      hint: 'Nape of neck to hem',                min: 24, max: 40 },
+    vestLength:   { label: 'Waistcoat Length',   hint: 'Nape of neck to waistcoat hem',      min: 18, max: 34 },
+    waist:        { label: 'Waist',              hint: 'Natural waist circumference',         min: 22, max: 60 },
+    hip:          { label: 'Seat',               hint: 'Fullest part of seat',               min: 28, max: 65 },
+    outseam:      { label: 'Finished Outseam',   hint: 'Waistband top to hem',               min: 36, max: 50 },
+    inseam:       { label: 'Finished Inseam',    hint: 'Crotch to hem',                      min: 26, max: 40 },
+    legOpen:      { label: 'Bottom Cuff',        hint: 'Leg opening circumference',          min: 12, max: 22 },
+    shirtLength:  { label: 'Shirt Length',       hint: 'Nape to shirt hem',                  min: 26, max: 38 },
+    neck:         { label: 'Neck',               hint: 'Neck circumference',                 min: 12, max: 22 },
+    thigh:        { label: 'Thigh',              hint: 'Leg circumference at fullest',       min: 17, max: 36 },
+    calf:         { label: 'Calf',               hint: 'Leg circumference at calf',          min: 10, max: 22 },
+    cuff:         { label: 'Cuff',               hint: 'Wrist / cuff circumference',         min: 7,  max: 14 },
+    urise:        { label: 'U-Rise',             hint: 'Front waist → crotch → back',        min: 22, max: 40 },
+  },
+  garment: {
+    chest:        { label: 'Chest (finished)',          hint: 'Half chest × 2',                         min: 30, max: 68 },
+    stomach:      { label: 'Stomach (finished)',        hint: 'Fullest part of stomach',                min: 30, max: 72 },
+    bicep:        { label: 'Bicep (finished)',          hint: 'Sleeve circumference at fullest point',  min: 11, max: 23 },
+    shoulder:     { label: 'Shoulder (finished)',       hint: 'Seam to seam across back',               min: 13, max: 24 },
+    sleeveLength: { label: 'Sleeve Length (finished)',  hint: 'Shoulder seam to cuff edge',             min: 21, max: 33 },
+    backLength:   { label: 'Back Length (finished)',    hint: 'Collar seam to hem',                     min: 25, max: 42 },
+    vestLength:   { label: 'Waistcoat (finished)',      hint: 'Collar seam to waistcoat hem',           min: 19, max: 36 },
+    waist:        { label: 'Waist (finished)',          hint: 'Waistband circumference',                min: 24, max: 64 },
+    hip:          { label: 'Seat (finished)',           hint: 'Seat circumference',                     min: 30, max: 68 },
+    outseam:      { label: 'Outseam (finished)',        hint: 'Waistband top to hem',                   min: 37, max: 52 },
+    inseam:       { label: 'Inseam (finished)',         hint: 'Crotch to hem',                          min: 27, max: 42 },
+    legOpen:      { label: 'Leg Opening (finished)',    hint: 'Leg opening circumference',              min: 13, max: 24 },
+    shirtLength:  { label: 'Shirt Length (finished)',   hint: 'Collar seam to shirt hem',               min: 27, max: 40 },
+    neck:         { label: 'Collar (finished)',         hint: 'Collar band length',                     min: 13, max: 24 },
+    thigh:        { label: 'Thigh (finished)',          hint: 'Pant circumference at fullest',          min: 18, max: 38 },
+    calf:         { label: 'Calf (finished)',           hint: 'Leg circumference at calf',              min: 11, max: 23 },
+    cuff:         { label: 'Cuff (finished)',           hint: 'Cuff opening circumference',             min: 8,  max: 15 },
+    urise:        { label: 'U-Rise (finished)',         hint: 'Front waist → crotch → back',            min: 23, max: 42 },
+  },
 }
 
 function fmt(yards: number, unit: 'yards' | 'meters') {
@@ -585,8 +609,9 @@ export default function CalculatorScreen() {
   const [unit,         setUnit]         = useState<'yards' | 'meters'>('yards')
   const [measurements, setMeasurements] = useState<Record<string, string>>({})
   const [options,      setOptions]      = useState<CalculatorOptions>(DEFAULT_OPTIONS)
-  const [result,       setResult]       = useState<CalculationResult | null>(null)
-  const [wbWidthStr,   setWbWidthStr]   = useState(String(DEFAULT_OPTIONS.waistbandWidth))
+  const [result,      setResult]      = useState<CalculationResult | null>(null)
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
+  const [wbWidthStr,     setWbWidthStr]     = useState(String(DEFAULT_OPTIONS.waistbandWidth))
   const [cuffDepthStr, setCuffDepthStr] = useState('1.5')
 
   const visibleFields = useMemo(() => {
@@ -608,6 +633,25 @@ export default function CalculatorScreen() {
   }
 
   function runCalculation() {
+    const required = GARMENT_REQUIRED[garment]
+    const defs = FIELD_DEFS[measureMode]
+    const errors: Record<string, string> = {}
+
+    visibleFields.forEach(f => {
+      const v = parseFloat(measurements[f] ?? '')
+      const def = defs[f]
+      if (isNaN(v) || v <= 0) {
+        if (required.includes(f)) errors[f] = 'Required'
+      } else if (def && v < def.min) {
+        errors[f] = `Min ${def.min}"`
+      } else if (def && v > def.max) {
+        errors[f] = `Max ${def.max}"`
+      }
+    })
+
+    setFieldErrors(errors)
+    if (Object.keys(errors).length > 0) return
+
     const m: Measurements = {}
     visibleFields.forEach(f => {
       const v = parseFloat(measurements[f] ?? '')
@@ -629,6 +673,7 @@ export default function CalculatorScreen() {
     setMeasurements({})
     setOptions(DEFAULT_OPTIONS)
     setResult(null)
+    setFieldErrors({})
     goTo(0)
   }
 
@@ -744,32 +789,28 @@ export default function CalculatorScreen() {
         {/* ══ STEP 1: Garments ══ */}
         {step === 1 && (
           <>
+            <TouchableOpacity style={styles.backBtn} onPress={() => goTo(0)}>
+              <Ionicons name="arrow-back" size={22} color={colors.black} />
+            </TouchableOpacity>
             <Text style={styles.stepEyebrow}>Step 1 of 3</Text>
             <Text style={styles.sectionTitle}>What are you{'\n'}making?</Text>
 
             <View style={styles.gRow}>
               {(['suit2', 'suit3'] as GarmentType[]).map((g, i) => (
                 <GarmentCard key={g} garment={g} selected={garment === g}
-                  onPress={() => setGarment(g)} first={i === 0} />
+                  onPress={() => { setGarment(g); goTo(2) }} first={i === 0} />
               ))}
             </View>
             <View style={[styles.gRow, styles.gRowMt]}>
               {(['sportcoat', 'slacks', 'vest'] as GarmentType[]).map((g, i) => (
                 <GarmentCard key={g} garment={g} selected={garment === g}
-                  onPress={() => setGarment(g)} first={i === 0} />
+                  onPress={() => { setGarment(g); goTo(2) }} first={i === 0} />
               ))}
             </View>
             <View style={[styles.gRow, styles.gRowMt]}>
               <GarmentCard garment="shirt" selected={garment === 'shirt'}
-                onPress={() => setGarment('shirt')} first landscape />
+                onPress={() => { setGarment('shirt'); goTo(2) }} first landscape />
             </View>
-
-            <TouchableOpacity
-              style={styles.primaryBtn}
-              onPress={() => goTo(2)}
-            >
-              <Text style={styles.primaryBtnText}>Next →</Text>
-            </TouchableOpacity>
           </>
         )}
 
@@ -1010,25 +1051,52 @@ export default function CalculatorScreen() {
               {measureMode === 'body'
                 ? 'Enter the customer\'s actual body measurements in inches.'
                 : 'Enter the finished garment dimensions in inches.'}
+              {unit === 'meters' ? ' Results will be shown in meters.' : ''}
             </Text>
 
-            <View style={styles.fieldGrid}>
-              {visibleFields.map(f => (
-                <View key={f} style={styles.fieldItem}>
-                  <Text style={styles.fieldLabel}>{FIELD_LABELS[f]}</Text>
-                  <TextInput
-                    style={styles.fieldInput}
-                    value={measurements[f] ?? ''}
-                    onChangeText={v => setMeasurements(prev => ({ ...prev, [f]: v }))}
-                    keyboardType="decimal-pad"
-                    placeholder="—"
-                    placeholderTextColor={colors.lightGray}
-                  />
+            {(() => {
+              const required = GARMENT_REQUIRED[garment]
+              const defs = FIELD_DEFS[measureMode]
+              return (
+                <View style={styles.fieldGrid}>
+                  {visibleFields.map(f => {
+                    const isReq = required.includes(f)
+                    const def   = defs[f]
+                    const err   = fieldErrors[f]
+                    const isShirtYoke = f === 'shoulder' && garment === 'shirt'
+                    const label = isShirtYoke
+                      ? (measureMode === 'body' ? 'Yoke' : 'Yoke (finished)')
+                      : def.label
+                    return (
+                      <View key={f} style={styles.fieldItem}>
+                        <View style={styles.fieldLabelRow}>
+                          <Text style={[styles.fieldLabel, !isReq && styles.fieldLabelOpt]}>
+                            {label.toUpperCase()}
+                          </Text>
+                          {isReq
+                            ? <Text style={styles.fieldRequired}> *</Text>
+                            : <Text style={styles.fieldOptTag}> opt</Text>}
+                        </View>
+                        <TextInput
+                          style={[styles.fieldInput, !!err && styles.fieldInputError]}
+                          value={measurements[f] ?? ''}
+                          onChangeText={v => {
+                            setMeasurements(prev => ({ ...prev, [f]: v }))
+                            if (fieldErrors[f]) setFieldErrors(prev => { const n = { ...prev }; delete n[f]; return n })
+                          }}
+                          keyboardType="decimal-pad"
+                          placeholder={def.hint}
+                          placeholderTextColor={colors.lightGray}
+                        />
+                        {err && <Text style={styles.fieldError}>{err}</Text>}
+                      </View>
+                    )
+                  })}
                 </View>
-              ))}
-            </View>
+              )
+            })()}
 
-            <TouchableOpacity style={[styles.primaryBtn, { marginTop: 32 }]} onPress={runCalculation}>
+            <TouchableOpacity style={[styles.primaryBtn, { marginTop: 28 }]} onPress={runCalculation}>
               <Text style={styles.primaryBtnText}>Calculate Fabric</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.secondaryBtn} onPress={() => goTo(2)}>
@@ -1356,6 +1424,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.sansBold, fontSize: 10, color: colors.warmGray,
     textTransform: 'uppercase', letterSpacing: 3, marginBottom: 6,
   },
+  backBtn: { alignSelf: 'flex-start', padding: 8, marginBottom: 4, marginLeft: -8 },
   measureHint:  { fontFamily: fonts.sans, fontSize: 13, color: colors.warmGray, marginBottom: 20, lineHeight: 20 },
 
   // ── Garment cards ──
@@ -1393,17 +1462,20 @@ const styles = StyleSheet.create({
   chipActive:      { backgroundColor: colors.black, borderColor: colors.black },
   chipText:        { fontFamily: fonts.sans, fontSize: 13, color: colors.charcoal },
   chipTextActive:  { color: colors.warmWhite },
-  fieldGrid:           { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
-  fieldItem:           { width: '47%' },
-  fieldLabel:          {
-    fontFamily: fonts.sansBold, fontSize: 10, color: colors.warmGray,
-    textTransform: 'uppercase', letterSpacing: 1, marginBottom: 5,
-  },
-  fieldInput:          {
+  fieldGrid:        { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  fieldItem:        { width: '47%' },
+  fieldLabelRow:    { flexDirection: 'row', alignItems: 'baseline', marginBottom: 5 },
+  fieldLabel:       { fontFamily: fonts.sansBold, fontSize: 9, color: colors.charcoal, letterSpacing: 1 },
+  fieldLabelOpt:    { color: colors.lightGray },
+  fieldRequired:    { fontFamily: fonts.sansBold, fontSize: 9, color: colors.charcoal },
+  fieldOptTag:      { fontFamily: fonts.sans, fontSize: 8, color: colors.lightGray, letterSpacing: 0.5 },
+  fieldInput:       {
     borderWidth: 1, borderColor: colors.rule, borderRadius: radius.sm,
     paddingHorizontal: 12, paddingVertical: 10,
     fontFamily: fonts.sans, fontSize: 14, color: colors.text, backgroundColor: colors.warmWhite,
   },
+  fieldInputError:  { borderColor: '#c0392b' },
+  fieldError:       { fontFamily: fonts.sans, fontSize: 10, color: '#c0392b', marginTop: 3 },
 
   // ── Buttons ──
   primaryBtn:     {

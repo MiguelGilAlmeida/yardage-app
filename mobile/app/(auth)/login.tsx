@@ -9,12 +9,13 @@ import {
   View,
   Alert,
 } from 'react-native'
-import { Link } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 import { supabase } from '../../lib/supabase'
 import { colors, fonts, radius } from '../../lib/theme'
 
 export default function LoginScreen() {
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -32,6 +33,9 @@ export default function LoginScreen() {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
+      <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+        <Ionicons name="arrow-back" size={22} color={colors.black} />
+      </TouchableOpacity>
       <View style={styles.inner}>
         <Text style={styles.brand}>Cloth & Chalk</Text>
         <Text style={styles.subtitle}>Sign in to your account</Text>
@@ -98,7 +102,8 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.cream },
-  inner: { flex: 1, justifyContent: 'center', paddingHorizontal: 32 },
+  backBtn:   { position: 'absolute', top: 54, left: 20, padding: 8, zIndex: 10 },
+  inner:     { flex: 1, justifyContent: 'center', paddingHorizontal: 32 },
   brand: { fontFamily: fonts.serifBold, fontSize: 32, color: colors.black, marginBottom: 6 },
   subtitle: { fontFamily: fonts.sans, fontSize: 14, color: colors.warmGray, marginBottom: 40, letterSpacing: 0.2 },
   input: {
