@@ -14,9 +14,9 @@ import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads'
 import { SvgXml } from 'react-native-svg'
 import { useAdsReady } from '../../lib/adContext'
 
-const BANNER_AD_UNIT_ID = __DEV__
+const BANNER_AD_UNIT_ID = __DEV__ || !process.env.EXPO_PUBLIC_ADMOB_BANNER_ID
   ? TestIds.BANNER
-  : (process.env.EXPO_PUBLIC_ADMOB_BANNER_ID ?? '')
+  : process.env.EXPO_PUBLIC_ADMOB_BANNER_ID
 
 import { calculate, getLayoutRows, GARMENT_NAMES } from '../../shared/calculations/index'
 import { DEFAULT_OPTIONS, GARMENT_FIELDS } from '../../shared/types/index'
